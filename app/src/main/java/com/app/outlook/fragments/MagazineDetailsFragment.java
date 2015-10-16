@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +69,18 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
     }
 
+    private void loadCardView(View view){
+
+        TextView txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+        TextView subtitle = (TextView) view.findViewById(R.id.subtitle);
+        TextView sub_category_name = (TextView) view.findViewById(R.id.sub_category_name);
+        TextView description = (TextView) view.findViewById(R.id.description);
+        TextView author = (TextView) view.findViewById(R.id.author);
+        ImageView userImg = (ImageView) view.findViewById(R.id.userImg);
+
+        sectionBreifListLyt.addView(view);
+    }
+
     private void loadSectionListLyt() {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -97,7 +110,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
         int size = items.size() % 2 == 0 ? (items.size()/2 ) : ((items.size()/2) +1) ;
         size = size+3;
-        Log.v("List","size : "+size);
         for(int i =0;i<= size;i++){
             if(i< items.size()) {
                 View view = inflater.inflate(R.layout.details_section_row_item, null);
@@ -117,7 +129,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
                 i++;
             }
-            Log.v("List", "i++ : " + i);
         }
 
     }
