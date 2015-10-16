@@ -77,10 +77,10 @@ public class HomeListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_list,null);
-        ButterKnife.bind(this, view);
+        mView = inflater.inflate(R.layout.fragment_list,null);
+        ButterKnife.bind(this, mView);
         initView();
-        return view;
+        return mView;
     }
 
     private void initView() {

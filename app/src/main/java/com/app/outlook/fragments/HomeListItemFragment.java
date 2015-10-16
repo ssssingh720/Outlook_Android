@@ -43,15 +43,15 @@ public class HomeListItemFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view  = inflater.inflate(R.layout.fragment_list_item, container, false);
-        ButterKnife.bind(this,view);
+        mView  = inflater.inflate(R.layout.fragment_list_item, container, false);
+        ButterKnife.bind(this,mView);
 
-        CarouselLinearLayout root = (CarouselLinearLayout) view.findViewById(R.id.root);
+        CarouselLinearLayout root = (CarouselLinearLayout) mView.findViewById(R.id.root);
         float scale = this.getArguments().getFloat("scale");
         root.setScaleBoth(scale);
 
         init();
-        return view;
+        return mView;
     }
 
     private void init() {
@@ -73,7 +73,7 @@ public class HomeListItemFragment extends BaseFragment {
         Log.v("MyLog","id -- "+magazine.getId());
         magazineImg.setImageResource(magazine.getImage());
 
-        view.setOnClickListener(new View.OnClickListener() {
+        mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             if(magazine.getId() == 1)
