@@ -66,9 +66,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         cardIds.recycle();
     }
 
+    // Array of Cards
     private void loadSectionBreifListLyt() {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+        // replace with array of cards
         ArrayList<String> items = new ArrayList<>();
         items.add("REGULAR");
         items.add("BUSINESS");
@@ -97,6 +99,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             subtitleLyt.setVisibility(View.GONE);
         }
 
+        // items inside card
         ArrayList<String> items = new ArrayList<>();
         items.add("REGULAR");
         items.add("BUSINESS");
@@ -155,9 +158,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         return view;
     }
 
+    // Top section items
     private void loadSectionListLyt() {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+        //replace this array with original array
         ArrayList<String> items = new ArrayList<>();
         items.add("REGULAR");
         items.add("BUSINESS");
@@ -173,13 +178,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             if(i< items.size()) {
                 View view = inflater.inflate(R.layout.details_section_row_item, null);
                 ((TextView) view.findViewById(R.id.txtLeft)).setText(items.get(i));
-//                ((TextView) view.findViewById(R.id.txtLeft)).setId(categoryIds.getResourceId(i, -1));
                 ((TextView) view.findViewById(R.id.txtLeft)).setTag("category,"+i);
                 ((TextView) view.findViewById(R.id.txtLeft)).setOnClickListener(this);
 
                 if (i + 1 < items.size()) {
                     ((TextView) view.findViewById(R.id.txtRight)).setText(items.get(i + 1));
-//                    ((TextView) view.findViewById(R.id.txtRight)).setId(categoryIds.getResourceId(i + 1, -1));
                     ((TextView) view.findViewById(R.id.txtRight)).setTag("category,"+(i + 1));
                     ((TextView) view.findViewById(R.id.txtRight)).setOnClickListener(this);
                 } else {
@@ -206,11 +209,18 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
         if(tags[0].equals("category")){
             Toast.makeText(getActivity(),tags[1]+"",Toast.LENGTH_SHORT).show();
+            switch (Integer.parseInt(tags[1])){
+
+            }
         }else if(tags[0].equals("card")) {
             Toast.makeText(getActivity(),tags[2]+"",Toast.LENGTH_SHORT).show();
+
+            switch (Integer.parseInt(tags[1])){
+
+            }
         }
 
 
-//                ((MagazineDetailsActivity) getActivity()).openSectionDetails(0);
+                ((MagazineDetailsActivity) getActivity()).openSectionDetails(0);
     }
 }

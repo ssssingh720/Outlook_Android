@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:id="@+id/imgBackground"
         android:scaleType="centerCrop"
-        android:src="@drawable/outlook_splash_bg"
+        android:src="@color/white"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
