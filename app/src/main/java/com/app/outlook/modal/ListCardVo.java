@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by srajendrakumar on 16/10/15.
  */
-public class Regular {
+public class ListCardVo {
     @SerializedName("item")
     @Expose
     private List<Item> item = new ArrayList<Item>();

@@ -13,45 +13,45 @@ public class Category {
 
     @SerializedName("regular")
     @Expose
-    private List<Regular> regular = new ArrayList<Regular>();
+    private List<ListCardVo> listCardVo = new ArrayList<ListCardVo>();
     @SerializedName("cover_story")
     @Expose
-    private List<Object> coverStory = new ArrayList<Object>();
+    private List<ListCardVo> coverStory = new ArrayList<ListCardVo>();
     @SerializedName("national")
     @Expose
-    private List<Object> national = new ArrayList<Object>();
+    private List<ListCardVo> national = new ArrayList<ListCardVo>();
     @SerializedName("international")
     @Expose
-    private List<Object> international = new ArrayList<Object>();
+    private List<ListCardVo> international = new ArrayList<ListCardVo>();
     @SerializedName("business")
     @Expose
-    private List<Object> business = new ArrayList<Object>();
+    private List<ListCardVo> business = new ArrayList<ListCardVo>();
     @SerializedName("features")
     @Expose
-    private List<Object> features = new ArrayList<Object>();
+    private List<ListCardVo> features = new ArrayList<ListCardVo>();
     @SerializedName("regulars")
     @Expose
-    private List<Object> regulars = new ArrayList<Object>();
+    private List<ListCardVo> regulars = new ArrayList<ListCardVo>();
     @SerializedName("daily")
     @Expose
-    private List<Object> daily = new ArrayList<Object>();
+    private List<ListCardVo> daily = new ArrayList<ListCardVo>();
 
     /**
      *
      * @return
      * The regular
      */
-    public List<Regular> getRegular() {
-        return regular;
+    public List<ListCardVo> getListCardVo() {
+        return listCardVo;
     }
 
     /**
      *
-     * @param regular
+     * @param listCardVo
      * The regular
      */
-    public void setRegular(List<Regular> regular) {
-        this.regular = regular;
+    public void setListCardVo(List<ListCardVo> listCardVo) {
+        this.listCardVo = listCardVo;
     }
 
     /**
@@ -59,7 +59,7 @@ public class Category {
      * @return
      * The coverStory
      */
-    public List<Object> getCoverStory() {
+    public List<ListCardVo> getCoverStory() {
         return coverStory;
     }
 
@@ -68,7 +68,7 @@ public class Category {
      * @param coverStory
      * The cover_story
      */
-    public void setCoverStory(List<Object> coverStory) {
+    public void setCoverStory(List<ListCardVo> coverStory) {
         this.coverStory = coverStory;
     }
 
@@ -77,7 +77,7 @@ public class Category {
      * @return
      * The national
      */
-    public List<Object> getNational() {
+    public List<ListCardVo> getNational() {
         return national;
     }
 
@@ -86,7 +86,7 @@ public class Category {
      * @param national
      * The national
      */
-    public void setNational(List<Object> national) {
+    public void setNational(List<ListCardVo> national) {
         this.national = national;
     }
 
@@ -95,7 +95,7 @@ public class Category {
      * @return
      * The international
      */
-    public List<Object> getInternational() {
+    public List<ListCardVo> getInternational() {
         return international;
     }
 
@@ -104,7 +104,7 @@ public class Category {
      * @param international
      * The international
      */
-    public void setInternational(List<Object> international) {
+    public void setInternational(List<ListCardVo> international) {
         this.international = international;
     }
 
@@ -113,7 +113,7 @@ public class Category {
      * @return
      * The business
      */
-    public List<Object> getBusiness() {
+    public List<ListCardVo> getBusiness() {
         return business;
     }
 
@@ -122,7 +122,7 @@ public class Category {
      * @param business
      * The business
      */
-    public void setBusiness(List<Object> business) {
+    public void setBusiness(List<ListCardVo> business) {
         this.business = business;
     }
 
@@ -131,7 +131,7 @@ public class Category {
      * @return
      * The features
      */
-    public List<Object> getFeatures() {
+    public List<ListCardVo> getFeatures() {
         return features;
     }
 
@@ -140,7 +140,7 @@ public class Category {
      * @param features
      * The features
      */
-    public void setFeatures(List<Object> features) {
+    public void setFeatures(List<ListCardVo> features) {
         this.features = features;
     }
 
@@ -149,7 +149,7 @@ public class Category {
      * @return
      * The regulars
      */
-    public List<Object> getRegulars() {
+    public List<ListCardVo> getRegulars() {
         return regulars;
     }
 
@@ -158,7 +158,7 @@ public class Category {
      * @param regulars
      * The regulars
      */
-    public void setRegulars(List<Object> regulars) {
+    public void setRegulars(List<ListCardVo> regulars) {
         this.regulars = regulars;
     }
 
@@ -167,7 +167,7 @@ public class Category {
      * @return
      * The daily
      */
-    public List<Object> getDaily() {
+    public List<ListCardVo> getDaily() {
         return daily;
     }
 
@@ -176,7 +176,7 @@ public class Category {
      * @param daily
      * The daily
      */
-    public void setDaily(List<Object> daily) {
+    public void setDaily(List<ListCardVo> daily) {
         this.daily = daily;
     }
 
