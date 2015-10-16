@@ -7,12 +7,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 
 import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.model.IntentConstants;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.R;
 import com.app.outlook.fragments.HomeListFragment;
 import com.app.outlook.fragments.MagazineGridView;
-import com.app.outlook.model.OutlookConstants;
+import com.app.outlook.modal.OutlookConstants;
 
 import java.util.ArrayList;
 

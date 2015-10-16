@@ -8,8 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.app.outlook.R;
-import com.app.outlook.activities.MagazineDetailsActivity;
-import com.app.outlook.model.IntentConstants;
+import com.app.outlook.modal.IntentConstants;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

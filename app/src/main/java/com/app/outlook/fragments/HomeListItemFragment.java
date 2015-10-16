@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.CategoryListingActivity;
-import com.app.outlook.model.IntentConstants;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.google.gson.Gson;
 
@@ -29,6 +29,8 @@ public class HomeListItemFragment extends BaseFragment {
     @Bind(R.id.magazineImg)
     ImageView magazineImg;
     Magazine magazine;
+    @Bind(R.id.cardView)
+    CardView cardView;
 
     public static Fragment newInstance(Context context, int pos,
                                        float scale) {
@@ -53,6 +55,9 @@ public class HomeListItemFragment extends BaseFragment {
     }
 
     private void init() {
+        float restingElevation = cardView.getCardElevation(); // keep the default
+        Log.d("elevation", "resting: " + restingElevation);
+
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

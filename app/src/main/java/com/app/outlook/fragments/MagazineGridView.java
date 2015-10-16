@@ -13,10 +13,10 @@ import android.widget.GridView;
 import com.app.outlook.activities.CategoryListingActivity;
 import com.app.outlook.adapters.MagazineGridViewAdapter;
 import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.model.IntentConstants;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.R;
-import com.app.outlook.model.OutlookConstants;
+import com.app.outlook.modal.OutlookConstants;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 

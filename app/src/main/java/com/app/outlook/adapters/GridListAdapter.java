@@ -2,28 +2,33 @@ package com.app.outlook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.outlook.R;
+import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.Magazine;
 
 import java.util.ArrayList;
 
 /**
- * Created by srajendrakumar on 09/09/15.
+ * Created by srajendrakumar on 15/10/15.
  */
-public class CategoryGridViewAdapter extends ArrayAdapter<Magazine> {
+public class GridListAdapter extends ArrayAdapter<String> {
 
     private final int layoutResourceId;
     private Context context;
-    private ArrayList<Magazine> data;
+    private ArrayList<String> data;
+    private int width;
 
-    public CategoryGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data) {
+    public GridListAdapter(Context context, int layoutResourceId, ArrayList<String> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -39,16 +44,10 @@ public class CategoryGridViewAdapter extends ArrayAdapter<Magazine> {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.image = (ImageView) row.findViewById(R.id.magazineImg);
-            holder.dateTxt = (TextView) row.findViewById(R.id.dateTxt);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
-
-        Magazine magazine = data.get(position);
-        holder.image.setImageResource(magazine.getImage());
-        holder.dateTxt.setText(magazine.getIssueDate());
 
         return row;
     }
@@ -56,5 +55,6 @@ public class CategoryGridViewAdapter extends ArrayAdapter<Magazine> {
     static class ViewHolder {
         TextView dateTxt;
         ImageView image;
+        LinearLayout headerLyt;
     }
 }

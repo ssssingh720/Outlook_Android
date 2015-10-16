@@ -11,8 +11,8 @@ import android.widget.GridView;
 
 import com.app.outlook.R;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
-import com.app.outlook.model.IntentConstants;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.views.MonthYearPicker;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;

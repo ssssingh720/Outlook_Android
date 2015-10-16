@@ -2,12 +2,11 @@ package com.app.outlook.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.app.outlook.R;
 import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.model.OutlookConstants;
+import com.app.outlook.modal.OutlookConstants;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 

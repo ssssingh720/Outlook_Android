@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.app.outlook.R;
-import com.app.outlook.model.IntentConstants;
+import com.app.outlook.modal.IntentConstants;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

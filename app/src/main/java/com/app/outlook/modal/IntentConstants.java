@@ -1,4 +1,4 @@
-package com.app.outlook.model;
+package com.app.outlook.modal;
 
 /**
  * Created by srajendrakumar on 09/09/15.

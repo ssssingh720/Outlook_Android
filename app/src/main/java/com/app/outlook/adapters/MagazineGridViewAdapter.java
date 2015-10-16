@@ -2,9 +2,7 @@ package com.app.outlook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.support.v7.widget.CardView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.outlook.Utils.Util;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.R;
 
 import java.util.ArrayList;

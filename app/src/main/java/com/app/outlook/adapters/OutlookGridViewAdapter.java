@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
-import com.app.outlook.model.Magazine;
+import com.app.outlook.modal.Magazine;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,4 @@
-package com.app.outlook.model;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.app.outlook.modal;
 
 import java.io.Serializable;
 
