@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="category1" />
-    <item type="id" name="category2" />
-    <item type="id" name="category3" />
-    <item type="id" name="category4" />
-    <item type="id" name="category5" />
-    <item type="id" name="category6" />
-    <item type="id" name="category7" />
-    <item type="id" name="category8" />
-    <item type="id" name="category9" />
-    <item type="id" name="category10" />
-    <item type="id" name="category11" />
-    <item type="id" name="category12" />
+    <string-array name="categoryIds">
+        <item type="id" name="category1" />
+        <item type="id" name="category2" />
+        <item type="id" name="category3" />
+        <item type="id" name="category4" />
+        <item type="id" name="category5" />
+        <item type="id" name="category6" />
+        <item type="id" name="category7" />
+        <item type="id" name="category8" />
+        <item type="id" name="category9" />
+        <item type="id" name="category10" />
+        <item type="id" name="category11" />
+        <item type="id" name="category12" />
+        <item type="id" name="category13" />
+        <item type="id" name="category14" />
+        <item type="id" name="category15" />
+    </string-array>
 
-    <item type="id" name="card1" />
-    <item type="id" name="card2" />
-    <item type="id" name="card3" />
-    <item type="id" name="card4" />
-    <item type="id" name="card5" />
-    <item type="id" name="card6" />
-    <item type="id" name="card7" />
-    <item type="id" name="card8" />
-    <item type="id" name="card9" />
-    <item type="id" name="card10" />
-    <item type="id" name="card11" />
-    <item type="id" name="card12" />
+    <string-array name="cardIds">
+        <item type="id" name="card1" />
+        <item type="id" name="card2" />
+        <item type="id" name="card3" />
+        <item type="id" name="card4" />
+        <item type="id" name="card5" />
+        <item type="id" name="card6" />
+        <item type="id" name="card7" />
+        <item type="id" name="card8" />
+        <item type="id" name="card9" />
+        <item type="id" name="card10" />
+        <item type="id" name="card11" />
+        <item type="id" name="card12" />
+        <item type="id" name="card13" />
+        <item type="id" name="card14" />
+        <item type="id" name="card15" />
+    </string-array>
 
 </resources>

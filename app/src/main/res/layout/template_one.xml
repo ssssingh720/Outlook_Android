@@ -15,6 +15,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/itemsLyt"
             style="@style/Widget.CardContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -28,9 +29,6 @@
                 android:textSize="@dimen/text_medium"
                 android:layout_marginLeft="17dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <include layout="@layout/template_three"/>
-            <include layout="@layout/template_three"/>
 
         </LinearLayout>
 
