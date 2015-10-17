@@ -13,12 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
+import com.android.volley.VolleyError;
 import com.app.outlook.R;
+import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.activities.MagazineDetailsActivity;
 import com.app.outlook.adapters.GridListAdapter;
+import com.app.outlook.modal.DetailsObject;
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +33,7 @@ import butterknife.OnClick;
  */
 public class MagazineDetailsFragment extends BaseFragment implements View.OnClickListener{
 
+    private static final String TAG = "MagazineDetailsFragment";
     @Bind(R.id.sectionListLyt)
     LinearLayout sectionListLyt;
     @Bind(R.id.sectionBreifListLyt)
@@ -42,11 +47,17 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details,null);
         ButterKnife.bind(this, mView);
         initView();
+        fetchMagazineDetails();
         return mView;
     }
 
+    private void fetchMagazineDetails() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("post_id","864");
+        placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
+    }
+
     private void initView() {
-        loadSectionListLyt();
         loadSectionBreifListLyt();
     }
 
@@ -68,17 +79,17 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
     }
 
-    private void loadSectionListLyt() {
+    private void loadSectionListLyt(ArrayList<String> items) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        ArrayList<String> items = new ArrayList<>();
-        items.add("REGULAR");
-        items.add("BUSINESS");
-        items.add("COVER STORY");
-        items.add("FEATURES");
-        items.add("CURRENT AFFAIRS");
-        items.add("EDITORS PICK");
-        items.add("CARS");
+//        ArrayList<String> items = new ArrayList<>();
+//        items.add("REGULAR");
+//        items.add("BUSINESS");
+//        items.add("COVER STORY");
+//        items.add("FEATURES");
+//        items.add("CURRENT AFFAIRS");
+//        items.add("EDITORS PICK");
+//        items.add("CARS");
 
         ArrayList<Integer> itemsIds = new ArrayList<Integer>();
         itemsIds.add(R.id.category1);
@@ -129,5 +140,29 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     @Override
     public void onClick(View v) {
         ((MagazineDetailsActivity)getActivity()).openSectionDetails(0);
+    }
+
+    @Override
+    public void onAPIResponse(Object response, String apiMethod) {
+        super.onAPIResponse(response, apiMethod);
+        Log.d(TAG, "onAPIResponse APIMethod::" + apiMethod);
+        Log.d(TAG,"onAPIResponse Response::" + response);
+        if(apiMethod.equals(APIMethods.MAGAZINE_DETAILS)) {
+            DetailsObject detailsObject = (DetailsObject) response;
+            ArrayList<String> sections = new ArrayList<>();
+            for(int i=0; i< detailsObject.getCategories().size(); i++){
+                sections.add(detailsObject.getCategories().get(i).getCategoryName().replace("_", " ").toUpperCase());
+            }
+
+            loadSectionListLyt(sections);
+        }
+
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod) {
+        super.onErrorResponse(error, apiMethod);
+        Log.d(TAG, "onAPIResponse APIMethod::" + apiMethod);
+        Log.d(TAG,"onAPIResponse Error::" + error);
     }
 }

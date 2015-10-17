@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by srajendrakumar on 16/10/15.
  */
-public class DetailsObject {
+public class DetailsObject extends BaseVO {
 
     @SerializedName("categories")
     @Expose

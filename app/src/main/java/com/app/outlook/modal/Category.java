@@ -11,173 +11,67 @@ import com.google.gson.annotations.SerializedName;
 
 public class Category {
 
-    @SerializedName("regular")
+    @SerializedName("categoryName")
     @Expose
-    private List<ListCardVo> listCardVo = new ArrayList<ListCardVo>();
-    @SerializedName("cover_story")
+    private String categoryName;
+    @SerializedName("categoryId")
     @Expose
-    private List<ListCardVo> coverStory = new ArrayList<ListCardVo>();
-    @SerializedName("national")
+    private String categoryId;
+    @SerializedName("data")
     @Expose
-    private List<ListCardVo> national = new ArrayList<ListCardVo>();
-    @SerializedName("international")
-    @Expose
-    private List<ListCardVo> international = new ArrayList<ListCardVo>();
-    @SerializedName("business")
-    @Expose
-    private List<ListCardVo> business = new ArrayList<ListCardVo>();
-    @SerializedName("features")
-    @Expose
-    private List<ListCardVo> features = new ArrayList<ListCardVo>();
-    @SerializedName("regulars")
-    @Expose
-    private List<ListCardVo> regulars = new ArrayList<ListCardVo>();
-    @SerializedName("daily")
-    @Expose
-    private List<ListCardVo> daily = new ArrayList<ListCardVo>();
+    private List<Data> data = new ArrayList<>();
 
     /**
      *
      * @return
-     * The regular
+     * The categoryName
      */
-    public List<ListCardVo> getListCardVo() {
-        return listCardVo;
+    public String getCategoryName() {
+        return categoryName;
     }
 
     /**
      *
-     * @param listCardVo
-     * The regular
+     * @param categoryName
+     * The categoryName
      */
-    public void setListCardVo(List<ListCardVo> listCardVo) {
-        this.listCardVo = listCardVo;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     /**
      *
      * @return
-     * The coverStory
+     * The categoryId
      */
-    public List<ListCardVo> getCoverStory() {
-        return coverStory;
+    public String getCategoryId() {
+        return categoryId;
     }
 
     /**
      *
-     * @param coverStory
-     * The cover_story
+     * @param categoryId
+     * The categoryId
      */
-    public void setCoverStory(List<ListCardVo> coverStory) {
-        this.coverStory = coverStory;
-    }
-
-    /**
-     *
-     * @return
-     * The national
-     */
-    public List<ListCardVo> getNational() {
-        return national;
-    }
-
-    /**
-     *
-     * @param national
-     * The national
-     */
-    public void setNational(List<ListCardVo> national) {
-        this.national = national;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     /**
      *
      * @return
-     * The international
+     * The data
      */
-    public List<ListCardVo> getInternational() {
-        return international;
+    public List<Data> getData() {
+        return data;
     }
 
     /**
      *
-     * @param international
-     * The international
+     * @param data
+     * The data
      */
-    public void setInternational(List<ListCardVo> international) {
-        this.international = international;
+    public void setData(List<Data> data) {
+        this.data = data;
     }
-
-    /**
-     *
-     * @return
-     * The business
-     */
-    public List<ListCardVo> getBusiness() {
-        return business;
-    }
-
-    /**
-     *
-     * @param business
-     * The business
-     */
-    public void setBusiness(List<ListCardVo> business) {
-        this.business = business;
-    }
-
-    /**
-     *
-     * @return
-     * The features
-     */
-    public List<ListCardVo> getFeatures() {
-        return features;
-    }
-
-    /**
-     *
-     * @param features
-     * The features
-     */
-    public void setFeatures(List<ListCardVo> features) {
-        this.features = features;
-    }
-
-    /**
-     *
-     * @return
-     * The regulars
-     */
-    public List<ListCardVo> getRegulars() {
-        return regulars;
-    }
-
-    /**
-     *
-     * @param regulars
-     * The regulars
-     */
-    public void setRegulars(List<ListCardVo> regulars) {
-        this.regulars = regulars;
-    }
-
-    /**
-     *
-     * @return
-     * The daily
-     */
-    public List<ListCardVo> getDaily() {
-        return daily;
-    }
-
-    /**
-     *
-     * @param daily
-     * The daily
-     */
-    public void setDaily(List<ListCardVo> daily) {
-        this.daily = daily;
-    }
-
 }
