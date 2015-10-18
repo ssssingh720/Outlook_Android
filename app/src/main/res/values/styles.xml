@@ -9,7 +9,8 @@
         <item name="colorAccent">#FF4081</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
     </style>
 
     <style name="AppThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,7 +21,8 @@
         <item name="colorAccent">#FF4081</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
     </style>
 
 
@@ -43,6 +45,7 @@
     <style name="textBold">
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="textNormal">
         <item name="android:textStyle">normal</item>
     </style>

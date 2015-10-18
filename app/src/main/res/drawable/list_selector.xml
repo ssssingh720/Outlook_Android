@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item style="@style/textBold" android:state_selected="true"/>
-    <item style="@style/textBold" android:state_activated="true"/>
-    <item style="@style/textBold" android:state_pressed="true"/>
-    <item style="@style/textNormal"/>
+    <item style="@style/textBold" android:state_selected="true" />
+    <item style="@style/textBold" android:state_activated="true" />
+    <item style="@style/textBold" android:state_pressed="true" />
+    <item style="@style/textNormal" />
 </selector>

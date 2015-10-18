@@ -46,216 +46,168 @@ public class Sizes {
     private Integer postThumbnailHeight;
 
     /**
-     *
-     * @return
-     * The thumbnail
+     * @return The thumbnail
      */
     public String getThumbnail() {
         return thumbnail;
     }
 
     /**
-     *
-     * @param thumbnail
-     * The thumbnail
+     * @param thumbnail The thumbnail
      */
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
     /**
-     *
-     * @return
-     * The thumbnailWidth
+     * @return The thumbnailWidth
      */
     public Integer getThumbnailWidth() {
         return thumbnailWidth;
     }
 
     /**
-     *
-     * @param thumbnailWidth
-     * The thumbnail-width
+     * @param thumbnailWidth The thumbnail-width
      */
     public void setThumbnailWidth(Integer thumbnailWidth) {
         this.thumbnailWidth = thumbnailWidth;
     }
 
     /**
-     *
-     * @return
-     * The thumbnailHeight
+     * @return The thumbnailHeight
      */
     public Integer getThumbnailHeight() {
         return thumbnailHeight;
     }
 
     /**
-     *
-     * @param thumbnailHeight
-     * The thumbnail-height
+     * @param thumbnailHeight The thumbnail-height
      */
     public void setThumbnailHeight(Integer thumbnailHeight) {
         this.thumbnailHeight = thumbnailHeight;
     }
 
     /**
-     *
-     * @return
-     * The medium
+     * @return The medium
      */
     public String getMedium() {
         return medium;
     }
 
     /**
-     *
-     * @param medium
-     * The medium
+     * @param medium The medium
      */
     public void setMedium(String medium) {
         this.medium = medium;
     }
 
     /**
-     *
-     * @return
-     * The mediumWidth
+     * @return The mediumWidth
      */
     public Integer getMediumWidth() {
         return mediumWidth;
     }
 
     /**
-     *
-     * @param mediumWidth
-     * The medium-width
+     * @param mediumWidth The medium-width
      */
     public void setMediumWidth(Integer mediumWidth) {
         this.mediumWidth = mediumWidth;
     }
 
     /**
-     *
-     * @return
-     * The mediumHeight
+     * @return The mediumHeight
      */
     public Integer getMediumHeight() {
         return mediumHeight;
     }
 
     /**
-     *
-     * @param mediumHeight
-     * The medium-height
+     * @param mediumHeight The medium-height
      */
     public void setMediumHeight(Integer mediumHeight) {
         this.mediumHeight = mediumHeight;
     }
 
     /**
-     *
-     * @return
-     * The large
+     * @return The large
      */
     public String getLarge() {
         return large;
     }
 
     /**
-     *
-     * @param large
-     * The large
+     * @param large The large
      */
     public void setLarge(String large) {
         this.large = large;
     }
 
     /**
-     *
-     * @return
-     * The largeWidth
+     * @return The largeWidth
      */
     public Integer getLargeWidth() {
         return largeWidth;
     }
 
     /**
-     *
-     * @param largeWidth
-     * The large-width
+     * @param largeWidth The large-width
      */
     public void setLargeWidth(Integer largeWidth) {
         this.largeWidth = largeWidth;
     }
 
     /**
-     *
-     * @return
-     * The largeHeight
+     * @return The largeHeight
      */
     public Integer getLargeHeight() {
         return largeHeight;
     }
 
     /**
-     *
-     * @param largeHeight
-     * The large-height
+     * @param largeHeight The large-height
      */
     public void setLargeHeight(Integer largeHeight) {
         this.largeHeight = largeHeight;
     }
 
     /**
-     *
-     * @return
-     * The postThumbnail
+     * @return The postThumbnail
      */
     public String getPostThumbnail() {
         return postThumbnail;
     }
 
     /**
-     *
-     * @param postThumbnail
-     * The post-thumbnail
+     * @param postThumbnail The post-thumbnail
      */
     public void setPostThumbnail(String postThumbnail) {
         this.postThumbnail = postThumbnail;
     }
 
     /**
-     *
-     * @return
-     * The postThumbnailWidth
+     * @return The postThumbnailWidth
      */
     public Integer getPostThumbnailWidth() {
         return postThumbnailWidth;
     }
 
     /**
-     *
-     * @param postThumbnailWidth
-     * The post-thumbnail-width
+     * @param postThumbnailWidth The post-thumbnail-width
      */
     public void setPostThumbnailWidth(Integer postThumbnailWidth) {
         this.postThumbnailWidth = postThumbnailWidth;
     }
 
     /**
-     *
-     * @return
-     * The postThumbnailHeight
+     * @return The postThumbnailHeight
      */
     public Integer getPostThumbnailHeight() {
         return postThumbnailHeight;
     }
 
     /**
-     *
-     * @param postThumbnailHeight
-     * The post-thumbnail-height
+     * @param postThumbnailHeight The post-thumbnail-height
      */
     public void setPostThumbnailHeight(Integer postThumbnailHeight) {
         this.postThumbnailHeight = postThumbnailHeight;

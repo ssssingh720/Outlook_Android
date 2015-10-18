@@ -64,324 +64,252 @@ public class Image {
     private Sizes sizes;
 
     /**
-     *
-     * @return
-     * The ID
+     * @return The ID
      */
     public Integer getID() {
         return ID;
     }
 
     /**
-     *
-     * @param ID
-     * The ID
+     * @param ID The ID
      */
     public void setID(Integer ID) {
         this.ID = ID;
     }
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     * The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     *
-     * @param title
-     * The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     *
-     * @return
-     * The filename
+     * @return The filename
      */
     public String getFilename() {
         return filename;
     }
 
     /**
-     *
-     * @param filename
-     * The filename
+     * @param filename The filename
      */
     public void setFilename(String filename) {
         this.filename = filename;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     *
-     * @return
-     * The alt
+     * @return The alt
      */
     public String getAlt() {
         return alt;
     }
 
     /**
-     *
-     * @param alt
-     * The alt
+     * @param alt The alt
      */
     public void setAlt(String alt) {
         this.alt = alt;
     }
 
     /**
-     *
-     * @return
-     * The author
+     * @return The author
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     *
-     * @param author
-     * The author
+     * @param author The author
      */
     public void setAuthor(String author) {
         this.author = author;
     }
 
     /**
-     *
-     * @return
-     * The description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     *
-     * @param description
-     * The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     *
-     * @return
-     * The caption
+     * @return The caption
      */
     public String getCaption() {
         return caption;
     }
 
     /**
-     *
-     * @param caption
-     * The caption
+     * @param caption The caption
      */
     public void setCaption(String caption) {
         this.caption = caption;
     }
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The date
+     * @return The date
      */
     public String getDate() {
         return date;
     }
 
     /**
-     *
-     * @param date
-     * The date
+     * @param date The date
      */
     public void setDate(String date) {
         this.date = date;
     }
 
     /**
-     *
-     * @return
-     * The modified
+     * @return The modified
      */
     public String getModified() {
         return modified;
     }
 
     /**
-     *
-     * @param modified
-     * The modified
+     * @param modified The modified
      */
     public void setModified(String modified) {
         this.modified = modified;
     }
 
     /**
-     *
-     * @return
-     * The mimeType
+     * @return The mimeType
      */
     public String getMimeType() {
         return mimeType;
     }
 
     /**
-     *
-     * @param mimeType
-     * The mime_type
+     * @param mimeType The mime_type
      */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The icon
+     * @return The icon
      */
     public String getIcon() {
         return icon;
     }
 
     /**
-     *
-     * @param icon
-     * The icon
+     * @param icon The icon
      */
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
     /**
-     *
-     * @return
-     * The width
+     * @return The width
      */
     public Integer getWidth() {
         return width;
     }
 
     /**
-     *
-     * @param width
-     * The width
+     * @param width The width
      */
     public void setWidth(Integer width) {
         this.width = width;
     }
 
     /**
-     *
-     * @return
-     * The height
+     * @return The height
      */
     public Integer getHeight() {
         return height;
     }
 
     /**
-     *
-     * @param height
-     * The height
+     * @param height The height
      */
     public void setHeight(Integer height) {
         this.height = height;
     }
 
     /**
-     *
-     * @return
-     * The sizes
+     * @return The sizes
      */
     public Sizes getSizes() {
         return sizes;
     }
 
     /**
-     *
-     * @param sizes
-     * The sizes
+     * @param sizes The sizes
      */
     public void setSizes(Sizes sizes) {
         this.sizes = sizes;
