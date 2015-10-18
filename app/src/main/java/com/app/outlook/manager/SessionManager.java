@@ -32,7 +32,7 @@ public class SessionManager {
     private static final String PREF_KEY_USERSESSION_PASSWORD = "PREF_KEY_USERSESSION_PASSWORD";
     private static final String PREF_KEY_USER_DATE_OF_BIRTH = "PREF_KEY_USER_DATE_OF_BIRTH";
     private static final String PREF_USER_CITIES = "allCities";
-
+    private static final String PREF_DOWNLOAD_INTERRUPTED = "PREF_DOWNLOAD_INTERRUPTED";
 
     private static Editor mEditor;
     private static SharedPreferences mPref;
@@ -220,5 +220,14 @@ public class SessionManager {
 
     public static String getAllCities(Context context) {
         return context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE).getString(PREF_USER_CITIES, null);
+    }
+
+    public static void setDownloadFailed(Context context, boolean failed) {
+        context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE).edit().putBoolean(PREF_DOWNLOAD_INTERRUPTED, failed).apply();
+    }
+
+    public static boolean isDownloadFailed(Context context) {
+        mPref = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        return mPref.getBoolean(PREF_DOWNLOAD_INTERRUPTED, false);
     }
 }

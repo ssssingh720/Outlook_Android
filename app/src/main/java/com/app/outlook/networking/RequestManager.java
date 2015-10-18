@@ -36,8 +36,8 @@ public class RequestManager<T> {
 
     public static final boolean IS_LIVE = true;
 
-    public static final String TESTING_SERVER = "http://outlook.jumpcatch.com/";
-    public static final String LIVE_SERVER = "http://outlook.jumpcatch.com/";
+    public static final String TESTING_SERVER = "http://52.76.121.132/";
+    public static final String LIVE_SERVER = "http://52.76.121.132/";
     public static final String VERSION = "v1";
 
     public static final String TEST_BASEFEED_URL = TESTING_SERVER;

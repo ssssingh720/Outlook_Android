@@ -881,40 +881,41 @@ public class Util {
     //Params:
     // jsonResponse: pass directly new Gson().fromJson here.
     //path: Folder path to store json
-    public static void saveJsonToSDCard(String jsonResponse, String path) {
-        try {
+    public static void saveJsonToSDCard(final String jsonResponse, final String path) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File file = new File(path);
+                    if (file.exists())
+                        file.delete();
 
+                    file.createNewFile();
+                    file.setReadable(true);
+                    file.setExecutable(true);
+                    file.setWritable(true);
 
-            File file = new File(path);
-            Log.d("BRAND", "write to sd card" + file);
-            if (file.exists())
-                file.delete();
-
-            file.createNewFile();
-            file.setReadable(true);
-            file.setExecutable(true);
-            file.setWritable(true);
-
-            Log.d("BRAND", "write to sd card");
-            FileOutputStream fOut = new FileOutputStream(file);
-            OutputStreamWriter myOutWriter =
-                    new OutputStreamWriter(fOut);
-            myOutWriter.append(jsonResponse);
-            myOutWriter.close();
-            fOut.close();
-        } catch (Exception e) {
-            Log.d("BRAND", "Exception" + e.toString());
-        }
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    OutputStreamWriter myOutWriter =
+                            new OutputStreamWriter(fOut);
+                    myOutWriter.append(jsonResponse);
+                    myOutWriter.close();
+                    fOut.close();
+                } catch (Exception e) {
+                }
+            }
+        });
+        thread.start();
     }
 
     //Params:
     // path: Path  to the folder without "/"
     //fileName: Name of the File
-    public static String readJsonFromSDCard(String path, String fileName) {
+    public static String readJsonFromSDCard(String path) {
 
         try {
 
-            File jsonPath = new File(path + File.separator + fileName);
+            File jsonPath = new File(path);
 
             if (jsonPath.exists()) {
                 FileInputStream fIn = new FileInputStream(jsonPath);
@@ -922,9 +923,9 @@ public class Util {
                         new InputStreamReader(fIn));
 
                 String aDataRow = "";
-                String aBuffer = "";
+                StringBuffer aBuffer = new StringBuffer();
                 while ((aDataRow = myReader.readLine()) != null) {
-                    aBuffer += aDataRow + "\n";
+                    aBuffer.append(new String(aDataRow + "\n"));
 
                 }
                 Log.d("BRAND", "Buffer::" + aBuffer);

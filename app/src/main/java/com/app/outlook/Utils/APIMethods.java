@@ -6,5 +6,6 @@ package com.app.outlook.Utils;
 public class APIMethods {
 
     //API METHODS
+    public static final String BASE_URL = "http://outlook.jumpcatch.com/";
     public static final String MAGAZINE_DETAILS = "outlook-api";
 }

@@ -1,1 +1,6 @@
 /build
+/app/app.iml
+/app/src/main/assets/.DS_Store
+/app/src/main/res/values-w820dp/.DS_Store
+/.idea
+/.gradle

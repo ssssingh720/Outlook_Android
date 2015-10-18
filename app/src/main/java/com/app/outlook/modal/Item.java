@@ -22,7 +22,7 @@ public class Item {
     private String tag;
     @SerializedName("image")
     @Expose
-    private String image;
+    private Image image;
     @SerializedName("description")
     @Expose
     private String description;
@@ -92,14 +92,14 @@ public class Item {
     /**
      * @return The image
      */
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
     /**
      * @param image The image
      */
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 

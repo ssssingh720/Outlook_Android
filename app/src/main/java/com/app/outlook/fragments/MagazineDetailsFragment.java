@@ -1,7 +1,9 @@
 package com.app.outlook.fragments;
 
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +18,24 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.MagazineDetailsActivity;
+import com.app.outlook.manager.SessionManager;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
 import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.Item;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +60,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     TypedArray cardIds;
     List<Category> mCategories = new ArrayList<>();
     int mSelectedCategory = 0;
+    private String magazineID;
+    private String root;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +69,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details, null);
         ButterKnife.bind(this, mView);
         initView();
-        String id = "897";
-        fetchMagazineDetails(id);
+        magazineID = "391";
+        root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        fetchMagazineDetails(magazineID);
         return mView;
     }
 
@@ -68,9 +83,31 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     }
 
     private void fetchMagazineDetails(String id) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("post_id", id);
-        placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
+
+        try {
+            String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+            File file = new File(filePath);
+            if (file.exists()) {
+                String response = Util.readJsonFromSDCard(filePath);
+                response = response.replaceAll("\\\\", "");
+                System.out.println("Response::" + response);
+                Gson gson = new Gson();
+                JsonReader reader = new JsonReader(new StringReader(response));
+                reader.setLenient(true);
+                DetailsObject detailsObject = new Gson().fromJson(reader, DetailsObject.class);
+                mCategories = detailsObject.getCategories();
+                loadSectionListLyt();
+                loadSectionBreifListLyt(mCategories.get(0).getData());
+            } else if (Util.isNetworkOnline(getActivity())) {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("post_id", id);
+                placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
+//                new DownloadFileFromURL(magazineID).execute();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showToast("Error Parsing content");
+        }
     }
 
     // Array of Cards
@@ -149,8 +186,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         } else {
             author.setVisibility(View.GONE);
         }
-        if (data.getImage() != null && !data.getImage().isEmpty()) {
-            Picasso.with(getActivity()).load("imageUrl")
+        if (data.getImage() != null && !data.getImage().getUrl().isEmpty()) {
+            Picasso.with(getActivity()).load(data.getImage().getUrl())
                     .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
         } else {
             userImg.setVisibility(View.GONE);
@@ -290,11 +327,27 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         Log.d(TAG, "onAPIResponse Response::" + response);
         if (apiMethod.equals(APIMethods.MAGAZINE_DETAILS)) {
             DetailsObject detailsObject = (DetailsObject) response;
-            Util.saveJsonToSDCard(new Gson().toJson(detailsObject), "");
             mCategories = detailsObject.getCategories();
             loadSectionListLyt();
             loadSectionBreifListLyt(mCategories.get(0).getData());
         }
+//        saveJson(new Gson().toJson(response));
+    }
+
+    private void saveJson(String jsonData) {
+
+        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+        File parentFolder = new File(root + File.separator + "Outlook");
+        File subFolder = new File(root + File.separator + "Outlook/Magazines");
+        if (!parentFolder.exists()) {
+            parentFolder.mkdir();
+        }
+        if (!subFolder.exists()) {
+            subFolder.mkdir();
+        }
+        Log.d(TAG, "Storage Folder Path::" + parentFolder);
+        Log.d(TAG, "Storage File Path::" + filePath);
+        Util.saveJsonToSDCard(new Gson().toJson(jsonData), filePath);
     }
 
     @Override
@@ -302,5 +355,89 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         super.onErrorResponse(error, apiMethod);
         Log.d(TAG, "onAPIResponse APIMethod::" + apiMethod);
         Log.d(TAG, "onAPIResponse Error::" + error);
+    }
+
+    class DownloadFileFromURL extends AsyncTask<String, String, String> {
+
+        String mPath;
+
+        public DownloadFileFromURL(String fileName) {
+            this.mPath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+            File file = new File(mPath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            File parentFolder = new File(root + File.separator + "Outlook");
+            File subFolder = new File(root + File.separator + "Outlook/Magazines");
+            if (!parentFolder.exists()) {
+                parentFolder.mkdir();
+            }
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... id) {
+            int count;
+            try {
+                URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "/?post_id=" + magazineID);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+                // getting file length
+                int lenghtOfFile = connection.getContentLength();
+
+                // input stream to read file - with 8k buffer
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+
+                // Output stream to write file
+                OutputStream output = new FileOutputStream(mPath);
+//                Log.d("GalleryFragment", "DOWNLOAD Output Path::" + output.toString());
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                SessionManager.setDownloadFailed(getActivity(), true);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d(TAG, "Downloaded JSON Successfully::");
+            if (SessionManager.isDownloadFailed(getActivity())) {
+                stopDownload(mPath);
+            }
+        }
+    }
+
+    private void stopDownload(String mFileName) {
+        File imageFile = new File(mFileName);
+        imageFile.delete();
+        SessionManager.setDownloadFailed(getActivity(), false);
     }
 }

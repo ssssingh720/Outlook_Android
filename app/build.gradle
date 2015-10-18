@@ -12,11 +12,10 @@ android {
     }
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.app.outlook"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -25,6 +24,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
