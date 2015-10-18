@@ -27,7 +27,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
     private ArrayList<Magazine> data;
     private int width;
 
-    public OutlookGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data,int width) {
+    public OutlookGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data, int width) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -46,27 +46,27 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder = new ViewHolder();
             holder.image = (ImageView) row.findViewById(R.id.magazineImg);
             holder.dateTxt = (TextView) row.findViewById(R.id.dateTxt);
-            holder.headerLyt = (LinearLayout)row.findViewById(R.id.headerLyt);
+            holder.headerLyt = (LinearLayout) row.findViewById(R.id.headerLyt);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
         CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width- Util.dipToPixels(context, 40))/2);
-        lp.height = (int) (((width- Util.dipToPixels(context, 40))/2)*1.4);
+        lp.width = ((width - Util.dipToPixels(context, 40)) / 2);
+        lp.height = (int) (((width - Util.dipToPixels(context, 40)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);
 
         Magazine magazine = data.get(position);
         holder.image.setImageResource(magazine.getImage());
         holder.dateTxt.setText(magazine.getIssueDate());
-        if(position > 0 && data.get(position-1).getIssueDate().equals(magazine.getIssueDate())) {
+        if (position > 0 && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())) {
             holder.dateTxt.setText("");
         }
-        if(position > 1 && data.get(position-1).getIssueDate().equals(magazine.getIssueDate())
-                && data.get(position-2).getIssueDate().equals(magazine.getIssueDate())) {
+        if (position > 1 && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())
+                && data.get(position - 2).getIssueDate().equals(magazine.getIssueDate())) {
             holder.headerLyt.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.headerLyt.setVisibility(View.VISIBLE);
         }
 

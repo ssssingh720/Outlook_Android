@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.Magazine;
-import com.app.outlook.R;
 
 import java.util.ArrayList;
 
@@ -51,8 +51,8 @@ public class MagazineGridViewAdapter extends ArrayAdapter<Magazine> {
         }
 
         CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width- Util.dipToPixels(context, 40))/2);
-        lp.height = (int) (((width- Util.dipToPixels(context, 40))/2)*1.4);
+        lp.width = ((width - Util.dipToPixels(context, 40)) / 2);
+        lp.height = (int) (((width - Util.dipToPixels(context, 40)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);
 
         Magazine magazine = data.get(position);

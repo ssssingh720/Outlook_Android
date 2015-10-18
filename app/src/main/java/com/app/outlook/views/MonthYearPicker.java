@@ -1,7 +1,5 @@
 package com.app.outlook.views;
 
-import java.util.Calendar;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,6 +8,8 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.app.outlook.R;
+
+import java.util.Calendar;
 
 /**
  * Created by srajendrakumar on 24/09/15.
@@ -23,11 +23,11 @@ public class MonthYearPicker {
 
     private static int MAX_YEAR = 2099;
 
-    private static final String[] PICKER_DISPLAY_MONTHS_NAMES = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
-            "Nov", "Dec" };
+    private static final String[] PICKER_DISPLAY_MONTHS_NAMES = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+            "Nov", "Dec"};
 
-    private static final String[] MONTHS = new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September",
-            "October", "November", "December" };
+    private static final String[] MONTHS = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September",
+            "October", "November", "December"};
 
     private View view;
     private Activity activity;
@@ -40,8 +40,7 @@ public class MonthYearPicker {
     /**
      * Instantiates a new month year picker.
      *
-     * @param activity
-     *            the activity
+     * @param activity the activity
      */
     public MonthYearPicker(Activity activity) {
         this.activity = activity;
@@ -51,10 +50,8 @@ public class MonthYearPicker {
     /**
      * Builds the month year alert dialog.
      *
-     * @param positiveButtonListener
-     *            the positive listener
-     * @param negativeButtonListener
-     *            the negative listener
+     * @param positiveButtonListener the positive listener
+     * @param negativeButtonListener the negative listener
      */
     public void build(DialogInterface.OnClickListener positiveButtonListener, DialogInterface.OnClickListener negativeButtonListener) {
         this.build(-1, -1, positiveButtonListener, negativeButtonListener);
@@ -67,16 +64,12 @@ public class MonthYearPicker {
     /**
      * Builds the month year alert dialog.
      *
-     * @param selectedMonth
-     *            the selected month 0 to 11 (sets current moth if invalid
-     *            value)
-     * @param selectedYear
-     *            the selected year 1970 to 2099 (sets current year if invalid
-     *            value)
-     * @param positiveButtonListener
-     *            the positive listener
-     * @param negativeButtonListener
-     *            the negative listener
+     * @param selectedMonth          the selected month 0 to 11 (sets current moth if invalid
+     *                               value)
+     * @param selectedYear           the selected year 1970 to 2099 (sets current year if invalid
+     *                               value)
+     * @param positiveButtonListener the positive listener
+     * @param negativeButtonListener the negative listener
      */
     public void build(int selectedMonth, int selectedYear, DialogInterface.OnClickListener positiveButtonListener,
                       DialogInterface.OnClickListener negativeButtonListener) {
@@ -197,8 +190,7 @@ public class MonthYearPicker {
     /**
      * Sets the month value changed listener.
      *
-     * @param valueChangeListener
-     *            the new month value changed listener
+     * @param valueChangeListener the new month value changed listener
      */
     public void setMonthValueChangedListener(NumberPicker.OnValueChangeListener valueChangeListener) {
         monthNumberPicker.setOnValueChangedListener(valueChangeListener);
@@ -207,8 +199,7 @@ public class MonthYearPicker {
     /**
      * Sets the year value changed listener.
      *
-     * @param valueChangeListener
-     *            the new year value changed listener
+     * @param valueChangeListener the new year value changed listener
      */
     public void setYearValueChangedListener(NumberPicker.OnValueChangeListener valueChangeListener) {
         yearNumberPicker.setOnValueChangedListener(valueChangeListener);
@@ -217,8 +208,7 @@ public class MonthYearPicker {
     /**
      * Sets the month wrap selector wheel.
      *
-     * @param wrapSelectorWheel
-     *            the new month wrap selector wheel
+     * @param wrapSelectorWheel the new month wrap selector wheel
      */
     public void setMonthWrapSelectorWheel(boolean wrapSelectorWheel) {
         monthNumberPicker.setWrapSelectorWheel(wrapSelectorWheel);
@@ -227,8 +217,7 @@ public class MonthYearPicker {
     /**
      * Sets the year wrap selector wheel.
      *
-     * @param wrapSelectorWheel
-     *            the new year wrap selector wheel
+     * @param wrapSelectorWheel the new year wrap selector wheel
      */
     public void setYearWrapSelectorWheel(boolean wrapSelectorWheel) {
         yearNumberPicker.setWrapSelectorWheel(wrapSelectorWheel);

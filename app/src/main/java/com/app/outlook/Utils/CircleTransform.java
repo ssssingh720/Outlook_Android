@@ -1,14 +1,11 @@
 package com.app.outlook.Utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.squareup.picasso.Transformation;
 
@@ -20,11 +17,11 @@ public class CircleTransform implements Transformation {
 
     private int size = 0;
 
-    public CircleTransform(int size){
+    public CircleTransform(int size) {
         this.size = size;
     }
 
-    public CircleTransform(){
+    public CircleTransform() {
         this.size = 200;
     }
 

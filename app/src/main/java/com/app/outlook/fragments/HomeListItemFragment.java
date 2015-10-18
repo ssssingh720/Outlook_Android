@@ -43,8 +43,8 @@ public class HomeListItemFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView  = inflater.inflate(R.layout.fragment_list_item, container, false);
-        ButterKnife.bind(this,mView);
+        mView = inflater.inflate(R.layout.fragment_list_item, container, false);
+        ButterKnife.bind(this, mView);
 
         CarouselLinearLayout root = (CarouselLinearLayout) mView.findViewById(R.id.root);
         float scale = this.getArguments().getFloat("scale");
@@ -64,20 +64,20 @@ public class HomeListItemFragment extends BaseFragment {
         int width = size.x;
 
         CardView.LayoutParams lp = (CardView.LayoutParams) magazineImg.getLayoutParams();
-        lp.width = (width- Util.dipToPixels(getActivity(),150));
-        lp.height = (int) ((width- Util.dipToPixels(getActivity(), 150))*1.4);
+        lp.width = (width - Util.dipToPixels(getActivity(), 150));
+        lp.height = (int) ((width - Util.dipToPixels(getActivity(), 150)) * 1.4);
         magazineImg.setLayoutParams(lp);
 
-        magazine =new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), Magazine.class);
+        magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), Magazine.class);
 
-        Log.v("MyLog","id -- "+magazine.getId());
+        Log.v("MyLog", "id -- " + magazine.getId());
         magazineImg.setImageResource(magazine.getImage());
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(magazine.getId() == 1)
-                startActivity(new Intent(getActivity(), CategoryListingActivity.class));
+                if (magazine.getId() == 1)
+                    startActivity(new Intent(getActivity(), CategoryListingActivity.class));
             }
         });
 

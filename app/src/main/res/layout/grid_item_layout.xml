@@ -43,7 +43,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Medium Text"
         android:textSize="@dimen/text_big"
-        fontPath="fonts/Didot.ttf"
-        />
+        fontPath="fonts/Didot.ttf" />
 
 </LinearLayout>

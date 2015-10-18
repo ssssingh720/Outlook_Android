@@ -33,7 +33,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
         SharedPrefManager prefManager = SharedPrefManager.getInstance();
         prefManager.init(this);
         int theme = prefManager.getSharedDataInt(OutlookConstants.theme);
-        if(theme != 0)
+        if (theme != 0)
             setTheme(theme);
 
         super.onCreate(savedInstanceState);

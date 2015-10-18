@@ -1,17 +1,17 @@
 package com.app.outlook.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 
-import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.modal.IntentConstants;
-import com.app.outlook.modal.Magazine;
 import com.app.outlook.R;
 import com.app.outlook.fragments.HomeListFragment;
 import com.app.outlook.fragments.MagazineGridView;
+import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.OutlookConstants;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class HomeListingActivity extends AppBaseActivity {
     }
 
     @OnClick(R.id.gridView)
-    public void onGridviewClick(){
+    public void onGridviewClick() {
         changeFragment(magazineGridFragment);
 
         carouselView.setSelected(false);
@@ -88,17 +88,17 @@ public class HomeListingActivity extends AppBaseActivity {
     }
 
     @OnClick(R.id.carouselView)
-    public void onCarouselViewClick(){
+    public void onCarouselViewClick() {
         changeFragment(magazineListFragment);
 
         carouselView.setSelected(true);
         gridView.setSelected(false);
     }
 
-    private void changeFragment(Fragment fragment){
+    private void changeFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction()
-                .replace(R.id.contentPanel,fragment)
+                .replace(R.id.contentPanel, fragment)
                 .commit();
     }
 

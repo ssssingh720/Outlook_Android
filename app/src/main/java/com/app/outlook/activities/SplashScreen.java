@@ -2,7 +2,6 @@ package com.app.outlook.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.app.outlook.R;
@@ -32,12 +31,12 @@ public class SplashScreen extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
-        
+
         init();
     }
 
     private void init() {
-        logoAnimation = ObjectAnimator.ofFloat(imgLogo, "alpha", 0,0.25f, 0.5f, 0.75f, 1);
+        logoAnimation = ObjectAnimator.ofFloat(imgLogo, "alpha", 0, 0.25f, 0.5f, 0.75f, 1);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet = new AnimatorSet();
         animatorSet.playTogether(Glider.glide(Skill.CircEaseOut, 200, logoAnimation, new BaseEasingMethod.EasingListener() {
@@ -63,7 +62,7 @@ public class SplashScreen extends AppBaseActivity {
             public void onAnimationEnd(Animator animation) {
 //                startInitialCall();
                 finish();
-                startActivity(new Intent(SplashScreen.this,CategoryListingActivity.class));
+                startActivity(new Intent(SplashScreen.this, CategoryListingActivity.class));
             }
 
             @Override

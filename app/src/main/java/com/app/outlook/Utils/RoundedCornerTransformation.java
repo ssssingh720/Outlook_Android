@@ -12,7 +12,7 @@ import com.squareup.picasso.Transformation;
 /**
  * Created by Madhumita on 09-04-2015.
  */
-public class RoundedCornerTransformation implements Transformation{
+public class RoundedCornerTransformation implements Transformation {
     private final int radius;
     private final int margin;
 

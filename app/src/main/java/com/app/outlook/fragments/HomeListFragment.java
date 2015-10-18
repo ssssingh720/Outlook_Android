@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.outlook.R;
+import com.app.outlook.activities.HomeListingActivity;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
-import com.app.outlook.views.CirclePageIndicator;
 import com.app.outlook.views.CarouselLinearLayout;
-import com.app.outlook.activities.HomeListingActivity;
+import com.app.outlook.views.CirclePageIndicator;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class HomeListFragment extends BaseFragment {
                 cur = adapter.getRootView(position);
                 cur.setScaleBoth(HomeListingActivity.BIG_SCALE
                         - HomeListingActivity.DIFF_SCALE * positionOffset);
-                if (position < adapter.getCount()-1) {
+                if (position < adapter.getCount() - 1) {
                     next = adapter.getRootView(position + 1);
                     next.setScaleBoth(HomeListingActivity.SMALL_SCALE
                             + HomeListingActivity.DIFF_SCALE * positionOffset);
@@ -77,7 +77,7 @@ public class HomeListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_list,null);
+        mView = inflater.inflate(R.layout.fragment_list, null);
         ButterKnife.bind(this, mView);
         initView();
         return mView;

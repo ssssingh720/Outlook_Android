@@ -1,18 +1,15 @@
 package com.app.outlook.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.app.outlook.R;
 import com.app.outlook.activities.AppBaseActivity;
 import com.app.outlook.listener.ServerCallback;
 import com.app.outlook.manager.SessionManager;
@@ -28,7 +25,7 @@ import java.util.HashMap;
 /**
  * Created by srajendrakumar on 09/09/15.
  */
-public class BaseFragment extends Fragment implements ServerCallback{
+public class BaseFragment extends Fragment implements ServerCallback {
 
     protected View mView;
     private Toast mToast;

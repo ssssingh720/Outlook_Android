@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by srajendrakumar on 09/09/15.
  */
-public class Magazine implements Serializable{
+public class Magazine implements Serializable {
 
     private String name;
     private String desciption;

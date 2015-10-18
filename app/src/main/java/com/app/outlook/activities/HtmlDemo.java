@@ -2,14 +2,9 @@ package com.app.outlook.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.webkit.WebView;
 
 import com.app.outlook.R;
-import com.app.outlook.Utils.MyWebViewClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by srajendrakumar on 15/10/15.
@@ -35,7 +30,7 @@ public class HtmlDemo extends AppCompatActivity {
                 "</html>";
 
         data = stripHtml(data);
-        WebView webview = (WebView)this.findViewById(R.id.webview);
+        WebView webview = (WebView) this.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.loadData(data, "text/html", "UTF-8");
@@ -47,9 +42,10 @@ public class HtmlDemo extends AppCompatActivity {
 //        webview.loadData(data, "text/html", null);
 //        webview.setWebViewClient(new MyWebViewClient(this));
     }
+
     public String stripHtml(String html) {
 //        return Html.fromHtml(html).toString();
-        return html.replace("\\","");
+        return html.replace("\\", "");
     }
 
 }

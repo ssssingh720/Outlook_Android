@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.webkit.WebView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.app.outlook.R;
@@ -21,16 +22,24 @@ public class SectionDetailsFragment extends BaseFragment {
 
 
     @Bind(R.id.containerLyt)
-    LinearLayout containerLyt;
+    RelativeLayout containerLyt;
     @Bind(R.id.scrollView)
     ScrollView scrollView;
+    @Bind(R.id.webview)
+    WebView webview;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.fragment_section_details,null);
+        mView = inflater.inflate(R.layout.fragment_section_details, null);
         ButterKnife.bind(this, mView);
-        initView();
+        int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
+        String content = getArguments().getString(IntentConstants.WEB_CONTENT, "");
+        final String mimeType = "text/html";
+        final String encoding = "UTF-8";
+        webview.loadData(content, mimeType, encoding);
+//        initView();
         return mView;
     }
 
@@ -38,17 +47,17 @@ public class SectionDetailsFragment extends BaseFragment {
         int position = getArguments().getInt(IntentConstants.POSITION);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = null;
-        if(position%2 == 0){
-            v = inflater.inflate(R.layout.template_four,null);
-        }else{
-            v = inflater.inflate(R.layout.template_five,null);
+        if (position % 2 == 0) {
+            v = inflater.inflate(R.layout.template_four, null);
+        } else {
+            v = inflater.inflate(R.layout.template_five, null);
         }
 
         containerLyt.addView(v, 0);
     }
 
     @OnClick(R.id.goUp)
-    public void goUp(){
+    public void goUp() {
         scrollView.smoothScrollTo(0, 0);
     }
 }

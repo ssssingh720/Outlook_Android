@@ -12,13 +12,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -39,13 +39,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.app.outlook.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -62,7 +67,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Util {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private Util() {}
+
+    private Util() {
+    }
 
     public static final String LANGUAGE_CODE = Locale.getDefault().getLanguage().toLowerCase();
 
@@ -90,28 +97,30 @@ public class Util {
         return str_date;
 
     }
-    public static String unixTimetoDate(String unix_time){
-        long unix_seconds=Long.parseLong(unix_time, 10);
+
+    public static String unixTimetoDate(String unix_time) {
+        long unix_seconds = Long.parseLong(unix_time, 10);
         SimpleDateFormat dfDate = new SimpleDateFormat("ddMMMyy-HHmm");
         Date date = new Date(unix_seconds);
-        String date_time=null;
+        String date_time = null;
         dfDate.setTimeZone(TimeZone.getDefault());
-        date_time= dfDate.format(date);
+        date_time = dfDate.format(date);
         return date_time;
     }
-    public static String unixTimePushMsg(long unix_time){
-        String time="";
+
+    public static String unixTimePushMsg(long unix_time) {
+        String time = "";
         //long unix_seconds=Long.parseLong(unix_time, 10);
         SimpleDateFormat dfDate = new SimpleDateFormat("ddMMMyy-HHmm");
         Date date = new Date(unix_time);
 
-        String date_time=null;
+        String date_time = null;
         dfDate.setTimeZone(TimeZone.getDefault());
-        date_time= dfDate.format(date);
+        date_time = dfDate.format(date);
         if (date_time.contains("-")) {
             String[] dm_date_time = date_time.split("-");
             String date1 = dm_date_time[0];
-             time = dm_date_time[1];
+            time = dm_date_time[1];
         }
         return time;
     }
@@ -142,6 +151,7 @@ public class Util {
         }
         return "";
     }
+
     /**
      * get foreground activity
      */
@@ -158,7 +168,8 @@ public class Util {
         return topActivity;
 
     }
-    public static Bitmap getBitmapFromURL(String strURL,Context context) {
+
+    public static Bitmap getBitmapFromURL(String strURL, Context context) {
         try {
             URL url = new URL(strURL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -172,6 +183,7 @@ public class Util {
             return BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_back);
         }
     }
+
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
@@ -194,7 +206,8 @@ public class Util {
 
         return output;
     }
-    public static Bitmap getRoundedBitmap(Bitmap bitmap,int radius,int margin){
+
+    public static Bitmap getRoundedBitmap(Bitmap bitmap, int radius, int margin) {
 
         final Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -238,7 +251,7 @@ public class Util {
                 size += getFolderSize(file);
             }
         } else {
-            size=f.length();
+            size = f.length();
         }
         return size;
     }
@@ -659,7 +672,8 @@ public class Util {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
- public static boolean hideKeyboard(Activity activity) {
+
+    public static boolean hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View f = activity.getCurrentFocus();
         if (null != f && null != f.getWindowToken() && EditText.class.isAssignableFrom(f.getClass())) {
@@ -687,7 +701,7 @@ public class Util {
         mHour = cal.get(Calendar.HOUR_OF_DAY);
         mMinute = cal.get(Calendar.MINUTE);
         // String currentTime = Utils.updateTime(mHour, mMinute);
-        return mHour+mMinute+"";
+        return mHour + mMinute + "";
 
     }
 
@@ -708,6 +722,7 @@ public class Util {
         return currentDate;
 
     }
+
     /**
      * Change date format dd-MM-yyyy to dd-MMM-yyyy
      */
@@ -724,12 +739,13 @@ public class Util {
         return str_date;
 
     }
-    public static String getTime(){
+
+    public static String getTime() {
         Calendar cal;
         cal = Calendar.getInstance();
-        String timemili= cal.getTimeInMillis()+"";
-        String time=cal.getTime().toString();
-        Log.i("time",time+"::mili::"+timemili);
+        String timemili = cal.getTimeInMillis() + "";
+        String time = cal.getTime().toString();
+        Log.i("time", time + "::mili::" + timemili);
         return timemili;
     }
 
@@ -844,7 +860,7 @@ public class Util {
         return titleCase.toString();
     }
 
-    public static String getTimefromMilli(long millis){
+    public static String getTimefromMilli(long millis) {
 
         return String.format("%02d:%02d:%02d",
                 TimeUnit.MILLISECONDS.toHours(millis),
@@ -857,8 +873,115 @@ public class Util {
     public static String getFileSize(long size) {
         if (size <= 0)
             return "0";
-        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    //Params:
+    // jsonResponse: pass directly new Gson().fromJson here.
+    //path: Folder path to store json
+    public static void saveJsonToSDCard(String jsonResponse, String path) {
+        try {
+
+
+            File file = new File(path);
+            Log.d("BRAND", "write to sd card" + file);
+            if (file.exists())
+                file.delete();
+
+            file.createNewFile();
+            file.setReadable(true);
+            file.setExecutable(true);
+            file.setWritable(true);
+
+            Log.d("BRAND", "write to sd card");
+            FileOutputStream fOut = new FileOutputStream(file);
+            OutputStreamWriter myOutWriter =
+                    new OutputStreamWriter(fOut);
+            myOutWriter.append(jsonResponse);
+            myOutWriter.close();
+            fOut.close();
+        } catch (Exception e) {
+            Log.d("BRAND", "Exception" + e.toString());
+        }
+    }
+
+    //Params:
+    // path: Path  to the folder without "/"
+    //fileName: Name of the File
+    public static String readJsonFromSDCard(String path, String fileName) {
+
+        try {
+
+            File jsonPath = new File(path + File.separator + fileName);
+
+            if (jsonPath.exists()) {
+                FileInputStream fIn = new FileInputStream(jsonPath);
+                BufferedReader myReader = new BufferedReader(
+                        new InputStreamReader(fIn));
+
+                String aDataRow = "";
+                String aBuffer = "";
+                while ((aDataRow = myReader.readLine()) != null) {
+                    aBuffer += aDataRow + "\n";
+
+                }
+                Log.d("BRAND", "Buffer::" + aBuffer);
+
+                return aBuffer.toString();
+
+            } else {
+                Log.d("Utils", "File Not Found");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    //Params:
+    // thumbnailsPath: Path  to the folder without "/"
+    //thumbnailsImage: Name of the image
+    private void downloadImagesToSdCard(final File thumbnailsPath, final String thumbnailImage, Context context) {
+
+
+        Target mTarget = new Target() {
+
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                // Perform simple file operation to store this bitmap to your sd card
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        File file = new File(thumbnailsPath + "/" + thumbnailImage.replace("model_thumbnails/", ""));
+                        Log.d("Util", "File::" + file);
+                        try {
+                            file.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, ostream);
+                            ostream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                Log.d("Util", "onBitmapFailed::" + errorDrawable);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.d("Util", "onPrepareLoad::");
+            }
+        };
+
+        Picasso.with(context).load(Uri.parse("MEDIA_URL" + thumbnailImage)).into(mTarget);
     }
 }

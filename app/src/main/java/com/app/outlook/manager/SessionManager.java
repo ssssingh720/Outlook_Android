@@ -52,7 +52,7 @@ public class SessionManager {
      */
     public static void saveUserSession(Context context, int sessionType, String userFullName,
                                        String email, String password, String authToken, String UserID,
-                                       String dob, String imgUrl){
+                                       String dob, String imgUrl) {
         clearUserSession(context);
         mPref = context.getSharedPreferences(PREF_FILE_USERSESSION, Context.MODE_PRIVATE);
         mEditor = mPref.edit();

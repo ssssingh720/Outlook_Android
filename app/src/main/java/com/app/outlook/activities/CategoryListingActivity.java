@@ -26,7 +26,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class CategoryListingActivity extends AppBaseActivity{
+public class CategoryListingActivity extends AppBaseActivity {
 
     private ArrayList<Magazine> magazineList;
     private OutlookGridViewAdapter adapter;
@@ -50,8 +50,8 @@ public class CategoryListingActivity extends AppBaseActivity{
         display.getSize(size);
         int width = size.x;
 
-        magazineType = getIntent().getIntExtra(IntentConstants.TYPE,0);
-        adapter = new OutlookGridViewAdapter(this,R.layout.grid_item_two_layout,magazineList,width);
+        magazineType = getIntent().getIntExtra(IntentConstants.TYPE, 0);
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout, magazineList, width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
@@ -60,18 +60,18 @@ public class CategoryListingActivity extends AppBaseActivity{
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startActivity(new Intent(getBaseContext(), MagazineDetailsActivity.class));
+                startActivity(new Intent(getBaseContext(), MagazineDetailsActivity.class));
             }
         });
     }
 
     @OnClick(R.id.back)
-    public void onMBackClick(){
+    public void onMBackClick() {
         finish();
     }
 
     @OnClick(R.id.calendarImg)
-    public void onCalendaerClick(){
+    public void onCalendaerClick() {
         MonthYearPicker myp = new MonthYearPicker(CategoryListingActivity.this);
         myp.build(new DialogInterface.OnClickListener() {
 
