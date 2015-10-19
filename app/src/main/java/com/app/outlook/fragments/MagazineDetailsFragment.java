@@ -28,7 +28,6 @@ import com.app.outlook.manager.SessionManager;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
 import com.app.outlook.modal.DetailsObject;
-import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -78,7 +77,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details, null);
         ButterKnife.bind(this, mView);
         initView();
-        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+//        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+        magazineID = "391";
         root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
         fetchMagazineDetails(magazineID);
         return mView;
@@ -104,8 +104,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
     private void fetchMagazineDetails(String id) {
 
+        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
         try {
-            String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
             Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
@@ -118,6 +118,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 reader.setLenient(true);
                 DetailsObject detailsObject = new Gson().fromJson(reader, DetailsObject.class);
                 mCategories = detailsObject.getCategories();
+                loadToast.success();
                 loadSectionListLyt();
                 loadSectionBreifListLyt(mCategories.get(0).getData());
             } else if (Util.isNetworkOnline(getActivity())) {
@@ -125,7 +126,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showToast("Error Parsing content");
+            loadToast.error();
+            stopDownload(filePath);
+            showToast("Something went wrong. Try again later");
         }
     }
 
@@ -406,19 +409,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             if (SessionManager.isDownloadFailed(getActivity())) {
                 stopDownload(mPath);
             }
-            loadToast.success();
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Do something after 1 second
-                            fetchMagazineDetails(magazineID);
-                        }
-                    }, 1000);
-                }
-            });
+            fetchMagazineDetails(magazineID);
         }
     }
 
@@ -427,6 +418,18 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         imageFile.delete();
         SessionManager.setDownloadFailed(getActivity(), false);
         loadToast.error();
-        getActivity().finish();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 1 second
+                        getActivity().finish();
+                    }
+                }, 1000);
+            }
+        });
+
     }
 }
