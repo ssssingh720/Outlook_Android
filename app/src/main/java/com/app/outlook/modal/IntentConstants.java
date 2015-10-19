@@ -7,6 +7,7 @@ public class IntentConstants {
 
     public static String MAGAZINE_LIST = "magazineList";
     public static String MAGAZINE = "magazine";
+    public static String MAGAZINE_ID = "magazine_id";
     public static String TYPE = "type";
     public static String POSITION = "position";
     public final static String CARD_HOLDER_POSITION = "card_holder_position";
