@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:parallax_factor="1.9"
+        android:visibility="gone"
         tools:context=".MainActivity">
 
         <LinearLayout
@@ -31,9 +32,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/bottomLyt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:layout_marginTop="-45dp">
 
                 <LinearLayout

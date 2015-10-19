@@ -82,13 +82,6 @@ public class MagazineDetailsActivity extends AppBaseActivity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home_listing, menu);
-        return true;
-    }
-
     public ArrayList<String> getContent() {
         return mContent;
     }

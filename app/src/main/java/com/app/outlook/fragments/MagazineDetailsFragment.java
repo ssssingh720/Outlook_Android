@@ -1,14 +1,19 @@
 package com.app.outlook.fragments;
 
+import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
 import com.squareup.picasso.Picasso;
+
+import net.steamcrafted.loadtoast.LoadToast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -63,6 +70,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     int mSelectedCategory = 0;
     private String magazineID;
     private String root;
+    private LoadToast loadToast;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +85,17 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     }
 
     private void initView() {
+        loadToast = new LoadToast(getActivity());
+        loadToast.setText("Downloading...");
+        WindowManager wm = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        loadToast.setTranslationY(height/2);
+        loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
+                .setProgressColor(getResources().getColor(R.color.app_red));
         categoryIds = getResources().obtainTypedArray(R.array.categoryIds);
         cardIds = getResources().obtainTypedArray(R.array.cardIds);
         categoryIds.recycle();
@@ -90,6 +109,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
+                ((LinearLayout)mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
+                parallaxView.setVisibility(View.VISIBLE);
+
                 String response = Util.readJsonFromSDCard(filePath);
 //                response = response.replaceAll("\\\\", "");
                 System.out.println("Response::" + response);
@@ -138,10 +160,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         LinearLayout itemsLyt = (LinearLayout) cardView.findViewById(R.id.itemsLyt);
         LinearLayout subtitleLyt = (LinearLayout) cardView.findViewById(R.id.subtitleLyt);
         TextView txtTitle = (TextView) cardView.findViewById(R.id.txtTitle);
-        if (true) {
-            txtTitle.setText("");
+        if (!items.get(position).getTitle().isEmpty()) {
+            txtTitle.setText(items.get(position).getTitle());
         } else {
-            subtitleLyt.setVisibility(View.GONE);
+            txtTitle.setVisibility(View.GONE);
         }
 
         for (int i = 0; i < items.size(); i++) {
@@ -162,6 +184,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private View loadCardItem(View view, Item data) {
 
         TextView subtitle = (TextView) view.findViewById(R.id.subtitle);
+        LinearLayout subtitleLyt = (LinearLayout) view.findViewById(R.id.subtitleLyt);
         TextView sub_category_name = (TextView) view.findViewById(R.id.sub_category_name);
         TextView description = (TextView) view.findViewById(R.id.description);
         TextView author = (TextView) view.findViewById(R.id.author);
@@ -171,7 +194,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if (data.getSubtitle() != null && !data.getSubtitle().isEmpty()) {
             subtitle.setText("" + data.getSubtitle());
         } else {
-            subtitle.setVisibility(View.GONE);
+            subtitleLyt.setVisibility(View.GONE);
         }
         if (data.getSubCategoryName() != null && !data.getSubCategoryName().isEmpty()) {
             sub_category_name.setText("" + data.getSubCategoryName());
@@ -380,6 +403,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            loadToast.show();
             File parentFolder = new File(root + File.separator + "Outlook");
             File subFolder = new File(root + File.separator + "Outlook/Magazines");
             if (!parentFolder.exists()) {
@@ -441,7 +465,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             if (SessionManager.isDownloadFailed(getActivity())) {
                 stopDownload(mPath);
             }
+
             fetchMagazineDetails(magazineID);
+
+            loadToast.success();
         }
     }
 
@@ -449,5 +476,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         File imageFile = new File(mFileName);
         imageFile.delete();
         SessionManager.setDownloadFailed(getActivity(), false);
+        loadToast.error();
+        getActivity().finish();
     }
 }
