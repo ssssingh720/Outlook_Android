@@ -103,7 +103,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 HashMap<String, String> params = new HashMap<>();
                 params.put("post_id", id);
                 placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
-//                new DownloadFileFromURL(magazineID).execute();
+                new DownloadFileFromURL(magazineID).execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,6 +394,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "/?post_id=" + magazineID);
+                Log.d(TAG,"Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
