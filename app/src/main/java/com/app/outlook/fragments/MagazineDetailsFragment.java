@@ -86,10 +86,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
         try {
             String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+            Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
                 String response = Util.readJsonFromSDCard(filePath);
-                response = response.replaceAll("\\\\", "");
+//                response = response.replaceAll("\\\\", "");
                 System.out.println("Response::" + response);
                 Gson gson = new Gson();
                 JsonReader reader = new JsonReader(new StringReader(response));
@@ -186,12 +187,18 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         } else {
             author.setVisibility(View.GONE);
         }
-        if (data.getImage() != null && !data.getImage().getUrl().isEmpty()) {
-            Picasso.with(getActivity()).load(data.getImage().getUrl())
+        if (data.getImage() != null && !data.getImage().isEmpty()) {
+            Picasso.with(getActivity()).load(data.getImage())
                     .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
         } else {
             userImg.setVisibility(View.GONE);
         }
+//        if (data.getImage() != null && !data.getImage().getUrl().isEmpty()) {
+//            Picasso.with(getActivity()).load(data.getImage().getUrl())
+//                    .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
+//        } else {
+//            userImg.setVisibility(View.GONE);
+//        }
 
         return view;
     }
