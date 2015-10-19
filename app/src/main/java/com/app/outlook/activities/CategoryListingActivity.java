@@ -90,7 +90,14 @@ public class CategoryListingActivity extends AppBaseActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getBaseContext(), MagazineDetailsActivity.class));
+                Magazine magazine = adapter.getItem(position);
+                String postID = magazine.getPostId();
+                if(postID!=null) {
+                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+                    intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
+                    startActivity(intent);
+                }
+
             }
         });
 
