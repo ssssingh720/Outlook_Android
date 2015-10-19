@@ -4,6 +4,7 @@ import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,9 +101,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 loadSectionListLyt();
                 loadSectionBreifListLyt(mCategories.get(0).getData());
             } else if (Util.isNetworkOnline(getActivity())) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("post_id", id);
-                placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
+//                HashMap<String, String> params = new HashMap<>();
+//                params.put("post_id", id);
+//                placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
                 new DownloadFileFromURL(magazineID).execute();
             }
         } catch (Exception e) {
@@ -178,7 +179,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             sub_category_name.setVisibility(View.GONE);
         }
         if (data.getDescription() != null && !data.getDescription().isEmpty()) {
-            description.setText("" + data.getDescription());
+            description.setText("" + Html.fromHtml(data.getDescription()));
         } else {
             description.setVisibility(View.GONE);
         }
@@ -440,6 +441,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             if (SessionManager.isDownloadFailed(getActivity())) {
                 stopDownload(mPath);
             }
+            fetchMagazineDetails(magazineID);
         }
     }
 
