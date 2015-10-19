@@ -28,6 +28,7 @@ import com.app.outlook.manager.SessionManager;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
 import com.app.outlook.modal.DetailsObject;
+import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -77,7 +78,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details, null);
         ButterKnife.bind(this, mView);
         initView();
-//        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+        if (getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
+
+        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+        }else {
+            showToast("Sorry!! Unable to load magazine");
+        }
         magazineID = "391";
         root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
         fetchMagazineDetails(magazineID);
