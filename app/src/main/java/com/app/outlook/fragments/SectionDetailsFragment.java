@@ -36,7 +36,8 @@ public class SectionDetailsFragment extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_section_details, null);
         ButterKnife.bind(this, mView);
         int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
-        String content = getArguments().getString(IntentConstants.WEB_CONTENT, "");
+        String content = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
+//        String content = getArguments().getString(IntentConstants.WEB_CONTENT, "");
         final String mimeType = "text/html";
         final String encoding = "UTF-8";
 //        webview.getSettings().setUseWideViewPort(false);
@@ -44,8 +45,8 @@ public class SectionDetailsFragment extends BaseFragment {
         webview.getSettings().setUseWideViewPort(true);
 //        webview.setInitialScale((int) (100*webview.getScale()));
 //        webview.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
-        webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webview.setScrollbarFadingEnabled(true);
+//        webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+//        webview.setScrollbarFadingEnabled(true);
         webview.loadData(content, mimeType, encoding);
 //        initView();
         return mView;

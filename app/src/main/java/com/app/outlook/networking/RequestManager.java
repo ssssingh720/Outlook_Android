@@ -136,13 +136,10 @@ public class RequestManager<T> {
 
 
         jsObjRequest.setTag("GN");
-        int socketTimeout = 30000;//30 seconds
+        int socketTimeout = 60000;//60 seconds
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsObjRequest.setRetryPolicy(policy);
-
-
         addToRequestQueue(jsObjRequest);
-
     }
 
     private String createGetWithParams(String url, HashMap<String, String> params) {
