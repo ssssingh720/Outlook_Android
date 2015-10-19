@@ -79,11 +79,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         ButterKnife.bind(this, mView);
         initView();
         if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
-            magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+            magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
         } else {
             showToast("Sorry!! Unable to load magazine");
+            getActivity().finish();
+            return mView;
         }
-        magazineID = "391";
         root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
         fetchMagazineDetails(magazineID);
         return mView;

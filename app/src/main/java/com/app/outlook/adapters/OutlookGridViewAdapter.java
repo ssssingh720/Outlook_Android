@@ -87,6 +87,11 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         return row;
     }
 
+    @Override
+    public Magazine getItem(int position) {
+        return data.get(position);
+    }
+
     static class ViewHolder {
         TextView dateTxt;
         ImageView image;

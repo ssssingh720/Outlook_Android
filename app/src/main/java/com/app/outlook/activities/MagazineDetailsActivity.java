@@ -51,6 +51,10 @@ public class MagazineDetailsActivity extends AppBaseActivity {
                 });
 
         magazineDetailsFragment = new MagazineDetailsFragment();
+        String magazineID = getIntent().getStringExtra(IntentConstants.MAGAZINE_ID);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
+        magazineDetailsFragment.setArguments(bundle);
         changeFragment(magazineDetailsFragment, false);
     }
 
