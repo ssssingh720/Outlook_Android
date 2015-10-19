@@ -116,7 +116,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             File file = new File(filePath);
             if (file.exists()) {
                 parallaxView.setVisibility(View.VISIBLE);
-//                ((LinearLayout) mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
+                ((LinearLayout) mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
                 String response = Util.readJsonFromSDCard(filePath);
                 System.out.println("Response::" + response);
                 JsonReader reader = new JsonReader(new StringReader(response));
@@ -214,7 +214,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
         if (data.getImage() != null && !data.getImage().isEmpty()) {
             Picasso.with(getActivity()).load(data.getImage())
-                    .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
+                    .fit().centerCrop().into(userImg);
         } else {
             userImg.setVisibility(View.GONE);
         }
