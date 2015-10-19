@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:padding="16dp"
     android:gravity="center"
+    android:id="@+id/bottom_holder"
     android:background="@color/cool_grey"
     android:layout_height="match_parent">
 

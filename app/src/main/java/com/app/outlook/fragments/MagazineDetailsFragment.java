@@ -64,6 +64,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     LinearLayout sectionBreifListLyt;
     @Bind(R.id.parallaxView)
     ParallaxScrollView parallaxView;
+    @Bind(R.id.bottom_holder)
+    LinearLayout mBottomHolder;
+
     TypedArray categoryIds;
     TypedArray cardIds;
     List<Category> mCategories = new ArrayList<>();
@@ -140,6 +143,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
     // Array of Cards
     private void loadSectionBreifListLyt(List<Data> data) {
+        if(data.isEmpty()){
+            mBottomHolder.setVisibility(View.GONE);
+        }
         removeAllSectionBreifListLyt();
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
