@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.Display;
@@ -19,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
@@ -28,6 +28,7 @@ import com.app.outlook.manager.SessionManager;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
 import com.app.outlook.modal.DetailsObject;
+import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -45,7 +46,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -78,6 +78,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details, null);
         ButterKnife.bind(this, mView);
         initView();
+        if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
+            magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+        } else {
+            showToast("Sorry!! Unable to load magazine");
+        }
         magazineID = "391";
         root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
         fetchMagazineDetails(magazineID);
@@ -93,7 +98,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-        loadToast.setTranslationY(height/2);
+        loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
                 .setProgressColor(getResources().getColor(R.color.app_red));
         categoryIds = getResources().obtainTypedArray(R.array.categoryIds);
@@ -104,33 +109,31 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
     private void fetchMagazineDetails(String id) {
 
+        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
         try {
-            String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
-            Log.d(TAG,"Magazine Path::" + filePath);
+            Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
-                ((LinearLayout)mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
+                ((LinearLayout) mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
                 parallaxView.setVisibility(View.VISIBLE);
 
                 String response = Util.readJsonFromSDCard(filePath);
-//                response = response.replaceAll("\\\\", "");
                 System.out.println("Response::" + response);
-                Gson gson = new Gson();
                 JsonReader reader = new JsonReader(new StringReader(response));
                 reader.setLenient(true);
                 DetailsObject detailsObject = new Gson().fromJson(reader, DetailsObject.class);
                 mCategories = detailsObject.getCategories();
+                loadToast.success();
                 loadSectionListLyt();
                 loadSectionBreifListLyt(mCategories.get(0).getData());
             } else if (Util.isNetworkOnline(getActivity())) {
-//                HashMap<String, String> params = new HashMap<>();
-//                params.put("post_id", id);
-//                placeRequest(APIMethods.MAGAZINE_DETAILS, DetailsObject.class, params);
                 new DownloadFileFromURL(magazineID).execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showToast("Error Parsing content");
+            loadToast.error();
+            stopDownload(filePath);
+            showToast("Something went wrong. Try again later");
         }
     }
 
@@ -151,14 +154,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 contents.add(data.get(j).getItem().get(k).getContent());
             }
         }
-
         ((MagazineDetailsActivity) getActivity()).setContent(contents);
     }
 
     private void loadCardView(View cardView, int position, ArrayList<Item> items) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         LinearLayout itemsLyt = (LinearLayout) cardView.findViewById(R.id.itemsLyt);
-        LinearLayout subtitleLyt = (LinearLayout) cardView.findViewById(R.id.subtitleLyt);
         TextView txtTitle = (TextView) cardView.findViewById(R.id.txtTitle);
         if (!items.get(position).getTitle().isEmpty()) {
             txtTitle.setText(items.get(position).getTitle());
@@ -217,13 +218,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         } else {
             userImg.setVisibility(View.GONE);
         }
-//        if (data.getImage() != null && !data.getImage().getUrl().isEmpty()) {
-//            Picasso.with(getActivity()).load(data.getImage().getUrl())
-//                    .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
-//        } else {
-//            userImg.setVisibility(View.GONE);
-//        }
-
         return view;
     }
 
@@ -338,54 +332,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
             }
         } else if (tags[0].equals("card")) {
-            for (int i = 0; i < tags.length; i++) {
-                Log.d("MagazineDetails", "Tags::" + tags[i]);
-            }
-            Toast.makeText(getActivity(), tags[2] + " Item", Toast.LENGTH_SHORT).show();
             openSectionDetails(Integer.parseInt(tags[1]), Integer.parseInt(tags[2]));
         }
     }
 
     private void openSectionDetails(int cardPosition, int item) {
         ((MagazineDetailsActivity) getActivity()).openSectionDetails(cardPosition, item);
-    }
-
-
-    @Override
-    public void onAPIResponse(Object response, String apiMethod) {
-        super.onAPIResponse(response, apiMethod);
-        Log.d(TAG, "onAPIResponse APIMethod::" + apiMethod);
-        Log.d(TAG, "onAPIResponse Response::" + response);
-        if (apiMethod.equals(APIMethods.MAGAZINE_DETAILS)) {
-            DetailsObject detailsObject = (DetailsObject) response;
-            mCategories = detailsObject.getCategories();
-            loadSectionListLyt();
-            loadSectionBreifListLyt(mCategories.get(0).getData());
-        }
-//        saveJson(new Gson().toJson(response));
-    }
-
-    private void saveJson(String jsonData) {
-
-        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
-        File parentFolder = new File(root + File.separator + "Outlook");
-        File subFolder = new File(root + File.separator + "Outlook/Magazines");
-        if (!parentFolder.exists()) {
-            parentFolder.mkdir();
-        }
-        if (!subFolder.exists()) {
-            subFolder.mkdir();
-        }
-        Log.d(TAG, "Storage Folder Path::" + parentFolder);
-        Log.d(TAG, "Storage File Path::" + filePath);
-        Util.saveJsonToSDCard(new Gson().toJson(jsonData), filePath);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error, String apiMethod) {
-        super.onErrorResponse(error, apiMethod);
-        Log.d(TAG, "onAPIResponse APIMethod::" + apiMethod);
-        Log.d(TAG, "onAPIResponse Error::" + error);
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -419,7 +371,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "/?post_id=" + magazineID);
-                Log.d(TAG,"Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
@@ -430,7 +381,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
                 // Output stream to write file
                 OutputStream output = new FileOutputStream(mPath);
-//                Log.d("GalleryFragment", "DOWNLOAD Output Path::" + output.toString());
 
                 byte data[] = new byte[1024];
 
@@ -461,14 +411,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.d(TAG, "Downloaded JSON Successfully::");
             if (SessionManager.isDownloadFailed(getActivity())) {
                 stopDownload(mPath);
             }
-
             fetchMagazineDetails(magazineID);
-
-            loadToast.success();
         }
     }
 
@@ -477,6 +423,17 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         imageFile.delete();
         SessionManager.setDownloadFailed(getActivity(), false);
         loadToast.error();
-        getActivity().finish();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 1 second
+                        getActivity().finish();
+                    }
+                }, 1000);
+            }
+        });
     }
 }
