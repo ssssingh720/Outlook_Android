@@ -51,8 +51,8 @@ public class HomeListingActivity extends AppBaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         carouselView.setSelected(true);
-        loadDummyData();
-        loadFragments();
+//        loadDummyData();
+//        loadFragments();
 
 
     }
@@ -102,44 +102,6 @@ public class HomeListingActivity extends AppBaseActivity {
                 .commit();
     }
 
-    private void loadDummyData() {
 
-        magazineList = new ArrayList<>();
-        Magazine m1 = new Magazine();
-        m1.setName("OUTLOOK");
-        m1.setDesciption("Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut");
-        m1.setId(1);
-        m1.setImage(R.drawable.outlook_coverpage);
-        magazineList.add(m1);
-
-        Magazine m2 = new Magazine();
-        m2.setName("TRAVELLER");
-        m2.setDesciption("Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut");
-        m2.setId(2);
-        m2.setImage(R.drawable.outlook_traveller_dummy2);
-        magazineList.add(m2);
-
-        Magazine m3 = new Magazine();
-        m3.setName("MONEY");
-        m3.setDesciption("Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut");
-        m3.setId(3);
-        m3.setImage(R.drawable.outlook_traveller_dummy3);
-        magazineList.add(m3);
-
-        Magazine m4 = new Magazine();
-        m4.setName("HINDI");
-        m4.setDesciption("Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut");
-        m4.setId(4);
-        m4.setImage(R.drawable.outlook_traveller_dummy4);
-        magazineList.add(m4);
-
-        Magazine m5 = new Magazine();
-        m5.setName("BUSINESS");
-        m5.setDesciption("Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut");
-        m5.setId(5);
-        m5.setImage(R.drawable.outlook_traveller_dummy5);
-        magazineList.add(m5);
-
-    }
 
 }

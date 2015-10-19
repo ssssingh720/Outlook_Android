@@ -57,7 +57,7 @@ public class MagazineGridViewAdapter extends ArrayAdapter<Magazine> {
 
         Magazine magazine = data.get(position);
         holder.imageTitle.setText(magazine.getName());
-        holder.image.setImageResource(magazine.getImage());
+//        holder.image.setImageResource(magazine.getImage());
 
         return row;
     }

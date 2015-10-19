@@ -70,8 +70,8 @@ public class HomeListItemFragment extends BaseFragment {
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), Magazine.class);
 
-        Log.v("MyLog", "id -- " + magazine.getId());
-        magazineImg.setImageResource(magazine.getImage());
+//        Log.v("MyLog", "id -- " + magazine.getId());
+//        magazineImg.setImageResource(magazine.getImage());
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override

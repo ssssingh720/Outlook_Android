@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.Magazine;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.image = (ImageView) row.findViewById(R.id.magazineImg);
             holder.dateTxt = (TextView) row.findViewById(R.id.dateTxt);
             holder.headerLyt = (LinearLayout) row.findViewById(R.id.headerLyt);
+            holder.mainLyt = (LinearLayout) row.findViewById(R.id.mainLyt);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -58,17 +60,29 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         holder.image.setLayoutParams(lp);
 
         Magazine magazine = data.get(position);
-        holder.image.setImageResource(magazine.getImage());
-        holder.dateTxt.setText(magazine.getIssueDate());
-        if (position > 0 && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())) {
-            holder.dateTxt.setText("");
-        }
-        if (position > 1 && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())
-                && data.get(position - 2).getIssueDate().equals(magazine.getIssueDate())) {
-            holder.headerLyt.setVisibility(View.GONE);
+        if (magazine.getPostId() == null) {
+            holder.mainLyt.setVisibility(View.GONE);
+            return row;
         } else {
-            holder.headerLyt.setVisibility(View.VISIBLE);
+            holder.mainLyt.setVisibility(View.VISIBLE);
+            Picasso.with(context).load(magazine.getImage())
+                    .placeholder(R.color.cool_grey).fit().centerCrop().into(holder.image);
+
+            holder.dateTxt.setText(magazine.getIssueDate());
+            if (position > 0 && data.get(position - 1).getIssueDate() != null
+                    && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())) {
+                holder.dateTxt.setText("");
+            }
+            if (position > 1 && data.get(position - 1).getIssueDate() != null
+                    && data.get(position - 2).getIssueDate() != null
+                    && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())
+                    && data.get(position - 2).getIssueDate().equals(magazine.getIssueDate())) {
+                holder.headerLyt.setVisibility(View.GONE);
+            } else {
+                holder.headerLyt.setVisibility(View.VISIBLE);
+            }
         }
+
 
         return row;
     }
@@ -76,6 +90,6 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
     static class ViewHolder {
         TextView dateTxt;
         ImageView image;
-        LinearLayout headerLyt;
+        LinearLayout headerLyt, mainLyt;
     }
 }

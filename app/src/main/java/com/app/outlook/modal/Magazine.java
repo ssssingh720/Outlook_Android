@@ -9,9 +9,10 @@ public class Magazine implements Serializable {
 
     private String name;
     private String desciption;
-    private int image;
+    private String image;
     private int id;
     private String issueDate;
+    private String postId;
 
     public String getName() {
         return name;
@@ -29,11 +30,11 @@ public class Magazine implements Serializable {
         this.desciption = desciption;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -52,5 +53,13 @@ public class Magazine implements Serializable {
 
     public void setIssueDate(String issueDate) {
         this.issueDate = issueDate;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 }

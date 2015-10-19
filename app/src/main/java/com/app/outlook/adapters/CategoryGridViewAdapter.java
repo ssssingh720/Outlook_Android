@@ -47,7 +47,7 @@ public class CategoryGridViewAdapter extends ArrayAdapter<Magazine> {
         }
 
         Magazine magazine = data.get(position);
-        holder.image.setImageResource(magazine.getImage());
+//        holder.image.setImageResource(magazine.getImage());
         holder.dateTxt.setText(magazine.getIssueDate());
 
         return row;
