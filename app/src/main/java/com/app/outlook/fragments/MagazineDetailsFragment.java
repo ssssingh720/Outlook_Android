@@ -78,10 +78,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         mView = inflater.inflate(R.layout.fragment_magazine_details, null);
         ButterKnife.bind(this, mView);
         initView();
-        if (getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
-
-        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
-        }else {
+        if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
+            magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "391");
+        } else {
             showToast("Sorry!! Unable to load magazine");
         }
         magazineID = "391";
@@ -436,6 +435,5 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 }, 1000);
             }
         });
-
     }
 }
