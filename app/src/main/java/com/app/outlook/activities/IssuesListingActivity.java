@@ -50,7 +50,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class CategoryListingActivity extends AppBaseActivity {
+public class IssuesListingActivity extends AppBaseActivity {
 
     private static final String TAG = "CategoryListingActivity";
     private OutlookGridViewAdapter adapter;
@@ -111,7 +111,7 @@ public class CategoryListingActivity extends AppBaseActivity {
 
     @OnClick(R.id.calendarImg)
     public void onCalendaerClick() {
-        MonthYearPicker myp = new MonthYearPicker(CategoryListingActivity.this);
+        MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
         myp.build(new DialogInterface.OnClickListener() {
 
             @Override
@@ -148,7 +148,7 @@ public class CategoryListingActivity extends AppBaseActivity {
                 animationAlphaAdapter.setAbsListView(gridView);
                 gridView.setAdapter(animationAlphaAdapter);
 
-            } else if (Util.isNetworkOnline(CategoryListingActivity.this)) {
+            } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
                 new DownloadFileFromURL(issueYear).execute();
             }
         } catch (Exception e) {
@@ -331,8 +331,8 @@ public class CategoryListingActivity extends AppBaseActivity {
                 Magazine magazine = new Magazine();
                 magazine.setName(weeklyIssueVo.getDisplayName());
                 magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("DECEMBER,"+issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0)+"");
+                magazine.setIssueDate("DECEMBER," + issueYear);
+                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
                 months.add(magazine);
             }
         }
@@ -407,7 +407,7 @@ public class CategoryListingActivity extends AppBaseActivity {
                 input.close();
 
             } catch (Exception e) {
-                SessionManager.setDownloadFailed(CategoryListingActivity.this, true);
+                SessionManager.setDownloadFailed(IssuesListingActivity.this, true);
             }
 
             return null;
@@ -417,7 +417,7 @@ public class CategoryListingActivity extends AppBaseActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d(TAG, "Downloaded JSON Successfully::");
-            if (SessionManager.isDownloadFailed(CategoryListingActivity.this)) {
+            if (SessionManager.isDownloadFailed(IssuesListingActivity.this)) {
                 stopDownload(mPath);
             }
             fetchIssueList();
@@ -428,7 +428,7 @@ public class CategoryListingActivity extends AppBaseActivity {
     private void stopDownload(String mFileName) {
         File imageFile = new File(mFileName);
         imageFile.delete();
-        SessionManager.setDownloadFailed(CategoryListingActivity.this, false);
+        SessionManager.setDownloadFailed(IssuesListingActivity.this, false);
         loadToast.error();
         finish();
     }

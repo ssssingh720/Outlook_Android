@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.app.outlook.R;
-import com.app.outlook.activities.CategoryListingActivity;
+import com.app.outlook.activities.IssuesListingActivity;
 import com.app.outlook.adapters.MagazineGridViewAdapter;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
@@ -64,7 +64,7 @@ public class MagazineGridView extends BaseFragment {
                     SharedPrefManager prefManager = SharedPrefManager.getInstance();
                     prefManager.init(getActivity());
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
-                    startActivity(new Intent(getActivity(), CategoryListingActivity.class));
+                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
                 }
 //                if(position == 1) {
 //                    SharedPrefManager prefManager = SharedPrefManager.getInstance();
