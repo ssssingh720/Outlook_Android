@@ -74,5 +74,5 @@
         android:paddingRight="15dp"
         android:scrollbars="none"
         android:visibility="gone"
-        android:verticalSpacing="25dp"></GridView>
+        android:verticalSpacing="10dp"></GridView>
 </RelativeLayout>

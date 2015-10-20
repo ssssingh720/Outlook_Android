@@ -79,7 +79,7 @@ public class IssuesListingActivity extends AppBaseActivity {
         int width = size.x;
 
         loadToast = new LoadToast(this);
-        loadToast.setText("Downloading...");
+        loadToast.setText("Loading...");
         int height = size.y;
         loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
@@ -92,7 +92,7 @@ public class IssuesListingActivity extends AppBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
-                if(postID!=null) {
+                if (postID != null) {
                     Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
                     intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
                     startActivity(intent);
@@ -128,25 +128,8 @@ public class IssuesListingActivity extends AppBaseActivity {
             String filePath = root + File.separator + "Outlook/Magazines/issues-" + issueYear + ".json";
             Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
-            if (file.exists()) {
-                gridView.setVisibility(View.VISIBLE);
-                String response = Util.readJsonFromSDCard(filePath);
-                System.out.println("Response::" + response);
-                JsonReader reader = new JsonReader(new StringReader(response));
-                reader.setLenient(true);
-
-                Type listType = new TypeToken<ArrayList<IssuesVo>>() {}.getType();
-                ArrayList<IssuesVo> issuesVo = new Gson().fromJson(reader, listType);
-
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-                adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(issuesVo.get(0).getAcf()), width);
-                SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
-                AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
-                animationAlphaAdapter.setAbsListView(gridView);
-                gridView.setAdapter(animationAlphaAdapter);
+            if (!Util.isNetworkOnline(IssuesListingActivity.this) && file.exists()) {
+                loadGridView(filePath);
 
             } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
                 new DownloadFileFromURL(issueYear).execute();
@@ -155,6 +138,27 @@ public class IssuesListingActivity extends AppBaseActivity {
             e.printStackTrace();
             showToast("Error Parsing content");
         }
+    }
+
+    private void loadGridView(String filePath){
+        gridView.setVisibility(View.VISIBLE);
+        String response = Util.readJsonFromSDCard(filePath);
+        System.out.println("Response::" + response);
+        JsonReader reader = new JsonReader(new StringReader(response));
+        reader.setLenient(true);
+
+        Type listType = new TypeToken<ArrayList<IssuesVo>>() {}.getType();
+        ArrayList<IssuesVo> issuesVo = new Gson().fromJson(reader, listType);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(issuesVo.get(0).getAcf()), width);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
+        animationAlphaAdapter.setAbsListView(gridView);
+        gridView.setAdapter(animationAlphaAdapter);
     }
 
     private ArrayList<Magazine> getMonthList(Acf acf){
@@ -420,7 +424,7 @@ public class IssuesListingActivity extends AppBaseActivity {
             if (SessionManager.isDownloadFailed(IssuesListingActivity.this)) {
                 stopDownload(mPath);
             }
-            fetchIssueList();
+            loadGridView(mPath);
             loadToast.success();
         }
     }
