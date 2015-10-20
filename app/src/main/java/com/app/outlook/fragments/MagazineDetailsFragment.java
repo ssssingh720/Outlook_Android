@@ -118,9 +118,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
-                ((LinearLayout) mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
                 parallaxView.setVisibility(View.VISIBLE);
-
+                ((LinearLayout) mView.findViewById(R.id.bottomLyt)).setVisibility(View.VISIBLE);
                 String response = Util.readJsonFromSDCard(filePath);
                 System.out.println("Response::" + response);
                 JsonReader reader = new JsonReader(new StringReader(response));
@@ -221,7 +220,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
         if (data.getImage() != null && !data.getImage().isEmpty()) {
             Picasso.with(getActivity()).load(data.getImage())
-                    .placeholder(R.drawable.dummy_12).fit().centerCrop().into(userImg);
+                    .fit().centerCrop().into(userImg);
         } else {
             userImg.setVisibility(View.GONE);
         }
@@ -256,6 +255,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 i++;
             }
         }
+
     }
 
     @OnClick(R.id.goUp)
@@ -270,7 +270,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         String[] tags = tag.split(",");
 
         if (tags[0].equals("category")) {
-            Toast.makeText(getActivity(), tags[1] + " Position", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), tags[1] + " Position", Toast.LENGTH_SHORT).show();
             mSelectedCategory = Integer.parseInt(tags[1]);
             switch (Integer.parseInt(tags[1])) {
                 case 0:

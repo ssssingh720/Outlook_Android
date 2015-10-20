@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.CategoryListingActivity"
+        <activity android:name=".activities.IssuesListingActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.MagazineDetailsActivity"
             android:screenOrientation="portrait"/>

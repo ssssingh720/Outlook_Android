@@ -34,6 +34,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:paddingRight="10dp"
+                    android:visibility="gone"
                     android:src="@drawable/icon_back" />
 
                 <ImageView
@@ -54,6 +55,7 @@
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
+                android:visibility="gone"
                 android:src="@drawable/icon_calendar" />
         </RelativeLayout>
 
@@ -72,5 +74,5 @@
         android:paddingRight="15dp"
         android:scrollbars="none"
         android:visibility="gone"
-        android:verticalSpacing="25dp"></GridView>
+        android:verticalSpacing="10dp"></GridView>
 </RelativeLayout>

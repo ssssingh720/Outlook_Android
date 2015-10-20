@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
-import com.app.outlook.activities.CategoryListingActivity;
+import com.app.outlook.activities.IssuesListingActivity;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.views.CarouselLinearLayout;
@@ -77,7 +77,7 @@ public class HomeListItemFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (magazine.getId() == 1)
-                    startActivity(new Intent(getActivity(), CategoryListingActivity.class));
+                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
             }
         });
 

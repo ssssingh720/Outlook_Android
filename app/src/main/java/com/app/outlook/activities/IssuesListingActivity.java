@@ -50,7 +50,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class CategoryListingActivity extends AppBaseActivity {
+public class IssuesListingActivity extends AppBaseActivity {
 
     private static final String TAG = "CategoryListingActivity";
     private OutlookGridViewAdapter adapter;
@@ -79,7 +79,7 @@ public class CategoryListingActivity extends AppBaseActivity {
         int width = size.x;
 
         loadToast = new LoadToast(this);
-        loadToast.setText("Downloading...");
+        loadToast.setText("Loading...");
         int height = size.y;
         loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
@@ -92,7 +92,7 @@ public class CategoryListingActivity extends AppBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
-                if(postID!=null) {
+                if (postID != null) {
                     Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
                     intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
                     startActivity(intent);
@@ -111,7 +111,7 @@ public class CategoryListingActivity extends AppBaseActivity {
 
     @OnClick(R.id.calendarImg)
     public void onCalendaerClick() {
-        MonthYearPicker myp = new MonthYearPicker(CategoryListingActivity.this);
+        MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
         myp.build(new DialogInterface.OnClickListener() {
 
             @Override
@@ -128,33 +128,37 @@ public class CategoryListingActivity extends AppBaseActivity {
             String filePath = root + File.separator + "Outlook/Magazines/issues-" + issueYear + ".json";
             Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
-            if (file.exists()) {
-                gridView.setVisibility(View.VISIBLE);
-                String response = Util.readJsonFromSDCard(filePath);
-                System.out.println("Response::" + response);
-                JsonReader reader = new JsonReader(new StringReader(response));
-                reader.setLenient(true);
+            if (!Util.isNetworkOnline(IssuesListingActivity.this) && file.exists()) {
+                loadGridView(filePath);
 
-                Type listType = new TypeToken<ArrayList<IssuesVo>>() {}.getType();
-                ArrayList<IssuesVo> issuesVo = new Gson().fromJson(reader, listType);
-
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-                adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(issuesVo.get(0).getAcf()), width);
-                SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
-                AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
-                animationAlphaAdapter.setAbsListView(gridView);
-                gridView.setAdapter(animationAlphaAdapter);
-
-            } else if (Util.isNetworkOnline(CategoryListingActivity.this)) {
+            } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
                 new DownloadFileFromURL(issueYear).execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
             showToast("Error Parsing content");
         }
+    }
+
+    private void loadGridView(String filePath){
+        gridView.setVisibility(View.VISIBLE);
+        String response = Util.readJsonFromSDCard(filePath);
+        System.out.println("Response::" + response);
+        JsonReader reader = new JsonReader(new StringReader(response));
+        reader.setLenient(true);
+
+        Type listType = new TypeToken<ArrayList<IssuesVo>>() {}.getType();
+        ArrayList<IssuesVo> issuesVo = new Gson().fromJson(reader, listType);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(issuesVo.get(0).getAcf()), width);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
+        animationAlphaAdapter.setAbsListView(gridView);
+        gridView.setAdapter(animationAlphaAdapter);
     }
 
     private ArrayList<Magazine> getMonthList(Acf acf){
@@ -331,8 +335,8 @@ public class CategoryListingActivity extends AppBaseActivity {
                 Magazine magazine = new Magazine();
                 magazine.setName(weeklyIssueVo.getDisplayName());
                 magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("DECEMBER,"+issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0)+"");
+                magazine.setIssueDate("DECEMBER," + issueYear);
+                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
                 months.add(magazine);
             }
         }
@@ -407,7 +411,7 @@ public class CategoryListingActivity extends AppBaseActivity {
                 input.close();
 
             } catch (Exception e) {
-                SessionManager.setDownloadFailed(CategoryListingActivity.this, true);
+                SessionManager.setDownloadFailed(IssuesListingActivity.this, true);
             }
 
             return null;
@@ -417,10 +421,10 @@ public class CategoryListingActivity extends AppBaseActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d(TAG, "Downloaded JSON Successfully::");
-            if (SessionManager.isDownloadFailed(CategoryListingActivity.this)) {
+            if (SessionManager.isDownloadFailed(IssuesListingActivity.this)) {
                 stopDownload(mPath);
             }
-            fetchIssueList();
+            loadGridView(mPath);
             loadToast.success();
         }
     }
@@ -428,7 +432,7 @@ public class CategoryListingActivity extends AppBaseActivity {
     private void stopDownload(String mFileName) {
         File imageFile = new File(mFileName);
         imageFile.delete();
-        SessionManager.setDownloadFailed(CategoryListingActivity.this, false);
+        SessionManager.setDownloadFailed(IssuesListingActivity.this, false);
         loadToast.error();
         finish();
     }
