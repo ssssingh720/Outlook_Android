@@ -144,7 +144,6 @@ public class SharedPrefManager {
         return shared.getInt(key, 0);
     }
 
-
     public final static boolean isValidEmail(CharSequence target) {
         if (TextUtils.isEmpty(target)) {
             return false;

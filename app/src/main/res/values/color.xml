@@ -5,14 +5,15 @@
     <color name="white">#FFFFFF</color>
     <color name="light_grey">#cfcfce</color>
     <color name="cool_grey">#F1F1F2</color>
-    <color name="text_dark_grey">#717171</color>
+    <color name="text_dark_grey">#777777</color>
     <color name="text_grey03">#bbbbbb</color>
-    <color name="grey">#3d4049</color>
+    <color name="grey">#333333</color>
     <color name="grey_pressed">#3d4049</color>
     <color name="divider">#DADBDC</color>
     <color name="section_blue">#127CB4</color>
     <color name="text_secondary">#808284</color>
     <color name="tag_grey">#949698</color>
+    <color name="description_grey">#58595B</color>
 
     <color name="vpi__background_holo_dark">#ff000000</color>
     <color name="vpi__background_holo_light">#fff3f3f3</color>

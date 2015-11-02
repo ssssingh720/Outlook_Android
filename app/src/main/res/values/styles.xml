@@ -6,7 +6,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimaryDark">@color/app_red</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorAccent">@color/app_red</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
@@ -18,7 +18,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimaryDark">@color/app_blue</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorAccent">@color/app_blue</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated

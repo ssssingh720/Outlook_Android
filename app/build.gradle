@@ -37,7 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.17'
-    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
@@ -49,4 +49,5 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'
     compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
     compile 'net.steamcrafted:load-toast:1.0.9'
+
 }

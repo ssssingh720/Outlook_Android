@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.outlook.R;
@@ -54,7 +55,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder = (ViewHolder) row.getTag();
         }
 
-        CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.image.getLayoutParams();
         lp.width = ((width - Util.dipToPixels(context, 40)) / 2);
         lp.height = (int) (((width - Util.dipToPixels(context, 40)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);

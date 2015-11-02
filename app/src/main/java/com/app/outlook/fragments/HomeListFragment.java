@@ -16,6 +16,7 @@ import com.app.outlook.R;
 import com.app.outlook.activities.HomeListingActivity;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.app.outlook.views.CirclePageIndicator;
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ public class HomeListFragment extends BaseFragment {
     private CarouselLinearLayout cur = null;
     private CarouselLinearLayout next = null;
     public ListPagerAdapter adapter;
-    private ArrayList<Magazine> magazineList;
+    private ArrayList<MagazineTypeVo> magazineList;
     @Bind(R.id.magazineName)
     TextView magazineName;
     @Bind(R.id.magazineDescp)
@@ -66,7 +67,7 @@ public class HomeListFragment extends BaseFragment {
             Log.d("MyPagerAdapter", "onPageSelected::" + position);
 
             magazineName.setText(magazineList.get(position).getName());
-            magazineDescp.setText(magazineList.get(position).getDesciption());
+            magazineDescp.setText(magazineList.get(position).getDescription());
         }
 
         @Override
@@ -84,7 +85,7 @@ public class HomeListFragment extends BaseFragment {
     }
 
     private void initView() {
-        magazineList = (ArrayList<Magazine>) getArguments().getSerializable(IntentConstants.MAGAZINE_LIST);
+        magazineList = (ArrayList<MagazineTypeVo>) getArguments().getSerializable(IntentConstants.MAGAZINE_LIST);
         adapter = new ListPagerAdapter(getActivity(), getChildFragmentManager());
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(mPageChangeListener);
@@ -106,7 +107,7 @@ public class HomeListFragment extends BaseFragment {
         mViewPager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.view_pager_padding));
 
         magazineName.setText(magazineList.get(0).getName());
-        magazineDescp.setText(magazineList.get(0).getDesciption());
+        magazineDescp.setText(magazineList.get(0).getDescription());
 
     }
 

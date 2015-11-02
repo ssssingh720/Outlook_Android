@@ -62,7 +62,7 @@ public class SplashScreen extends AppBaseActivity {
             public void onAnimationEnd(Animator animation) {
 //                startInitialCall();
                 finish();
-                startActivity(new Intent(SplashScreen.this, IssuesListingActivity.class));
+                startActivity(new Intent(SplashScreen.this, HomeListingActivity.class));
             }
 
             @Override

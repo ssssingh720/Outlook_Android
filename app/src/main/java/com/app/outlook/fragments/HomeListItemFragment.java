@@ -18,8 +18,10 @@ import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.IssuesListingActivity;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,7 +30,7 @@ public class HomeListItemFragment extends BaseFragment {
 
     @Bind(R.id.magazineImg)
     ImageView magazineImg;
-    Magazine magazine;
+    MagazineTypeVo magazine;
     @Bind(R.id.cardView)
     CardView cardView;
 
@@ -68,15 +70,13 @@ public class HomeListItemFragment extends BaseFragment {
         lp.height = (int) ((width - Util.dipToPixels(getActivity(), 150)) * 1.4);
         magazineImg.setLayoutParams(lp);
 
-        magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), Magazine.class);
-
-//        Log.v("MyLog", "id -- " + magazine.getId());
-//        magazineImg.setImageResource(magazine.getImage());
+        magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
+        Picasso.with(getActivity()).load(magazine.getCoverImage()).into(magazineImg);
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (magazine.getId() == 1)
+//                if (magazine.getId() == 1)
                     startActivity(new Intent(getActivity(), IssuesListingActivity.class));
             }
         });

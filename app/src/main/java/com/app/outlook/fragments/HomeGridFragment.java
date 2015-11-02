@@ -12,10 +12,10 @@ import android.widget.GridView;
 
 import com.app.outlook.R;
 import com.app.outlook.activities.IssuesListingActivity;
-import com.app.outlook.adapters.MagazineGridViewAdapter;
+import com.app.outlook.adapters.HomeGridViewAdapter;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
-import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.modal.OutlookConstants;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
@@ -28,10 +28,10 @@ import butterknife.ButterKnife;
 /**
  * Created by srajendrakumar on 09/09/15.
  */
-public class MagazineGridView extends BaseFragment {
+public class HomeGridFragment extends BaseFragment {
 
-    private ArrayList<Magazine> magazineList;
-    private MagazineGridViewAdapter adapter;
+    private ArrayList<MagazineTypeVo> magazineList;
+    private HomeGridViewAdapter adapter;
     @Bind(R.id.gridView)
     GridView gridView;
 
@@ -50,8 +50,8 @@ public class MagazineGridView extends BaseFragment {
         display.getSize(size);
         int width = size.x;
 
-        magazineList = (ArrayList<Magazine>) getArguments().getSerializable(IntentConstants.MAGAZINE_LIST);
-        adapter = new MagazineGridViewAdapter(getActivity(), R.layout.grid_item_layout, magazineList, width);
+        magazineList = (ArrayList<MagazineTypeVo>) getArguments().getSerializable(IntentConstants.MAGAZINE_LIST);
+        adapter = new HomeGridViewAdapter(getActivity(), R.layout.grid_item_layout, magazineList, width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);

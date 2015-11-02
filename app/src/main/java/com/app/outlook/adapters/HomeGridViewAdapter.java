@@ -13,20 +13,22 @@ import android.widget.TextView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.MagazineTypeVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
  * Created by srajendrakumar on 09/09/15.
  */
-public class MagazineGridViewAdapter extends ArrayAdapter<Magazine> {
+public class HomeGridViewAdapter extends ArrayAdapter<MagazineTypeVo> {
 
     private final int layoutResourceId;
     private Context context;
-    private ArrayList<Magazine> data;
+    private ArrayList<MagazineTypeVo> data;
     private int width;
 
-    public MagazineGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data, int width) {
+    public HomeGridViewAdapter(Context context, int layoutResourceId, ArrayList<MagazineTypeVo> data, int width) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -51,13 +53,13 @@ public class MagazineGridViewAdapter extends ArrayAdapter<Magazine> {
         }
 
         CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width - Util.dipToPixels(context, 40)) / 2);
-        lp.height = (int) (((width - Util.dipToPixels(context, 40)) / 2) * 1.4);
+        lp.width = ((width - Util.dipToPixels(context, 30)) / 2);
+        lp.height = (int) (((width - Util.dipToPixels(context, 30)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);
 
-        Magazine magazine = data.get(position);
+        MagazineTypeVo magazine = data.get(position);
         holder.imageTitle.setText(magazine.getName());
-//        holder.image.setImageResource(magazine.getImage());
+        Picasso.with(context).load(magazine.getCoverImage()).fit().into(holder.image);
 
         return row;
     }

@@ -10,6 +10,7 @@ import android.view.Menu;
 import com.app.outlook.R;
 import com.app.outlook.fragments.MagazineDetailsFragment;
 import com.app.outlook.fragments.SectionDetailsHolderFragment;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 
 import java.util.ArrayList;

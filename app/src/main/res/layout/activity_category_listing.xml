@@ -61,11 +61,22 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <Button
+        android:id="@+id/btnSubscribe"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="15dp"
+        android:text="@string/subscribe"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/selector_subcribe_button"/>
+
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/btnSubscribe"
         android:layout_gravity="center_horizontal"
         android:clipToPadding="true"
         android:horizontalSpacing="0dp"

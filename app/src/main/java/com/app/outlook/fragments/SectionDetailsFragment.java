@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.app.outlook.R;
+import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.IntentConstants;
 
 import butterknife.Bind;
@@ -37,32 +38,19 @@ public class SectionDetailsFragment extends BaseFragment {
         ButterKnife.bind(this, mView);
         int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
         String content = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
-//        String content = getArguments().getString(IntentConstants.WEB_CONTENT, "");
         final String mimeType = "text/html";
         final String encoding = "UTF-8";
-//        webview.getSettings().setUseWideViewPort(false);
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setUseWideViewPort(true);
-//        webview.setInitialScale((int) (100*webview.getScale()));
-//        webview.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
-//        webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-//        webview.setScrollbarFadingEnabled(true);
-        webview.loadData(content, mimeType, encoding);
-//        initView();
-        return mView;
-    }
-
-    private void initView() {
-        int position = getArguments().getInt(IntentConstants.POSITION);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = null;
-        if (position % 2 == 0) {
-            v = inflater.inflate(R.layout.template_four, null);
-        } else {
-            v = inflater.inflate(R.layout.template_five, null);
+        webview.getSettings().setLoadsImagesAutomatically(true);
+        if(Util.isNetworkOnline(getActivity())) {
+            webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         }
-
-        containerLyt.addView(v, 0);
+        else{
+            webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
+        webview.loadData(content, mimeType, encoding);
+        return mView;
     }
 
     @OnClick(R.id.goUp)

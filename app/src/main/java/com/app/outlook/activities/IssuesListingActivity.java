@@ -1,27 +1,39 @@
 package com.app.outlook.activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
+import com.app.outlook.Utils.IabHelper;
+import com.app.outlook.Utils.IabResult;
+import com.app.outlook.Utils.Inventory;
+import com.app.outlook.Utils.Purchase;
+import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Acf;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.IssuesVo;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.WeeklyIssueVo;
 import com.app.outlook.views.MonthYearPicker;
 import com.google.gson.Gson;
@@ -42,6 +54,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +63,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class IssuesListingActivity extends AppBaseActivity {
+public class IssuesListingActivity extends AppBaseActivity implements IabHelper.QueryInventoryFinishedListener, IabHelper.OnIabPurchaseFinishedListener, IabHelper.OnConsumeMultiFinishedListener,  IabHelper.OnConsumeFinishedListener{
 
     private static final String TAG = "CategoryListingActivity";
     private OutlookGridViewAdapter adapter;
@@ -60,6 +73,15 @@ public class IssuesListingActivity extends AppBaseActivity {
     private LoadToast loadToast;
     private String issueYear = "2015";
     private String root;
+    IInAppBillingService mService;
+    IabHelper mHelper;
+    static final String ITEM_SKU = "android.test.purchased";
+    private ArrayList<String> productIDList;
+    private ArrayList<SkuDetails> skuList;
+    private String selectedSKU;
+    private ArrayList<Purchase> purchaseList;
+    private Purchase purchaseInfo;
+    private SkuDetails selectedSKUItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +89,25 @@ public class IssuesListingActivity extends AppBaseActivity {
 
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+        mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
+
+        mHelper.startSetup(new
+                                   IabHelper.OnIabSetupFinishedListener() {
+                                       public void onIabSetupFinished(IabResult result)
+                                       {
+                                           if (!result.isSuccess()) {
+                                               Log.d(TAG, "In-app Billing setup failed: " +
+                                                       result);
+                                           } else {
+                                               Log.d(TAG, "In-app Billing is set up OK");
+                                           }
+                                       }
+                                   });
         initView();
     }
 
@@ -93,9 +134,10 @@ public class IssuesListingActivity extends AppBaseActivity {
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-                    intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
-                    startActivity(intent);
+//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+//                    intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
+//                    startActivity(intent);
+                    buyClick();
                 }
 
             }
@@ -159,6 +201,7 @@ public class IssuesListingActivity extends AppBaseActivity {
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
         gridView.setAdapter(animationAlphaAdapter);
+
     }
 
     private ArrayList<Magazine> getMonthList(Acf acf){
@@ -347,6 +390,19 @@ public class IssuesListingActivity extends AppBaseActivity {
 
     }
 
+    @Override
+    public void onIabPurchaseFinished(IabResult result, Purchase info) {
+        if (result.isFailure()) {
+            // Handle error
+            return;
+        }
+//        else if (purchase.getSku().equals(ITEM_SKU)) {
+//            consumeItem();
+//            buyButton.setEnabled(false);
+//        }
+
+    }
+
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         String mPath;
@@ -437,4 +493,69 @@ public class IssuesListingActivity extends AppBaseActivity {
         finish();
     }
 
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+    }
+
+    public void buyClick() {
+        mHelper.launchPurchaseFlow(this, ITEM_SKU, 10001,
+                this, "mypurchasetokend");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mHelper.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onConsumeFinished(Purchase purchase, IabResult result) {
+        Log.i(TAG, "onConsumeFinished");
+    }
+
+    @Override
+    public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results) {
+        Log.i(TAG, "onConsumeMultiFinished");
+    }
+
+    @Override
+    public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+        if(inv!=null) {
+            skuList = new ArrayList<SkuDetails>();
+            purchaseList = new ArrayList<Purchase>();
+            for (int i = 0; i < productIDList.size(); i++) {
+                if (productIDList.get(i) != null) {
+                    SkuDetails sku = inv.getSkuDetails(productIDList.get(i));
+                    skuList.add(sku);
+                    Purchase purchase = inv.getPurchase(productIDList.get(i));
+                    if (purchase != null)
+                        purchaseList.add(purchase);
+                }
+            }
+            if (purchaseList != null && purchaseList.size() > 0) {
+                mHelper.consumeAsync(purchaseList, this);
+            }
+
+        } else {
+            showToast("Not able to retreive data. Please try again.");
+            this.finish();
+        }
+    }
 }

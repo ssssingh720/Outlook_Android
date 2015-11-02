@@ -5,6 +5,7 @@ package com.app.outlook.modal;
  */
 public class IntentConstants {
 
+    public static final String THEME = "theme" ;
     public static String MAGAZINE_LIST = "magazineList";
     public static String MAGAZINE = "magazine";
     public static String MAGAZINE_ID = "magazine_id";

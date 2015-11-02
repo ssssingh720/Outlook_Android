@@ -195,6 +195,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         TextView sub_category_name = (TextView) view.findViewById(R.id.sub_category_name);
         TextView description = (TextView) view.findViewById(R.id.description);
         TextView author = (TextView) view.findViewById(R.id.author);
+        LinearLayout authorLyt = (LinearLayout) view.findViewById(R.id.authorLyt);
         ImageView userImg = (ImageView) view.findViewById(R.id.userImg);
 
 
@@ -216,7 +217,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if (data.getAuthor() != null && !data.getAuthor().isEmpty()) {
             author.setText("" + data.getAuthor());
         } else {
-            author.setVisibility(View.GONE);
+            authorLyt.setVisibility(View.GONE);
         }
         if (data.getImage() != null && !data.getImage().isEmpty()) {
             Picasso.with(getActivity()).load(data.getImage())
