@@ -28,13 +28,15 @@ import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
-import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.modal.Acf;
+import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.Issue;
 import com.app.outlook.modal.IssuesVo;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.Month;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.WeeklyIssueVo;
+import com.app.outlook.modal.YearListVo;
 import com.app.outlook.views.MonthYearPicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -174,7 +176,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 loadGridView(filePath);
 
             } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
-                new DownloadFileFromURL(issueYear).execute();
+                new DownloadFileFromURL(issueYear).execute(magazineType+"",issueYear);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,14 +191,13 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.setLenient(true);
 
-        Type listType = new TypeToken<ArrayList<IssuesVo>>() {}.getType();
-        ArrayList<IssuesVo> issuesVo = new Gson().fromJson(reader, listType);
+        YearListVo yearListVo = new Gson().fromJson(reader, YearListVo.class);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(issuesVo.get(0).getAcf()), width);
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
@@ -204,187 +205,23 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     }
 
-    private ArrayList<Magazine> getMonthList(Acf acf){
+    private ArrayList<Magazine> getMonthList(List<Month> monthArray,String issueYear){
 
         ArrayList<Magazine> months = new ArrayList<Magazine>();
 
-        ArrayList<WeeklyIssueVo> janMonthVo = (ArrayList<WeeklyIssueVo>) acf.getJanuary();
-        for (int i=0;i<janMonthVo.size();i++){
-            if(!janMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = janMonthVo.get(i);
+        for(int i=0; i< monthArray.size();i++){
 
+            List<Issue> issueArray = monthArray.get(i).getIssues();
 
+            for(int j=0 ; j< issueArray.size();j++){
                 Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("JANUARY," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0)+"");
+                magazine.setImage(issueArray.get(j).getImage());
+                magazine.setIssueDate(monthArray.get(i).getName()+", " + issueYear);
+                magazine.setPostId(issueArray.get(j).getIssueId()+"");
                 months.add(magazine);
             }
 
         }
-        ArrayList<WeeklyIssueVo> febMonthVo = (ArrayList<WeeklyIssueVo>) acf.getFebruary();
-        for (int i=0;i<febMonthVo.size();i++){
-            if(!febMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = febMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("FEBRUARY," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> marchMonthVo = (ArrayList<WeeklyIssueVo>) acf.getMarch();
-        for (int i=0;i<marchMonthVo.size();i++){
-            if(!marchMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = marchMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("MARCH," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> aprilMonthVo = (ArrayList<WeeklyIssueVo>) acf.getApril();
-        for (int i=0;i<aprilMonthVo.size();i++){
-            if(!aprilMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = aprilMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("APRIL," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> mayMonthVo = (ArrayList<WeeklyIssueVo>) acf.getMay();
-        for (int i=0;i<mayMonthVo.size();i++){
-            if(!mayMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = mayMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("MAY," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> juneMonthVo = (ArrayList<WeeklyIssueVo>) acf.getJune();
-        for (int i=0;i<juneMonthVo.size();i++){
-            if(!juneMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = juneMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("JUNE," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> julyMonthVo = (ArrayList<WeeklyIssueVo>) acf.getJuly();
-        for (int i=0;i<julyMonthVo.size();i++){
-            if(!julyMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = julyMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("JULY," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> augMonthVo = (ArrayList<WeeklyIssueVo>) acf.getAugust();
-        for (int i=0;i<augMonthVo.size();i++){
-            if(!augMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = augMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("AUGUST," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> sepMonthVo = (ArrayList<WeeklyIssueVo>) acf.getSeptember();
-        for (int i=0;i<sepMonthVo.size();i++){
-            if(!sepMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = sepMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("SEPTEMBER," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-            if(i == sepMonthVo.size()-1 && sepMonthVo.size() % 2 == 1){
-                months.add(new Magazine());
-            }
-        }
-        ArrayList<WeeklyIssueVo> octMonthVo = (ArrayList<WeeklyIssueVo>) acf.getOctober();
-        for (int i=0;i<octMonthVo.size();i++){
-            if(!octMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = octMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("OCTOBER," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-            if(i == octMonthVo.size()-1 && octMonthVo.size() % 2 == 1){
-                months.add(new Magazine());
-            }
-        }
-        ArrayList<WeeklyIssueVo> novMonthVo = (ArrayList<WeeklyIssueVo>) acf.getNovember();
-        for (int i=0;i<novMonthVo.size();i++){
-            if(!novMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = novMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("NOVEMBER," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-        ArrayList<WeeklyIssueVo> decMonthVo = (ArrayList<WeeklyIssueVo>) acf.getDecember();
-        for (int i=0;i<decMonthVo.size();i++){
-            if(!decMonthVo.get(i).getDisplayName().equals("@nopost@")) {
-                WeeklyIssueVo weeklyIssueVo = decMonthVo.get(i);
-
-
-                Magazine magazine = new Magazine();
-                magazine.setName(weeklyIssueVo.getDisplayName());
-                magazine.setImage(weeklyIssueVo.getCoverImage());
-                magazine.setIssueDate("DECEMBER," + issueYear);
-                magazine.setPostId(weeklyIssueVo.getSelectIssuePost().get(0) + "");
-                months.add(magazine);
-            }
-        }
-
-
 
         return months;
 
@@ -407,7 +244,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
         String mPath;
 
-        public DownloadFileFromURL(String fileName) {
+        public DownloadFileFromURL(String issueYear) {
             this.mPath = root + File.separator + "Outlook/Magazines/issues-" + issueYear + ".json";
             File file = new File(mPath);
             if (file.exists()) {
@@ -430,10 +267,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
 
         @Override
-        protected String doInBackground(String... id) {
+        protected String doInBackground(String... params) {
             int count;
             try {
-                URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST + issueYear);
+                URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
+                "?mag_id="+params[0]+"&year="+params[1]);
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();

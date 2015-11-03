@@ -40,11 +40,11 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
+//    }
 
     @Override
     protected void attachBaseContext(Context newBase) {

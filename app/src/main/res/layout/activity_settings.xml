@@ -86,7 +86,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/my_downloads"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_big" />
 
                 <ImageView
@@ -120,7 +120,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/restore_subcription"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_big" />
 
                 <ImageView
@@ -185,7 +185,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/about"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_big" />
 
                 <ImageView
@@ -218,7 +218,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/terms_conditions"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_big" />
 
                 <ImageView
@@ -251,7 +251,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/privacy_policy"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/text_big" />
 
                 <ImageView

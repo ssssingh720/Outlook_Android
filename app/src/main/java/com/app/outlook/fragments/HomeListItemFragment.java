@@ -71,7 +71,8 @@ public class HomeListItemFragment extends BaseFragment {
         magazineImg.setLayoutParams(lp);
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
-        Picasso.with(getActivity()).load(magazine.getCoverImage()).into(magazineImg);
+        if(!magazine.getCoverImage().isEmpty())
+            Picasso.with(getActivity()).load(magazine.getCoverImage()).into(magazineImg);
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override

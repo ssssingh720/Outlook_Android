@@ -203,7 +203,7 @@ public class HomeListingActivity extends AppBaseActivity {
         protected String doInBackground(String... id) {
             int count;
             try {
-                URL url = new URL(APIMethods.MAGAZINE_TYPE_LIST);
+                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST);
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();

@@ -22,4 +22,9 @@ public class SettingsActivity extends AppBaseActivity {
         setContentView(R.layout.activity_settings);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
+    }
 }

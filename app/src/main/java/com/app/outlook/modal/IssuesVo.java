@@ -28,9 +28,6 @@ public class IssuesVo {
     @SerializedName("excerpt")
     @Expose
     private Object excerpt;
-    @SerializedName("acf")
-    @Expose
-    private Acf acf;
     @SerializedName("terms")
     @Expose
     private Terms terms;
@@ -159,24 +156,6 @@ public class IssuesVo {
      */
     public void setExcerpt(Object excerpt) {
         this.excerpt = excerpt;
-    }
-
-    /**
-     *
-     * @return
-     * The acf
-     */
-    public Acf getAcf() {
-        return acf;
-    }
-
-    /**
-     *
-     * @param acf
-     * The acf
-     */
-    public void setAcf(Acf acf) {
-        this.acf = acf;
     }
 
     /**

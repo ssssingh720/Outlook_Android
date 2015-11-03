@@ -10,9 +10,9 @@ import java.io.Serializable;
 
 public class MagazineTypeVo implements Serializable{
 
-    @SerializedName("id")
+    @SerializedName("mag_id")
     @Expose
-    private String id;
+    private String mag_id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -162,10 +162,10 @@ public class MagazineTypeVo implements Serializable{
     }
 
     public String getId() {
-        return id;
+        return mag_id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.mag_id = id;
     }
 }

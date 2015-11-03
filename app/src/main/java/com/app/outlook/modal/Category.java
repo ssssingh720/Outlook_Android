@@ -1,10 +1,9 @@
 package com.app.outlook.modal;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by srajendrakumar on 16/10/15.
@@ -12,55 +11,109 @@ import java.util.List;
 
 public class Category {
 
-    @SerializedName("categoryName")
+    @SerializedName("category_name")
     @Expose
     private String categoryName;
-    @SerializedName("categoryId")
+    @SerializedName("category_icon")
     @Expose
-    private String categoryId;
-    @SerializedName("data")
+    private String categoryIcon;
+    @SerializedName("category_type")
     @Expose
-    private List<Data> data = new ArrayList<>();
+    private String categoryType;
+    @SerializedName("cards")
+    @Expose
+    private List<Card> cards = new ArrayList<Card>();
+    @SerializedName("categories")
+    @Expose
+    private List<Category> categories = new ArrayList<Category>();
 
     /**
-     * @return The categoryName
+     *
+     * @return
+     * The categoryName
      */
     public String getCategoryName() {
         return categoryName;
     }
 
     /**
-     * @param categoryName The categoryName
+     *
+     * @param categoryName
+     * The category_name
      */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
     /**
-     * @return The categoryId
+     *
+     * @return
+     * The categoryIcon
      */
-    public String getCategoryId() {
-        return categoryId;
+    public String getCategoryIcon() {
+        return categoryIcon;
     }
 
     /**
-     * @param categoryId The categoryId
+     *
+     * @param categoryIcon
+     * The category_icon
      */
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryIcon(String categoryIcon) {
+        this.categoryIcon = categoryIcon;
     }
 
     /**
-     * @return The data
+     *
+     * @return
+     * The categoryType
      */
-    public List<Data> getData() {
-        return data;
+    public String getCategoryType() {
+        return categoryType;
     }
 
     /**
-     * @param data The data
+     *
+     * @param categoryType
+     * The category_type
      */
-    public void setData(List<Data> data) {
-        this.data = data;
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    /**
+     *
+     * @return
+     * The cards
+     */
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    /**
+     *
+     * @param cards
+     * The cards
+     */
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
+
+    /**
+     *
+     * @return
+     * The categories
+     */
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    /**
+     *
+     * @param categories
+     * The categories
+     */
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }
