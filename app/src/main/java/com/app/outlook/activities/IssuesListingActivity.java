@@ -84,6 +84,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private ArrayList<Purchase> purchaseList;
     private Purchase purchaseInfo;
     private SkuDetails selectedSKUItem;
+    private DownloadFileFromURL task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,10 +137,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-//                    intent.putExtra(IntentConstants.MAGAZINE_ID, postID);
-//                    startActivity(intent);
-                    buyClick();
+                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType+"");
+                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+                    startActivity(intent);
+//                    buyClick();
                 }
 
             }
@@ -176,7 +178,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 loadGridView(filePath);
 
             } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
-                new DownloadFileFromURL(issueYear).execute(magazineType+"",issueYear);
+                task = new DownloadFileFromURL(issueYear);
+                task.execute(magazineType+"",issueYear);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -395,5 +398,12 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             showToast("Not able to retreive data. Please try again.");
             this.finish();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(task != null)
+            task.cancel(true);
     }
 }

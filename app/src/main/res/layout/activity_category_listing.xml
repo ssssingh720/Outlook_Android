@@ -81,11 +81,11 @@
         android:layout_below="@+id/btnSubscribe"
         android:layout_gravity="center_horizontal"
         android:clipToPadding="true"
-        android:horizontalSpacing="0dp"
+        android:horizontalSpacing="15dp"
         android:numColumns="2"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:scrollbars="none"
         android:visibility="gone"
-        android:verticalSpacing="10dp"></GridView>
+        android:verticalSpacing="15dp"></GridView>
 </RelativeLayout>

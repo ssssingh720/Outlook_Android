@@ -56,8 +56,8 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         }
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width - Util.dipToPixels(context, 40)) / 2);
-        lp.height = (int) (((width - Util.dipToPixels(context, 40)) / 2) * 1.4);
+        lp.width = ((width - Util.dipToPixels(context, 45)) / 2);
+        lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);
 
         Magazine magazine = data.get(position);

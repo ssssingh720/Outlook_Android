@@ -1,5 +1,6 @@
 package com.app.outlook.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +26,6 @@ public class MagazineDetailsActivity extends AppBaseActivity {
 
     public static final String EXTRA_NAME = "cheese_name";
 
-    SectionDetailsHolderFragment sectionDetailsHolderFragment;
     MagazineDetailsFragment magazineDetailsFragment;
     private String TAG = "MagazineDetailsActivity";
     ArrayList<String> mContent = new ArrayList<>();
@@ -40,21 +40,23 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
-                        if (sectionDetailsHolderFragment.isRemoving()) {
-                            FragmentManager manager = getSupportFragmentManager();
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.show(magazineDetailsFragment);
-                        }
-                    }
-                });
+//        getSupportFragmentManager().addOnBackStackChangedListener(
+//                new FragmentManager.OnBackStackChangedListener() {
+//                    public void onBackStackChanged() {
+//                        if (sectionDetailsHolderFragment.isRemoving()) {
+//                            FragmentManager manager = getSupportFragmentManager();
+//                            FragmentTransaction transaction = manager.beginTransaction();
+//                            transaction.show(magazineDetailsFragment);
+//                        }
+//                    }
+//                });
 
         magazineDetailsFragment = new MagazineDetailsFragment();
         String magazineID = getIntent().getStringExtra(IntentConstants.MAGAZINE_ID);
+        String issueID = getIntent().getStringExtra(IntentConstants.ISSUE_ID);
         Bundle bundle = new Bundle();
         bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
+        bundle.putString(IntentConstants.ISSUE_ID, issueID);
         magazineDetailsFragment.setArguments(bundle);
         changeFragment(magazineDetailsFragment, false);
     }
@@ -76,15 +78,13 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         transaction.commit();
     }
 
-    public void openSectionDetails(int cardPosition, int itemPosition) {
-        sectionDetailsHolderFragment = new SectionDetailsHolderFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(IntentConstants.CARD_HOLDER_POSITION, cardPosition);
-        bundle.putInt(IntentConstants.ITEM_POSITION, itemPosition);
-        bundle.putStringArrayList(IntentConstants.CONTENTS, mContent);
-        sectionDetailsHolderFragment.setArguments(bundle);
-        changeFragment(sectionDetailsHolderFragment, true);
+    public void openSectionDetails(int categoryPosition, int cardPosition) {
 
+        Intent intent = new Intent(MagazineDetailsActivity.this, ArticleDetailsActivity.class);
+        intent.putExtra(IntentConstants.CATEGORY_POSITION, categoryPosition);
+        intent.putExtra(IntentConstants.CARD_POSITION, cardPosition);
+        intent.putExtra(IntentConstants.ISSUE_ID, getIntent().getStringExtra(IntentConstants.ISSUE_ID));
+        startActivity(intent);
     }
 
     public ArrayList<String> getContent() {

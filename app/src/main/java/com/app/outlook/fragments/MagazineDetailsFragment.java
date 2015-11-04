@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.outlook.R;
@@ -62,7 +63,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     @Bind(R.id.sectionBreifListLyt)
     LinearLayout sectionBreifListLyt;
     @Bind(R.id.bottom_holder)
-    LinearLayout mBottomHolder;
+    RelativeLayout mBottomHolder;
 
     TypedArray categoryIds;
     TypedArray cardIds;
@@ -71,6 +72,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private String magazineID;
     private String root;
     private LoadToast loadToast;
+    private MagazineDetailsVo detailsObject;
+    private String issueID;
+    private DownloadFileFromURL task;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,13 +84,14 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         initView();
         if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
             magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
+            issueID = getArguments().getString(IntentConstants.ISSUE_ID);
         } else {
             showToast("Sorry!! Unable to load magazine");
             getActivity().finish();
             return mView;
         }
         root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
-        fetchMagazineDetails(magazineID);
+        fetchMagazineDetails();
         return mView;
     }
 
@@ -108,9 +113,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         cardIds.recycle();
     }
 
-    private void fetchMagazineDetails(String id) {
+    private void fetchMagazineDetails() {
 
-        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + issueID + ".json";
         try {
             Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
@@ -119,15 +124,14 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 System.out.println("Response::" + response);
                 JsonReader reader = new JsonReader(new StringReader(response));
                 reader.setLenient(true);
-                MagazineDetailsVo detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
+                detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
                 mCategories = detailsObject.getCategories();
                 loadToast.success();
-                
+
                 loadCards();
-//                loadSectionListLyt();
-//                loadSectionBreifListLyt(mCategories.get(0).getData());
             } else if (Util.isNetworkOnline(getActivity())) {
-                new DownloadFileFromURL(magazineID).execute();
+                task = new DownloadFileFromURL();
+                task.execute(magazineID,issueID);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,9 +148,14 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             View title = inflater.inflate(R.layout.template_eight, null);
             ((TextView) title.findViewById(R.id.categoryTitle)).setText(mCategories.get(i).getCategoryName());
             sectionBreifListLyt.addView(title);
-            List<Card> cards = mCategories.get(i).getCards();
-            for(int j=0;j<cards.size();j++){
-                sectionBreifListLyt.addView(loadCardsView(cards.get(i)));
+            if(mCategories.get(i).getCategoryType().equals("Type1")) {
+                List<Card> cards = mCategories.get(i).getCards();
+                for (int j = 0; j < cards.size(); j++) {
+                    View cardView = loadCardsView(cards.get(j));
+                    cardView.setTag(i+","+j);
+                    cardView.setOnClickListener(this);
+                    sectionBreifListLyt.addView(cardView);
+                }
             }
         }
 
@@ -171,6 +180,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         ImageView userImg = (ImageView) view.findViewById(R.id.imgAuthor);
         ImageView coverImg = (ImageView) view.findViewById(R.id.imgCover);
         ImageView blockImg = (ImageView) view.findViewById(R.id.imgBlock);
+        LinearLayout overlay = (LinearLayout) view.findViewById(R.id.overlay);
 
 
         if (data.getSubsection() != null && !data.getSubsection().isEmpty()) {
@@ -194,6 +204,13 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         } else {
             userImg.setVisibility(View.GONE);
         }
+        if (data.getPaid().equals("Paid")) {
+            blockImg.setVisibility(View.GONE);
+//            overlay.setVisibility(View.GONE);
+        }else{
+            blockImg.setVisibility(View.VISIBLE);
+//            overlay.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -207,6 +224,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 
         String tag = (String) v.getTag();
         String[] tags = tag.split(",");
+        openSectionDetails(Integer.parseInt(tags[0]),Integer.parseInt(tags[1]));
 
 //        if (tags[0].equals("category")) {
 ////            Toast.makeText(getActivity(), tags[1] + " Position", Toast.LENGTH_SHORT).show();
@@ -282,16 +300,16 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
 //        }
     }
 
-    private void openSectionDetails(int cardPosition, int item) {
-        ((MagazineDetailsActivity) getActivity()).openSectionDetails(cardPosition, item);
+    private void openSectionDetails(int categoryPosition, int cardPosition) {
+        ((MagazineDetailsActivity) getActivity()).openSectionDetails(categoryPosition,cardPosition);
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         String mPath;
 
-        public DownloadFileFromURL(String fileName) {
-            this.mPath = root + File.separator + "Outlook/Magazines/magazine-" + magazineID + ".json";
+        public DownloadFileFromURL() {
+            this.mPath = root + File.separator + "Outlook/Magazines/magazine-" + issueID + ".json";
             File file = new File(mPath);
             if (file.exists()) {
                 file.delete();
@@ -313,10 +331,11 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
 
         @Override
-        protected String doInBackground(String... id) {
+        protected String doInBackground(String... params) {
             int count;
             try {
-                URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "/?post_id=" + magazineID);
+                URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "?mag_id=" + params[0]
+                +"&issue_id="+ params[1]);
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
@@ -360,7 +379,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             if (SessionManager.isDownloadFailed(getActivity())) {
                 stopDownload(mPath);
             }
-            fetchMagazineDetails(magazineID);
+            fetchMagazineDetails();
         }
     }
 
@@ -381,5 +400,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 }, 1000);
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(task != null)
+            task.cancel(true);
     }
 }

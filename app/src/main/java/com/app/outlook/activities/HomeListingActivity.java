@@ -63,7 +63,7 @@ public class HomeListingActivity extends AppBaseActivity {
     ImageButton carouselView;
     @Bind(R.id.gridView)
     ImageButton gridView;
-
+    private DownloadFileFromURL task;
     private String root;
 
     @Override
@@ -105,7 +105,8 @@ public class HomeListingActivity extends AppBaseActivity {
                 loadFragments(filePath);
 
             } else if (Util.isNetworkOnline(HomeListingActivity.this)) {
-                new DownloadFileFromURL().execute();
+                task = new DownloadFileFromURL();
+                task.execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,6 +253,7 @@ public class HomeListingActivity extends AppBaseActivity {
             loadFragments(mPath);
             loadToast.success();
         }
+
     }
 
     private void stopDownload(String mFileName) {
@@ -262,4 +264,10 @@ public class HomeListingActivity extends AppBaseActivity {
         finish();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(task != null)
+            task.cancel(true);
+    }
 }
