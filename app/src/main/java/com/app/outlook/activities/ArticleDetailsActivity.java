@@ -36,6 +36,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION,0));
         bundle.putInt(IntentConstants.CARD_POSITION, getIntent().getIntExtra(IntentConstants.CARD_POSITION,0));
         bundle.putString(IntentConstants.ISSUE_ID, getIntent().getStringExtra(IntentConstants.ISSUE_ID));
+        bundle.putString(IntentConstants.MAGAZINE_ID, getIntent().getStringExtra(IntentConstants.MAGAZINE_ID));
         sectionDetailsHolderFragment.setArguments(bundle);
 
         FragmentManager manager = getSupportFragmentManager();
