@@ -10,7 +10,7 @@ public class OutlookConstants {
     public static int type_outlook = 0;
     public static int type_traveller = 1;
     public static String theme = "theme";
-    public static final String IS_LOGGEDIN = "is_loggedIn";
+public static final String IS_LOGGEDIN = "is_loggedIn";
     public static final String PROFILE_NAME = "profile_name";
     public static final String TOKEN = "token";
     public static final String PROFILE_EMAIL = "profile_email";

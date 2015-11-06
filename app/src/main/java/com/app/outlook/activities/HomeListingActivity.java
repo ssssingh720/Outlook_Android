@@ -205,7 +205,8 @@ public class HomeListingActivity extends AppBaseActivity {
         protected String doInBackground(String... id) {
             int count;
             try {
-                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST);
+                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST+"?user_id=5&token="+
+                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6");
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();

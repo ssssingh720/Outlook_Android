@@ -278,7 +278,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "?mag_id=" + params[0]
-                +"&issue_id="+ params[1]);
+                +"&issue_id="+ params[1]+"&user_id=5&token="+
+                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+                );
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
