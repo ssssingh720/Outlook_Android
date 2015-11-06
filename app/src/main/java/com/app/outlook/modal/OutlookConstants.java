@@ -10,5 +10,9 @@ public class OutlookConstants {
     public static int type_outlook = 0;
     public static int type_traveller = 1;
     public static String theme = "theme";
-    public static String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmOJEyBfRoAyGbl0H22sBzb7XFwLFUJBOecROsMRTIVqe2VJ6jQ0du8SIkwH7H0mUpPQ1gSDgmwrMBwtaxyhRQbs7s0kCIoMZO7QNQLr3TbzWKx0hmehtywDI6Lb35OnF7EXtquIKKUiJsh5ZIqD/esLDzNbMETUAvadM9n9tBYzd2+9v4yPV7IDssmqioMlOzH9E8J32R+k17OmXCivuGOSfjEBY0yFv9Ido1bYATtMUMX0DCnf3JsCPm1Lw//r+z+sfGBczOMeQl4viSDgUCI8nfGsqN19Xlmb6RUS4M92TQqCQHZcBQAGO6FqHds0kp3lYLa5HeBs9YSDgbvpSBwIDAQAB";
+public static final String IS_LOGGEDIN = "is_loggedIn";
+    public static final String PROFILE_NAME = "profile_name";
+    public static final String TOKEN = "token";
+    public static final String PROFILE_EMAIL = "profile_email";
+    public static String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiruv4b5kkbATEXCv+Phuv3FxvXkCBAsgtF/DbMNfzn5DLTITJQG45+mThtmv4gOPx3R4GYlfHlebG+0SJf2rvX6824ssAL3DodDq2CxzvLd7YScIJhXy8vJEOJGuZgr38wQnyzYruyRGizEXdXiBWwGLOe4IQLAzR/3TM8eObOBlZV/rmHUXj7gNXYmXYU5lhhQjGegXzhU4BFPjFEuzmsdUDmGwAhZE2t6d6m2c+txOkC5D0lQFpIp4X0V4p6p2BeNzAaOjDnl8RrIPKZxgWcm2xP2Np7buM9OZoZ+7qS85yCCpt47Mm0aVNqSRrZGJdnol7JSDyhNeZdYe+D/TbQIDAQAB";
 }

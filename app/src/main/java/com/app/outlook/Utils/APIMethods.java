@@ -10,5 +10,6 @@ public class APIMethods {
     public static final String MAGAZINE_TYPE_LIST = "magazines/";
     public static final String MAGAZINE_DETAILS = "get-data/";
     public static final String ISSUE_LIST = "get-issues/";
+    public static final String REGISTER="register/";
 
 }

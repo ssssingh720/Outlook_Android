@@ -251,7 +251,7 @@ public class RequestManager<T> {
             public void onResponse(T response, GsonRequest<T> request) {
                 try {
                     Log.i(LOG_TAG, request.getApiMethodName() + ": onResponse called");
-                    if (((BaseVO) response).getError() == null)
+                    if (((BaseVO) response).getError() == null || ((BaseVO) response).getError().equalsIgnoreCase("false"))
                         request.getSourceListener().onAPIResponse(response, request.getApiMethodName());
                     else {
                         ResponseError errorResponse = new ResponseError();

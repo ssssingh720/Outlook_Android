@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.app.outlook.R;
+import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.OutlookConstants;
 import com.daimajia.easing.BaseEasingMethod;
 import com.daimajia.easing.Glider;
 import com.daimajia.easing.Skill;
@@ -62,7 +64,12 @@ public class SplashScreen extends AppBaseActivity {
             public void onAnimationEnd(Animator animation) {
 //                startInitialCall();
                 finish();
-                startActivity(new Intent(SplashScreen.this, HomeListingActivity.class));
+                if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_LOGGEDIN)) {
+                    startActivity(new Intent(SplashScreen.this, HomeListingActivity.class));
+                }
+                else{
+                    startActivity(new Intent(SplashScreen.this, LogInActivity.class));
+                }
             }
 
             @Override
