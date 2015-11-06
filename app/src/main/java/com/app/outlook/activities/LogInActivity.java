@@ -1,14 +1,20 @@
 package com.app.outlook.activities;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -20,6 +26,7 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.BaseVO;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.UserProfileVo;
@@ -92,6 +99,7 @@ public class LogInActivity extends AppBaseActivity implements
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
     private LoadToast loadToast;
+    private Dialog forgotPasswordPopUp;
     /*Facebok login Module starts here & Callback methods*/
     public FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
@@ -146,6 +154,7 @@ public class LogInActivity extends AppBaseActivity implements
         initView();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initView() {
@@ -180,9 +189,8 @@ public class LogInActivity extends AppBaseActivity implements
         if (Util.isNetworkOnline(LogInActivity.this)) {
             loadToast.show();
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
-        }
-        else{
-        showToast(getResources().getString(R.string.no_internet));
+        } else {
+            showToast(getResources().getString(R.string.no_internet));
         }
 
     }
@@ -190,7 +198,7 @@ public class LogInActivity extends AppBaseActivity implements
     @OnClick(R.id.google_button)
     void googleLogin() {
         if (Util.isNetworkOnline(LogInActivity.this)) {
-        mShouldResolve = true;
+            mShouldResolve = true;
         mGoogleApiClient.connect();
     }
     else{
@@ -216,8 +224,48 @@ public class LogInActivity extends AppBaseActivity implements
     }
 @OnClick (R.id.password_forgot)
 void forgotPassword(){
-
+    displayForgotPasswordPopUp();
 }
+
+    private void displayForgotPasswordPopUp() {
+        forgotPasswordPopUp=new Dialog(LogInActivity.this, R.style.DialogSlideAnim);
+        forgotPasswordPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        forgotPasswordPopUp.setContentView(R.layout.popup_forgot_password);
+        forgotPasswordPopUp.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        forgotPasswordPopUp.getWindow().setGravity(Gravity.CENTER);
+        forgotPasswordPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+       final EditText emailField=(EditText)forgotPasswordPopUp.findViewById(R.id.forgot_password_email);
+        Button resetPasswordBtn=(Button)forgotPasswordPopUp.findViewById(R.id.reset_password_button);
+        resetPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailField.getText().toString().trim();
+    if (email.length()>0 && SharedPrefManager.isValidEmail(email)){
+        if (Util.isNetworkOnline(LogInActivity.this)) {
+            recoverPassword(email);
+            hidePopupDialog();
+        }
+        else{
+            showToast(getResources().getString(R.string.no_internet));
+        }
+    }
+    else{
+        showToast(getResources().getString(R.string.email_to_get_password));
+    }
+            }
+        });
+        forgotPasswordPopUp.show();
+    }
+
+    /* recover password api call*/
+    private void recoverPassword(String email) {
+        loadToast.show();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(FeedParams.EMAIL, email);
+        placeRequest(APIMethods.RESET_PASSWORD, BaseVO.class, params, true);
+
+    }
+
     /*login api call*/
     private void doEmailLogIn(String email, String password) {
         loadToast.show();
@@ -389,17 +437,25 @@ void forgotPassword(){
         super.onAPIResponse(response, apiMethod);
         Log.i(TAG, "success" + response);
         loadToast.success();
+        if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
         UserProfileVo userInfo = (UserProfileVo) response;
         userInfo.setEmail(mEmailEditField.getText().toString().trim());
         saveLogInToken(userInfo);
+        }
+        if (apiMethod.equalsIgnoreCase(APIMethods.RESET_PASSWORD)){
+            showToast("Password has been sent to your registered email");
+        }
     }
 
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod) {
         super.onErrorResponse(error, apiMethod);
-        Log.i(TAG, "Error" + error);
         loadToast.error();
-        Toast.makeText(getApplicationContext(), "Couldn't LogIn. Please try later.", Toast.LENGTH_SHORT).show();
+        if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
+        showToast("Couldn't LogIn. Please try later.");}
+        if (apiMethod.equalsIgnoreCase(APIMethods.RESET_PASSWORD)){
+            showToast("Couldn't recover your password. Please try later.");}
+
     }
 
     /*saving Login data & move to next screen*/
@@ -415,4 +471,11 @@ void forgotPassword(){
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profileVo.getEmail());
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME, profileVo.getName());
     }
+    private void hidePopupDialog() {
+        if (forgotPasswordPopUp.isShowing()) {
+            forgotPasswordPopUp.dismiss();
+            forgotPasswordPopUp.cancel();
+        }
+    }
+
 }
