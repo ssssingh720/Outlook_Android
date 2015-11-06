@@ -71,7 +71,7 @@ import java.util.List;
  */
 public class IabHelper {
 
-    final String packageName = "com.app.outlook";
+    final String packageName = "com.app.outlooktest";
     // Is debug logging enabled?
     boolean mDebugLog = false;
     String mDebugTag = "IabHelper";

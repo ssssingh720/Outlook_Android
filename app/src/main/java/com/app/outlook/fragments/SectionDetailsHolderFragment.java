@@ -55,7 +55,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     private int currentCardPosition = 0;
     private int currentPageCount = 0;
     ArrayList<String> mContents = new ArrayList<>();
-    private String issueID;
+    private String issueID,magazineID;
     @Bind(R.id.cardsList)
     ListView cardsList;
     @Bind(R.id.articleOptionView)
@@ -69,6 +69,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         categoryPosition = getArguments().getInt(IntentConstants.CATEGORY_POSITION, 0);
         currentCardPosition = getArguments().getInt(IntentConstants.CARD_POSITION, 0);
         issueID = getArguments().getString(IntentConstants.ISSUE_ID);
+        magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID);
         currentPageCount = getArguments().getInt(IntentConstants.ITEM_POSITION, 0);
         ButterKnife.bind(this, mView);
         loadContents();
@@ -91,8 +92,9 @@ public class SectionDetailsHolderFragment extends BaseFragment {
 
     private void loadContents() {
 
-        String root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
-        String filePath = root + File.separator + "Outlook/Magazines/magazine-" + issueID + ".json";
+        String root = getActivity().getCacheDir().getAbsolutePath();
+                //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        String filePath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
         try {
             File file = new File(filePath);
             if (file.exists()) {
@@ -110,11 +112,13 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 }
                 List<Card> cards = selectedCategory.getCards();
                 for (int i=0;i<cards.size();i++){
+                    if(cards.get(i).getPaid()) {
                         mContents.add(cards.get(i).getContent());
-                    CategoryOptionsVo obj = new CategoryOptionsVo();
-                    obj.setTitle(cards.get(i).getTitle());
-                    obj.setSubTitle(cards.get(i).getSubsection());
-                    categoryOptions.add(obj);
+                        CategoryOptionsVo obj = new CategoryOptionsVo();
+                        obj.setTitle(cards.get(i).getTitle());
+                        obj.setSubTitle(cards.get(i).getSubsection());
+                        categoryOptions.add(obj);
+                    }
                 }
 
                 CategoryOptionAdapter adapter = new CategoryOptionAdapter(getActivity(),R.layout.category_selection_row);

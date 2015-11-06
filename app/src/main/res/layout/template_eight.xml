@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_marginBottom="@dimen/card_margin"
     android:layout_height="match_parent">
 
     <TextView android:id="@+id/categoryTitle"
@@ -11,6 +10,8 @@
         android:text="category"
         android:paddingLeft="@dimen/card_margin"
         android:paddingRight="@dimen/card_margin"
-        android:textSize="@dimen/text_extra_big"/>
+        android:paddingBottom="10dp"
+        android:paddingTop="20dp"
+        android:textSize="@dimen/text_big"/>
 
 </LinearLayout>

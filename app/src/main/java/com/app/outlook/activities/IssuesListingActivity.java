@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.android.volley.VolleyError;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.IabHelper;
@@ -56,6 +57,8 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -77,7 +80,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "android.test.purchased";
+    static final String ITEM_SKU = "testproduct_managedproduct";
     private ArrayList<String> productIDList;
     private ArrayList<SkuDetails> skuList;
     private String selectedSKU;
@@ -85,6 +88,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private Purchase purchaseInfo;
     private SkuDetails selectedSKUItem;
     private DownloadFileFromURL task;
+    private int currentYear;
+    private int currentMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +97,6 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
-
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
@@ -115,7 +116,12 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     }
 
     private void initView() {
-        root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        root =  getCacheDir().getAbsolutePath();
+                //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+
+        final Calendar instance = Calendar.getInstance();
+        currentMonth = instance.get(Calendar.MONTH);
+        currentYear = instance.get(Calendar.YEAR);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -138,7 +144,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 String postID = magazine.getPostId();
                 if (postID != null) {
                     Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType+"");
+                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
                     intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
                     startActivity(intent);
 //                    buyClick();
@@ -157,12 +163,14 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @OnClick(R.id.calendarImg)
     public void onCalendaerClick() {
-        MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
-        myp.build(new DialogInterface.OnClickListener() {
+        final MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
+        myp.build(currentMonth,currentYear,new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                textView1.setText(myp.getSelectedMonthName() + " >> " + myp.getSelectedYear());
+                currentMonth = myp.getSelectedMonth();
+                currentYear = myp.getSelectedYear();
+                getFilteredList(myp.getSelectedYear(),myp.getSelectedMonth()+1);
             }
         }, null);
         myp.show();
@@ -171,7 +179,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private void fetchIssueList() {
 
         try {
-            String filePath = root + File.separator + "Outlook/Magazines/issues-" + issueYear + ".json";
+            String filePath = root + File.separator + "Outlook/Magazines/"+magazineType+"-issues-" + issueYear + ".json";
             Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
             if (!Util.isNetworkOnline(IssuesListingActivity.this) && file.exists()) {
@@ -211,7 +219,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private ArrayList<Magazine> getMonthList(List<Month> monthArray,String issueYear){
 
         ArrayList<Magazine> months = new ArrayList<Magazine>();
-
+        Collections.reverse(monthArray);
         for(int i=0; i< monthArray.size();i++){
 
             List<Issue> issueArray = monthArray.get(i).getIssues();
@@ -223,11 +231,43 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 magazine.setPostId(issueArray.get(j).getIssueId()+"");
                 months.add(magazine);
             }
-
+            if(issueArray.size() % 2 == 1){
+                months.add(new Magazine());
+            }
         }
-
         return months;
 
+    }
+
+    private void getFilteredList(int year, int month){
+        loadToast.show();
+        String methodName = APIMethods.ISSUE_LIST +
+                "?mag_id="+magazineType+"&year="+year+"&month="+month;
+        placeRequest(methodName, YearListVo.class, null, false);
+    }
+
+    @Override
+    public void onAPIResponse(Object response, String apiMethod) {
+        super.onAPIResponse(response, apiMethod);
+        loadToast.success();
+
+        YearListVo yearListVo = (YearListVo) response;
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
+        AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
+        animationAlphaAdapter.setAbsListView(gridView);
+        gridView.setAdapter(animationAlphaAdapter);
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod) {
+        super.onErrorResponse(error, apiMethod);
+        loadToast.error();
     }
 
     @Override
@@ -248,7 +288,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         String mPath;
 
         public DownloadFileFromURL(String issueYear) {
-            this.mPath = root + File.separator + "Outlook/Magazines/issues-" + issueYear + ".json";
+            this.mPath = root + File.separator + "Outlook/Magazines/"+magazineType+"-issues-" + issueYear + ".json";
             File file = new File(mPath);
             if (file.exists()) {
                 file.delete();

@@ -16,9 +16,11 @@ import android.widget.ImageView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.IssuesListingActivity;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineTypeVo;
+import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -78,7 +80,15 @@ public class HomeListItemFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 //                if (magazine.getId() == 1)
+                SharedPrefManager prefManager = SharedPrefManager.getInstance();
+                prefManager.init(getActivity());
+                if (magazine.getId().equals("0")) {
+                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                     startActivity(new Intent(getActivity(), IssuesListingActivity.class));
+                }else if(magazine.getId().equals("1")) {
+//                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
+                }
+//                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
             }
         });
 

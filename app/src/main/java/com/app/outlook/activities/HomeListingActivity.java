@@ -77,7 +77,8 @@ public class HomeListingActivity extends AppBaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        root =  getCacheDir().getAbsolutePath();
+        //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();

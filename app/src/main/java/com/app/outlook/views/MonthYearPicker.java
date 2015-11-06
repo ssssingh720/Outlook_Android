@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
-import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import com.app.outlook.R;
 
@@ -34,8 +34,8 @@ public class MonthYearPicker {
     private AlertDialog.Builder builder;
     private AlertDialog pickerDialog;
     private boolean build = false;
-    private NumberPicker monthNumberPicker;
-    private NumberPicker yearNumberPicker;
+    private MNumberPicker monthNumberPicker;
+    private MNumberPicker yearNumberPicker;
 
     /**
      * Instantiates a new month year picker.
@@ -98,21 +98,22 @@ public class MonthYearPicker {
         builder = new AlertDialog.Builder(activity);
         builder.setView(view);
 
-        monthNumberPicker = (NumberPicker) view.findViewById(R.id.monthNumberPicker);
+        monthNumberPicker = (MNumberPicker) view.findViewById(R.id.monthNumberPicker);
         monthNumberPicker.setDisplayedValues(PICKER_DISPLAY_MONTHS_NAMES);
 
         monthNumberPicker.setMinValue(0);
         monthNumberPicker.setMaxValue(MONTHS.length - 1);
 
-        yearNumberPicker = (NumberPicker) view.findViewById(R.id.yearNumberPicker);
+        yearNumberPicker = (MNumberPicker) view.findViewById(R.id.yearNumberPicker);
         yearNumberPicker.setMinValue(MIN_YEAR);
         yearNumberPicker.setMaxValue(MAX_YEAR);
+
 
         monthNumberPicker.setValue(selectedMonth);
         yearNumberPicker.setValue(selectedYear);
 
-        monthNumberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        yearNumberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        monthNumberPicker.setDescendantFocusability(MNumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        yearNumberPicker.setDescendantFocusability(MNumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
         builder.setTitle(activity.getString(R.string.alert_dialog_title));
         builder.setPositiveButton(activity.getString(R.string.positive_button_text), positiveButtonListener);
@@ -192,7 +193,7 @@ public class MonthYearPicker {
      *
      * @param valueChangeListener the new month value changed listener
      */
-    public void setMonthValueChangedListener(NumberPicker.OnValueChangeListener valueChangeListener) {
+    public void setMonthValueChangedListener(MNumberPicker.OnValueChangeListener valueChangeListener) {
         monthNumberPicker.setOnValueChangedListener(valueChangeListener);
     }
 
@@ -201,7 +202,7 @@ public class MonthYearPicker {
      *
      * @param valueChangeListener the new year value changed listener
      */
-    public void setYearValueChangedListener(NumberPicker.OnValueChangeListener valueChangeListener) {
+    public void setYearValueChangedListener(MNumberPicker.OnValueChangeListener valueChangeListener) {
         yearNumberPicker.setOnValueChangedListener(valueChangeListener);
     }
 

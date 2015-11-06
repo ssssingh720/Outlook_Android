@@ -19,7 +19,7 @@ public class Card {
     private String tag;
     @SerializedName("paid")
     @Expose
-    private String paid;
+    private boolean paid;
     @SerializedName("byline")
     @Expose
     private String byline;
@@ -92,7 +92,7 @@ public class Card {
      * @return
      * The paid
      */
-    public String getPaid() {
+    public boolean getPaid() {
         return paid;
     }
 
@@ -101,7 +101,7 @@ public class Card {
      * @param paid
      * The paid
      */
-    public void setPaid(String paid) {
+    public void setPaid(boolean paid) {
         this.paid = paid;
     }
 

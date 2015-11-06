@@ -60,18 +60,15 @@ public class HomeGridFragment extends BaseFragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SharedPrefManager prefManager = SharedPrefManager.getInstance();
+                prefManager.init(getActivity());
                 if (position == 0) {
-                    SharedPrefManager prefManager = SharedPrefManager.getInstance();
-                    prefManager.init(getActivity());
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
-                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
+                }else if(position == 1) {
+                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
                 }
-//                if(position == 1) {
-//                    SharedPrefManager prefManager = SharedPrefManager.getInstance();
-//                    prefManager.init(getActivity());
-//                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
-//                    startActivity(new Intent(getActivity(), CategoryListingActivity.class));
-//                }
+
+                startActivity(new Intent(getActivity(), IssuesListingActivity.class));
             }
         });
     }
