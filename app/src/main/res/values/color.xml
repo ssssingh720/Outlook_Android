@@ -3,6 +3,7 @@
     <color name="app_red">#EB2E26</color>
     <color name="app_blue">#2380B7</color>
     <color name="white">#FFFFFF</color>
+    <color name="grey1">#E8E8E8</color>
     <color name="light_grey">#cfcfce</color>
     <color name="cool_grey">#F1F1F2</color>
     <color name="text_dark_grey">#777777</color>
@@ -16,6 +17,9 @@
     <color name="description_grey">#58595B</color>
     <color name="black_transparent">#66000000</color>
     <color name="white_transparent">#66FFFFFF</color>
+    <color name="black">#000</color>
+    <color name="blue_facebook">#39579A</color>
+    <color name="red_google_plus">#D5472F</color>
 
     <color name="vpi__background_holo_dark">#ff000000</color>
     <color name="vpi__background_holo_light">#fff3f3f3</color>

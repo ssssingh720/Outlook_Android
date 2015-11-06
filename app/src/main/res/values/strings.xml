@@ -37,4 +37,9 @@
     <string name="terms_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="logout">Logout</string>
+    <string name="facebook_signin">Sign in with Facebook</string>
+    <string name="google_signin">Sign in with Google</string>
+    <string name="signin_to_conitinue">SIGN IN TO CONTINUE</string>
+    <string name="facebook_app_id">1067468666675015</string>
+    <string name="play_services_error_fmt">Google Play Services Error: %i</string>
 </resources>
