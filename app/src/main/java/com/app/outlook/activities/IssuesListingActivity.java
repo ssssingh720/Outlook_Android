@@ -143,11 +143,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
-                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
-                    startActivity(intent);
-//                    buyClick();
+//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+//                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+//                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+//                    startActivity(intent);
+                    buyClick();
                 }
 
             }
@@ -314,7 +314,10 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
-                "?mag_id="+params[0]+"&year="+params[1]);
+                "?mag_id="+params[0]+"&year="+params[1]+
+                        "&user_id=5&token="+
+                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+                );
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
