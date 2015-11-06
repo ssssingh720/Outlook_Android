@@ -311,7 +311,8 @@ public class LogInActivity extends AppBaseActivity implements
                 UserProfileVo profile= new UserProfileVo();
                 profile.setName(personName);
                 profile.setEmail(email);
-                saveLogInData(LOGIN_GOOGLE,profile);
+                saveSocialLogInData(profile);
+                doEmailLogIn(profile.getEmail(),profile.getEmail());
             }
         } else {
             // Show signed-out message
@@ -332,8 +333,8 @@ public class LogInActivity extends AppBaseActivity implements
                         UserProfileVo profile= new UserProfileVo();
                         profile.setName(json.getString("name"));
                         profile.setEmail(json.getString("email"));
-                        Log.i(TAG + "Chum", profile.getEmail());
-                        saveLogInData(LOGIN_FACEBOOK,profile);
+                        saveSocialLogInData(profile);
+                        doEmailLogIn(profile.getEmail(),profile.getEmail());
                     }
                 } catch (JSONException e) {
                     //cancelAllLogins();
@@ -355,25 +356,25 @@ public class LogInActivity extends AppBaseActivity implements
         loadToast.success();
         UserProfileVo userInfo = (UserProfileVo) response;
         userInfo.setEmail(mEmailEditField.getText().toString().trim());
-        saveLogInData(LOGIN_EMAIL, userInfo);
+        saveLogInToken(userInfo);
     }
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod) {
         super.onErrorResponse(error, apiMethod);
         Log.i(TAG, "Error" + error);
         loadToast.error();
+        Toast.makeText(getApplicationContext(),"Couldn't LogIn. Please try later.",Toast.LENGTH_SHORT).show();
     }
     /*saving Login data & move to next screen*/
-    private void saveLogInData(int type, UserProfileVo profile) {
-
+    private void saveLogInToken(UserProfileVo profile) {
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
-            SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
-            SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME,profile.getName());
             startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-            Log.i(TAG, profile.getToken()+"email"+profile.getEmail()+"name"+profile.getName());
+            Log.i(TAG, profile.getToken() + "email" + profile.getEmail() + "name" + profile.getName());
             finish();
-
     }
-
+private void saveSocialLogInData(UserProfileVo profileVo){
+    SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profileVo.getEmail());
+    SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME, profileVo.getName());
+}
 }
