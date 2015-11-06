@@ -3,19 +3,25 @@ package com.app.outlook.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.Display;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.app.outlook.R;
+import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.OutlookConstants;
-import com.app.outlook.modal.UserProfile;
+import com.app.outlook.modal.UserProfileVo;
+import com.app.outlook.modal.YearListVo;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -34,9 +40,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
+import net.steamcrafted.loadtoast.LoadToast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,6 +85,7 @@ public class LogInActivity extends AppBaseActivity implements
     private static final int LOGIN_FACEBOOK = 1;
     private static final int LOGIN_GOOGLE = 2;
     private static final int LOGIN_EMAIL = 3;
+    private LoadToast loadToast;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +98,23 @@ public class LogInActivity extends AppBaseActivity implements
         initializeSDK();
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        initView();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+    }
+
+    private void initView() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        loadToast = new LoadToast(this);
+        loadToast.setText("Loading...");
+        int height = size.y;
+        loadToast.setTranslationY(height / 2);
+        loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
+                .setProgressColor(getResources().getColor(R.color.app_red));
 
     }
 
@@ -105,14 +131,16 @@ public class LogInActivity extends AppBaseActivity implements
         }
     }
     @OnClick (R.id.facebook_button) void facebookLogin(){
+        loadToast.show();
         Toast.makeText(getApplicationContext(),"facebook",Toast.LENGTH_SHORT).show();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
 
 
     }
     @OnClick (R.id.google_button) void googleLogin(){
-        mGoogleApiClient.connect();
+        //loadToast.show();
         mShouldResolve = true;
+        mGoogleApiClient.connect();
         Toast.makeText(getApplicationContext(), "google", Toast.LENGTH_SHORT).show();
     }
     @OnClick(R.id.email_button) void emailLogin(){
@@ -124,7 +152,11 @@ public class LogInActivity extends AppBaseActivity implements
     }
 /*login api call*/
     private void doEmailLogIn(String email, String password) {
-
+        loadToast.show();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(FeedParams.EMAIL, email);
+        params.put(FeedParams.USERNAME, password);
+        placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
 
     }
 
@@ -147,6 +179,7 @@ public class LogInActivity extends AppBaseActivity implements
     public FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
+            loadToast.success();
             Log.d(TAG, "Facebook Login Success::" + loginResult);
             Set<String> permissionsDenied = loginResult.getRecentlyDeniedPermissions();
             Log.d("LogIn", "Facebook Login Success Permission Denied::" + permissionsDenied);
@@ -170,11 +203,13 @@ public class LogInActivity extends AppBaseActivity implements
 
         @Override
         public void onCancel() {
+            loadToast.error();
             Log.d("LogIn", "Facebook Login Cancel::");
         }
 
         @Override
         public void onError(FacebookException exception) {
+            loadToast.error();
             Log.d("LogIn", "Facebook Login Error::" + exception);
         }
     };
@@ -207,6 +242,7 @@ public class LogInActivity extends AppBaseActivity implements
     public void onConnected(Bundle bundle) {
         Log.d("LogIn", "onConnected:" + bundle);
         // Show the signed-in UI
+        loadToast.success();
         requestGoogleData(true);
     }
     /* g+ connection suspended */
@@ -258,7 +294,6 @@ public class LogInActivity extends AppBaseActivity implements
             // No default Google Play Services error, display a message to the user.
             String errorString = getString(R.string.play_services_error_fmt, errorCode);
             Toast.makeText(this, errorString, Toast.LENGTH_SHORT).show();
-
             mShouldResolve = false;
             requestGoogleData(false);
         }
@@ -273,7 +308,7 @@ public class LogInActivity extends AppBaseActivity implements
                 Log.d(TAG, "requestGoogleData Person Name::" + personName);
                 String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
                 Log.d(TAG, "email::" + email);
-                UserProfile profile= new UserProfile();
+                UserProfileVo profile= new UserProfileVo();
                 profile.setName(personName);
                 profile.setEmail(email);
                 saveLogInData(LOGIN_GOOGLE,profile);
@@ -294,10 +329,9 @@ public class LogInActivity extends AppBaseActivity implements
                 try {
                     if (json != null) {    /*String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
                         showToast((Html.fromHtml(text)) + "");*/
-                        UserProfile profile= new UserProfile();
+                        UserProfileVo profile= new UserProfileVo();
                         profile.setName(json.getString("name"));
                         profile.setEmail(json.getString("email"));
-                        profile.setUserId(json.getString("id"));
                         Log.i(TAG + "Chum", profile.getEmail());
                         saveLogInData(LOGIN_FACEBOOK,profile);
                     }
@@ -314,21 +348,31 @@ public class LogInActivity extends AppBaseActivity implements
 
 
     }
+    @Override
+    public void onAPIResponse(Object response, String apiMethod) {
+        super.onAPIResponse(response, apiMethod);
+        Log.i(TAG,"success"+response);
+        loadToast.success();
+        UserProfileVo userInfo = (UserProfileVo) response;
+        userInfo.setEmail(mEmailEditField.getText().toString().trim());
+        saveLogInData(LOGIN_EMAIL, userInfo);
+    }
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod) {
+        super.onErrorResponse(error, apiMethod);
+        Log.i(TAG, "Error" + error);
+        loadToast.error();
+    }
     /*saving Login data & move to next screen*/
-    private void saveLogInData(int type, UserProfile profile) {
-       /* switch (type){
-            case LOGIN_FACEBOOK:
-                break;
-            case LOGIN_GOOGLE:
-                break;
-            case LOGIN_EMAIL:
-                break;*/
+    private void saveLogInData(int type, UserProfileVo profile) {
+
+            SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME,profile.getName());
             startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-
-
+            Log.i(TAG, profile.getToken()+"email"+profile.getEmail()+"name"+profile.getName());
+            finish();
 
     }
 

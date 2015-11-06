@@ -34,4 +34,5 @@ public class FeedParams {
     public static final String QUANTITY = "quantity";
     public static final String PINCODE = "pincode";
     public static final String PROFILE_PIC = "profile_pic";
+    public static final String USERNAME = "username";
 }
