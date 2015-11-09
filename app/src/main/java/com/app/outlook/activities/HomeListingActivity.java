@@ -46,23 +46,21 @@ import butterknife.OnClick;
 
 public class HomeListingActivity extends AppBaseActivity {
 
-    private static final String TAG = "HomeListingActivity";
-    private ArrayList<MagazineTypeVo> magazineList;
-    private HomeGridFragment magazineGridFragment;
-    private HomeListFragment magazineListFragment;
-    private LoadToast loadToast;
-
-    public static int PAGES = 2;
     public final static int LOOPS = 1;
     public final static int FIRST_PAGE = 0;//PAGES * LOOPS / 2;
     public final static float BIG_SCALE = 1.0f;
     public final static float SMALL_SCALE = 0.7f;
     public final static float DIFF_SCALE = BIG_SCALE - SMALL_SCALE;
-
+    private static final String TAG = "HomeListingActivity";
+    public static int PAGES = 2;
     @Bind(R.id.carouselView)
     ImageButton carouselView;
     @Bind(R.id.gridView)
     ImageButton gridView;
+    private ArrayList<MagazineTypeVo> magazineList;
+    private HomeGridFragment magazineGridFragment;
+    private HomeListFragment magazineListFragment;
+    private LoadToast loadToast;
     private DownloadFileFromURL task;
     private String root;
 
@@ -77,7 +75,7 @@ public class HomeListingActivity extends AppBaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        root =  getCacheDir().getAbsolutePath();
+        root = getCacheDir().getAbsolutePath();
         //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -100,7 +98,7 @@ public class HomeListingActivity extends AppBaseActivity {
 
         try {
             String filePath = root + File.separator + "Outlook/Magazines/list.json";
-            Log.d(TAG,"Magazine Path::" + filePath);
+            Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
             if (!Util.isNetworkOnline(HomeListingActivity.this) && file.exists()) {
                 loadFragments(filePath);
@@ -131,7 +129,8 @@ public class HomeListingActivity extends AppBaseActivity {
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.setLenient(true);
 
-        Type listType = new TypeToken<ArrayList<MagazineTypeVo>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<MagazineTypeVo>>() {
+        }.getType();
         magazineList = new Gson().fromJson(reader, listType);
         PAGES = magazineList.size();
 
@@ -156,8 +155,8 @@ public class HomeListingActivity extends AppBaseActivity {
     }
 
     @OnClick(R.id.imgSettings)
-    public void onSettingsClick(){
-        startActivity(new Intent(this,SettingsActivity.class));
+    public void onSettingsClick() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     @OnClick(R.id.carouselView)
@@ -173,6 +172,21 @@ public class HomeListingActivity extends AppBaseActivity {
         manager.beginTransaction()
                 .replace(R.id.contentPanel, fragment)
                 .commit();
+    }
+
+    private void stopDownload(String mFileName) {
+        File file = new File(mFileName);
+        file.delete();
+        SessionManager.setDownloadFailed(HomeListingActivity.this, false);
+        loadToast.error();
+        finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (task != null)
+            task.cancel(true);
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -205,8 +219,8 @@ public class HomeListingActivity extends AppBaseActivity {
         protected String doInBackground(String... id) {
             int count;
             try {
-                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST+"?user_id=5&token="+
-                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6");
+                URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_TYPE_LIST + "?user_id=5&token=" +
+                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6");
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
@@ -256,20 +270,5 @@ public class HomeListingActivity extends AppBaseActivity {
             loadToast.success();
         }
 
-    }
-
-    private void stopDownload(String mFileName) {
-        File file = new File(mFileName);
-        file.delete();
-        SessionManager.setDownloadFailed(HomeListingActivity.this, false);
-        loadToast.error();
-        finish();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(task != null)
-            task.cancel(true);
     }
 }

@@ -66,8 +66,7 @@ public class SplashScreen extends AppBaseActivity {
                 finish();
                 if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_LOGGEDIN)) {
                     startActivity(new Intent(SplashScreen.this, HomeListingActivity.class));
-                }
-                else{
+                } else {
                     startActivity(new Intent(SplashScreen.this, LogInActivity.class));
                 }
             }

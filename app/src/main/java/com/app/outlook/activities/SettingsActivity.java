@@ -16,7 +16,7 @@ public class SettingsActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPrefManager prefManager = SharedPrefManager.getInstance();
-        int theme = prefManager.getSharedDataInt(IntentConstants.THEME) == 0 ? R.style.AppTheme : prefManager.getSharedDataInt(IntentConstants.THEME) ;
+        int theme = prefManager.getSharedDataInt(IntentConstants.THEME) == 0 ? R.style.AppTheme : prefManager.getSharedDataInt(IntentConstants.THEME);
         setTheme(theme);
 
         setContentView(R.layout.activity_settings);

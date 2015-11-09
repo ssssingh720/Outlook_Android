@@ -1,1 +1,43 @@
-{"project_info":{"project_id":"outlook-app-1105","project_number":"105915870368","name":"Outlook-App"},"client":[{"client_info":{"mobilesdk_app_id":"1:105915870368:android:31949d92820bc267","client_id":"android:com.app.outlook","client_type":1,"android_client_info":{"package_name":"com.app.outlook"}},"oauth_client":[{"client_id":"105915870368-vmvllbsnu7nhkmpmcn65efdhcasp3b0r.apps.googleusercontent.com","client_type":1,"android_info":{"package_name":"com.app.outlook","certificate_hash":"849BFE6C6AE77EF5AAE2F76606D6BDCE34EBE487"}}],"api_key":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":1,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":2},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_id": "outlook-app-1105",
+    "project_number": "105915870368",
+    "name": "Outlook-App"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105915870368:android:31949d92820bc267",
+        "client_id": "android:com.app.outlook",
+        "client_type": 1,
+        "android_client_info": {"package_name": "com.app.outlook"}
+      },
+      "oauth_client": [
+        {
+          "client_id": "105915870368-vmvllbsnu7nhkmpmcn65efdhcasp3b0r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.outlook",
+            "certificate_hash": "849BFE6C6AE77EF5AAE2F76606D6BDCE34EBE487"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {"status": 1},
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {"status": 2},
+        "ads_service": {"status": 1}
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

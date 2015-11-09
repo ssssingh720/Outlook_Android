@@ -35,15 +35,14 @@ public class HomeListFragment extends BaseFragment {
     public ViewPager mViewPager;
     @Bind(R.id.page_indicator)
     public CirclePageIndicator pageIndicator;
-    private CarouselLinearLayout cur = null;
-    private CarouselLinearLayout next = null;
     public ListPagerAdapter adapter;
-    private ArrayList<MagazineTypeVo> magazineList;
     @Bind(R.id.magazineName)
     TextView magazineName;
     @Bind(R.id.magazineDescp)
     TextView magazineDescp;
-
+    private CarouselLinearLayout cur = null;
+    private CarouselLinearLayout next = null;
+    private ArrayList<MagazineTypeVo> magazineList;
     ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override

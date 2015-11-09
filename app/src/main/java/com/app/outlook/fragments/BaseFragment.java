@@ -28,9 +28,9 @@ import java.util.HashMap;
 public class BaseFragment extends Fragment implements ServerCallback {
 
     protected View mView;
-    private Toast mToast;
     protected StateHolder stateHolder;
     protected Context fragmentContext;
+    private Toast mToast;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -27,8 +27,8 @@ public class MagazineDetailsActivity extends AppBaseActivity {
     public static final String EXTRA_NAME = "cheese_name";
 
     MagazineDetailsFragment magazineDetailsFragment;
-    private String TAG = "MagazineDetailsActivity";
     ArrayList<String> mContent = new ArrayList<>();
+    private String TAG = "MagazineDetailsActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

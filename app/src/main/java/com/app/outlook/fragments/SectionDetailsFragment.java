@@ -43,10 +43,9 @@ public class SectionDetailsFragment extends BaseFragment {
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.getSettings().setLoadsImagesAutomatically(true);
-        if(Util.isNetworkOnline(getActivity())) {
+        if (Util.isNetworkOnline(getActivity())) {
             webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-        }
-        else{
+        } else {
             webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
         webview.loadData(content, mimeType, encoding);

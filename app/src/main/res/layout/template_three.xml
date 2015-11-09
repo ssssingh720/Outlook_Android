@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/subtitleLyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -25,9 +25,9 @@
             android:id="@+id/subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_medium"
+            android:text="VOTE OF THANKS"
             android:textColor="@color/section_blue"
-            android:text="VOTE OF THANKS" />
+            android:textSize="@dimen/text_medium" />
 
     </LinearLayout>
 
@@ -35,23 +35,23 @@
         android:id="@+id/sub_category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
         android:layout_marginBottom="10dp"
-        android:textSize="@dimen/text_small"
-        android:text="Meghna, Australia" />
+        android:layout_marginLeft="17dp"
+        android:text="Meghna, Australia"
+        android:textSize="@dimen/text_small" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/userImg"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@color/grey"
             android:layout_marginLeft="17dp"
+            android:src="@color/grey"
             android:visibility="visible" />
 
         <TextView
@@ -60,37 +60,37 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
             android:layout_marginRight="17dp"
-            android:textSize="@dimen/text_small"
-            android:text="@string/ipsum" />
+            android:text="@string/ipsum"
+            android:textSize="@dimen/text_small" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/authorLyt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:background="@color/tag_grey"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:paddingLeft="10dp"
         android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
         android:paddingTop="2dp">
 
         <ImageView
             android:layout_width="5dp"
             android:layout_height="5dp"
-            android:paddingLeft="10dp"
-            android:background="@color/white" />
+            android:background="@color/white"
+            android:paddingLeft="10dp" />
 
         <TextView
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_small"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Sumit Jaiswal" />
+            android:text="Sumit Jaiswal"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_small" />
 
     </LinearLayout>
 

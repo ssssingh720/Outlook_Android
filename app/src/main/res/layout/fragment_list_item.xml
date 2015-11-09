@@ -24,10 +24,10 @@
                 android:id="@+id/cardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
                 android:background="@color/white"
                 card_view:cardCornerRadius="3dp"
-                card_view:cardElevation="5dp">
+                card_view:cardElevation="5dp"
+                card_view:cardUseCompatPadding="true">
 
                 <ImageView
                     android:id="@+id/magazineImg"

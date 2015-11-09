@@ -3,13 +3,14 @@ package com.app.outlook.modal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by srajendrakumar on 03/11/15.
  */
-public class YearListVo extends BaseVO{
+public class YearListVo extends BaseVO {
 
     @SerializedName("name")
     @Expose
@@ -22,54 +23,42 @@ public class YearListVo extends BaseVO{
     private List<Month> months = new ArrayList<Month>();
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The year
+     * @return The year
      */
     public String getYear() {
         return year;
     }
 
     /**
-     *
-     * @param year
-     * The year
+     * @param year The year
      */
     public void setYear(String year) {
         this.year = year;
     }
 
     /**
-     *
-     * @return
-     * The months
+     * @return The months
      */
     public List<Month> getMonths() {
         return months;
     }
 
     /**
-     *
-     * @param months
-     * The months
+     * @param months The months
      */
     public void setMonths(List<Month> months) {
         this.months = months;

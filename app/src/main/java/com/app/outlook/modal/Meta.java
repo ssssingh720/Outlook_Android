@@ -13,18 +13,14 @@ public class Meta {
     private Links links;
 
     /**
-     *
-     * @return
-     * The links
+     * @return The links
      */
     public Links getLinks() {
         return links;
     }
 
     /**
-     *
-     * @param links
-     * The links
+     * @param links The links
      */
     public void setLinks(Links links) {
         this.links = links;

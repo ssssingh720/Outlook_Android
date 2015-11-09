@@ -3,6 +3,7 @@ package com.app.outlook.modal;
 /**
  * Created by srajendrakumar on 19/10/15.
  */
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

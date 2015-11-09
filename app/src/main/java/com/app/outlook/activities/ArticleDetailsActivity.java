@@ -20,9 +20,9 @@ import butterknife.OnClick;
  */
 public class ArticleDetailsActivity extends AppBaseActivity {
 
-    private SectionDetailsHolderFragment sectionDetailsHolderFragment;
     @Bind(R.id.toolbar_title)
     TextView titleTxt;
+    private SectionDetailsHolderFragment sectionDetailsHolderFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,8 @@ public class ArticleDetailsActivity extends AppBaseActivity {
 
         sectionDetailsHolderFragment = new SectionDetailsHolderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION,0));
-        bundle.putInt(IntentConstants.CARD_POSITION, getIntent().getIntExtra(IntentConstants.CARD_POSITION,0));
+        bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION, 0));
+        bundle.putInt(IntentConstants.CARD_POSITION, getIntent().getIntExtra(IntentConstants.CARD_POSITION, 0));
         bundle.putString(IntentConstants.ISSUE_ID, getIntent().getStringExtra(IntentConstants.ISSUE_ID));
         bundle.putString(IntentConstants.MAGAZINE_ID, getIntent().getStringExtra(IntentConstants.MAGAZINE_ID));
         sectionDetailsHolderFragment.setArguments(bundle);
@@ -47,7 +47,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         transaction.commit();
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         titleTxt.setText(title);
     }
 

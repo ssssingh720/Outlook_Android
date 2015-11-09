@@ -2,6 +2,7 @@ package com.app.outlook.modal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,90 +29,70 @@ public class Category {
     private List<Category> categories = new ArrayList<Category>();
 
     /**
-     *
-     * @return
-     * The categoryName
+     * @return The categoryName
      */
     public String getCategoryName() {
         return categoryName;
     }
 
     /**
-     *
-     * @param categoryName
-     * The category_name
+     * @param categoryName The category_name
      */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
     /**
-     *
-     * @return
-     * The categoryIcon
+     * @return The categoryIcon
      */
     public String getCategoryIcon() {
         return categoryIcon;
     }
 
     /**
-     *
-     * @param categoryIcon
-     * The category_icon
+     * @param categoryIcon The category_icon
      */
     public void setCategoryIcon(String categoryIcon) {
         this.categoryIcon = categoryIcon;
     }
 
     /**
-     *
-     * @return
-     * The categoryType
+     * @return The categoryType
      */
     public String getCategoryType() {
         return categoryType;
     }
 
     /**
-     *
-     * @param categoryType
-     * The category_type
+     * @param categoryType The category_type
      */
     public void setCategoryType(String categoryType) {
         this.categoryType = categoryType;
     }
 
     /**
-     *
-     * @return
-     * The cards
+     * @return The cards
      */
     public List<Card> getCards() {
         return cards;
     }
 
     /**
-     *
-     * @param cards
-     * The cards
+     * @param cards The cards
      */
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 
     /**
-     *
-     * @return
-     * The categories
+     * @return The categories
      */
     public List<Category> getCategories() {
         return categories;
     }
 
     /**
-     *
-     * @param categories
-     * The categories
+     * @param categories The categories
      */
     public void setCategories(List<Category> categories) {
         this.categories = categories;

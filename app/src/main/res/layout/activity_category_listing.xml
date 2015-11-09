@@ -34,15 +34,15 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:paddingRight="10dp"
-                    android:visibility="visible"
-                    android:src="@drawable/icon_back" />
+                    android:src="@drawable/icon_back"
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingLeft="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="10dp"
                     android:src="@drawable/icon_outlook" />
 
             </LinearLayout>
@@ -56,8 +56,8 @@
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
-                android:visibility="visible"
-                android:src="@drawable/icon_calendar" />
+                android:src="@drawable/icon_calendar"
+                android:visibility="visible" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -68,11 +68,11 @@
         android:layout_height="60dp"
         android:layout_below="@+id/toolbar"
         android:layout_margin="15dp"
+        android:background="@drawable/selector_subcribe_button"
         android:text="@string/subscribe"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:visibility="gone"
-        android:background="@drawable/selector_subcribe_button"/>
+        android:visibility="gone" />
 
     <GridView
         android:id="@+id/gridView"
@@ -86,6 +86,6 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:scrollbars="none"
-        android:visibility="gone"
-        android:verticalSpacing="15dp"></GridView>
+        android:verticalSpacing="15dp"
+        android:visibility="gone"></GridView>
 </RelativeLayout>

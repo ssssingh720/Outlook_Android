@@ -24,9 +24,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AppBaseActivity extends AppCompatActivity implements ServerCallback {
 
     public static final int MAX_PAGE_BUFFER = 3;
-    private Toast mToast;
     protected PageManager pageManager = new PageManager(this,
             MAX_PAGE_BUFFER);
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

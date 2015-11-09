@@ -73,7 +73,7 @@ public class HomeListItemFragment extends BaseFragment {
         magazineImg.setLayoutParams(lp);
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
-        if(!magazine.getCoverImage().isEmpty())
+        if (!magazine.getCoverImage().isEmpty())
             Picasso.with(getActivity()).load(magazine.getCoverImage()).into(magazineImg);
 
         mView.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,7 @@ public class HomeListItemFragment extends BaseFragment {
                 if (magazine.getId().equals("0")) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                     startActivity(new Intent(getActivity(), IssuesListingActivity.class));
-                }else if(magazine.getId().equals("1")) {
+                } else if (magazine.getId().equals("1")) {
 //                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
                 }
 //                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));

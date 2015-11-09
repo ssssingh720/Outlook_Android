@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -35,24 +36,24 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_big"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_toEndOf="@+id/toolbar_back"
+                android:layout_toRightOf="@+id/toolbar_back"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:text="title"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toRightOf="@+id/toolbar_back"
-                android:layout_toEndOf="@+id/toolbar_back" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_big" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/toolbar_title"
-                android:layout_toEndOf="@+id/toolbar_title"
                 android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/toolbar_title"
+                android:layout_toRightOf="@+id/toolbar_title"
                 android:paddingTop="15dp"
-                android:src="@drawable/icon_dropdown"/>
+                android:src="@drawable/icon_dropdown" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -60,8 +61,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="10dp"
-                android:visibility="gone"
-                android:src="@drawable/icon_share"/>
+                android:src="@drawable/icon_share"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

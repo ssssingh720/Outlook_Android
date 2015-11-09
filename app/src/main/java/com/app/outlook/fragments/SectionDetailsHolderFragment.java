@@ -47,20 +47,20 @@ import butterknife.OnClick;
  */
 public class SectionDetailsHolderFragment extends BaseFragment {
 
-    private int mSelectedItem;
     @Bind(R.id.container)
     ViewPager mPager;
-    private PageAdapter mAdapter;
-    private int categoryPosition = 0;
-    private int currentCardPosition = 0;
-    private int currentPageCount = 0;
     ArrayList<String> mContents = new ArrayList<>();
-    private String issueID,magazineID;
     @Bind(R.id.cardsList)
     ListView cardsList;
     @Bind(R.id.articleOptionView)
     CardView articleOptionView;
     ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
+    private int mSelectedItem;
+    private PageAdapter mAdapter;
+    private int categoryPosition = 0;
+    private int currentCardPosition = 0;
+    private int currentPageCount = 0;
+    private String issueID, magazineID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,23 +78,23 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     }
 
     public void onSelectionClick() {
-        if(articleOptionView.getVisibility() == View.VISIBLE){
+        if (articleOptionView.getVisibility() == View.VISIBLE) {
             articleOptionView.setVisibility(View.GONE);
-        }else{
+        } else {
             articleOptionView.setVisibility(View.VISIBLE);
         }
     }
 
     @OnClick(R.id.container)
-    public void onContainerClick(){
+    public void onContainerClick() {
         onSelectionClick();
     }
 
     private void loadContents() {
 
         String root = getActivity().getCacheDir().getAbsolutePath();
-                //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
-        String filePath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
+        //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        String filePath = root + File.separator + "Outlook/Magazines/" + magazineID + "-magazine-" + issueID + ".json";
         try {
             File file = new File(filePath);
             if (file.exists()) {
@@ -105,14 +105,14 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 MagazineDetailsVo detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
                 List<Category> mCategories = detailsObject.getCategories();
                 Category selectedCategory = mCategories.get(categoryPosition);
-                if(selectedCategory.getCategoryName() != null) {
-                    ((ArticleDetailsActivity)getActivity()).setTitle(selectedCategory.getCategoryName());
-                }else{
-                    ((ArticleDetailsActivity)getActivity()).setTitle("Category Title");
+                if (selectedCategory.getCategoryName() != null) {
+                    ((ArticleDetailsActivity) getActivity()).setTitle(selectedCategory.getCategoryName());
+                } else {
+                    ((ArticleDetailsActivity) getActivity()).setTitle("Category Title");
                 }
                 List<Card> cards = selectedCategory.getCards();
-                for (int i=0;i<cards.size();i++){
-                    if(cards.get(i).getPaid()) {
+                for (int i = 0; i < cards.size(); i++) {
+                    if (cards.get(i).getPaid()) {
                         mContents.add(cards.get(i).getContent());
                         CategoryOptionsVo obj = new CategoryOptionsVo();
                         obj.setTitle(cards.get(i).getTitle());
@@ -121,9 +121,9 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                     }
                 }
 
-                CategoryOptionAdapter adapter = new CategoryOptionAdapter(getActivity(),R.layout.category_selection_row);
+                CategoryOptionAdapter adapter = new CategoryOptionAdapter(getActivity(), R.layout.category_selection_row);
                 cardsList.setAdapter(adapter);
-                if(adapter.getCount() > 4){
+                if (adapter.getCount() > 4) {
                     View item = adapter.getView(0, null, cardsList);
                     item.measure(0, 0);
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (5.5 * item.getMeasuredHeight()));
@@ -202,7 +202,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         }
     }
 
-    public class CategoryOptionAdapter extends ArrayAdapter<CategoryOptionsVo>{
+    public class CategoryOptionAdapter extends ArrayAdapter<CategoryOptionsVo> {
 
         public CategoryOptionAdapter(Context context, int resource) {
             super(context, resource);

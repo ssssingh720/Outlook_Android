@@ -59,7 +59,7 @@ public class HomeGridViewAdapter extends ArrayAdapter<MagazineTypeVo> {
 
         MagazineTypeVo magazine = data.get(position);
         holder.imageTitle.setText(magazine.getName());
-        if(!magazine.getCoverImage().isEmpty())
+        if (!magazine.getCoverImage().isEmpty())
             Picasso.with(context).load(magazine.getCoverImage()).fit().into(holder.image);
 
         return row;
