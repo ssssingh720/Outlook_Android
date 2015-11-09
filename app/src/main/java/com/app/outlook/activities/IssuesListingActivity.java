@@ -29,7 +29,6 @@ import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
-import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Issue;
@@ -47,6 +46,9 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 import net.steamcrafted.loadtoast.LoadToast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -69,31 +71,19 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class IssuesListingActivity extends AppBaseActivity implements IabHelper.QueryInventoryFinishedListener, IabHelper.OnIabPurchaseFinishedListener, IabHelper.OnConsumeMultiFinishedListener, IabHelper.OnConsumeFinishedListener {
+public class IssuesListingActivity extends AppBaseActivity implements IabHelper.QueryInventoryFinishedListener, IabHelper.OnIabPurchaseFinishedListener, IabHelper.OnConsumeMultiFinishedListener,  IabHelper.OnConsumeFinishedListener{
 
-    static final String ITEM_SKU = "testproduct_managedproduct";
     private static final String TAG = "CategoryListingActivity";
+    private OutlookGridViewAdapter adapter;
     @Bind(R.id.gridView)
     GridView gridView;
-    IInAppBillingService mService;
-    IabHelper mHelper;
-    ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name,
-                                       IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-        }
-    };
-    private OutlookGridViewAdapter adapter;
     private int magazineType;
     private LoadToast loadToast;
     private String issueYear = "2015";
     private String root;
+    IInAppBillingService mService;
+    IabHelper mHelper;
+    static final String ITEM_SKU = "outlook.test.managedproduct";//"android.test.purchased";
     private ArrayList<String> productIDList;
     private ArrayList<SkuDetails> skuList;
     private String selectedSKU;
@@ -115,21 +105,32 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
         mHelper.startSetup(new
                                    IabHelper.OnIabSetupFinishedListener() {
-                                       public void onIabSetupFinished(IabResult result) {
+                                       public void onIabSetupFinished(IabResult result)
+                                       {
                                            if (!result.isSuccess()) {
                                                Log.d(TAG, "In-app Billing setup failed: " +
                                                        result);
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
+                                               queryList();
+
                                            }
                                        }
                                    });
         initView();
     }
 
+    private void queryList(){
+        List additionalSkuList = new ArrayList();
+        additionalSkuList.add(ITEM_SKU);
+//                                               additionalSkuList.add(SKU_BANANA);
+        mHelper.queryInventoryAsync(true, additionalSkuList,
+                this);
+    }
+
     private void initView() {
-        root = getCacheDir().getAbsolutePath();
-        //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+        root =  getCacheDir().getAbsolutePath();
+                //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
 
         final Calendar instance = Calendar.getInstance();
         currentMonth = instance.get(Calendar.MONTH);
@@ -155,11 +156,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-//                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
-//                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
-//                    startActivity(intent);
-                    buyClick();
+                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+                    startActivity(intent);
+//                    buyClick();
                 }
 
             }
@@ -176,13 +177,13 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     @OnClick(R.id.calendarImg)
     public void onCalendaerClick() {
         final MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
-        myp.build(currentMonth, currentYear, new DialogInterface.OnClickListener() {
+        myp.build(currentMonth,currentYear,new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 currentMonth = myp.getSelectedMonth();
                 currentYear = myp.getSelectedYear();
-                getFilteredList(myp.getSelectedYear(), myp.getSelectedMonth() + 1);
+                getFilteredList(myp.getSelectedYear(),myp.getSelectedMonth()+1);
             }
         }, null);
         myp.show();
@@ -191,15 +192,15 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private void fetchIssueList() {
 
         try {
-            String filePath = root + File.separator + "Outlook/Magazines/" + magazineType + "-issues-" + issueYear + ".json";
-            Log.d(TAG, "Magazine Path::" + filePath);
+            String filePath = root + File.separator + "Outlook/Magazines/"+magazineType+"-issues-" + issueYear + ".json";
+            Log.d(TAG,"Magazine Path::" + filePath);
             File file = new File(filePath);
             if (!Util.isNetworkOnline(IssuesListingActivity.this) && file.exists()) {
                 loadGridView(filePath);
 
             } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
                 task = new DownloadFileFromURL(issueYear);
-                task.execute(magazineType + "", issueYear);
+                task.execute(magazineType+"",issueYear);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +208,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
     }
 
-    private void loadGridView(String filePath) {
+    private void loadGridView(String filePath){
         gridView.setVisibility(View.VISIBLE);
         String response = Util.readJsonFromSDCard(filePath);
         System.out.println("Response::" + response);
@@ -220,7 +221,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout, getMonthList(yearListVo.getMonths(), yearListVo.getYear()), width);
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
@@ -228,22 +229,22 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     }
 
-    private ArrayList<Magazine> getMonthList(List<Month> monthArray, String issueYear) {
+    private ArrayList<Magazine> getMonthList(List<Month> monthArray,String issueYear){
 
         ArrayList<Magazine> months = new ArrayList<Magazine>();
         Collections.reverse(monthArray);
-        for (int i = 0; i < monthArray.size(); i++) {
+        for(int i=0; i< monthArray.size();i++){
 
             List<Issue> issueArray = monthArray.get(i).getIssues();
 
-            for (int j = 0; j < issueArray.size(); j++) {
+            for(int j=0 ; j< issueArray.size();j++){
                 Magazine magazine = new Magazine();
                 magazine.setImage(issueArray.get(j).getImage());
-                magazine.setIssueDate(monthArray.get(i).getName() + ", " + issueYear);
-                magazine.setPostId(issueArray.get(j).getIssueId() + "");
+                magazine.setIssueDate(monthArray.get(i).getName()+", " + issueYear);
+                magazine.setPostId(issueArray.get(j).getIssueId()+"");
                 months.add(magazine);
             }
-            if (issueArray.size() % 2 == 1) {
+            if(issueArray.size() % 2 == 1){
                 months.add(new Magazine());
             }
         }
@@ -251,10 +252,13 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     }
 
-    private void getFilteredList(int year, int month) {
+    private void getFilteredList(int year, int month){
         loadToast.show();
         String methodName = APIMethods.ISSUE_LIST +
-                "?mag_id=" + magazineType + "&year=" + year + "&month=" + month;
+                "?mag_id="+magazineType+"&year="+year+"&month="+month+
+        "&user_id=5&token="+
+                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+        ;
         placeRequest(methodName, YearListVo.class, null, false);
     }
 
@@ -269,7 +273,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout, getMonthList(yearListVo.getMonths(), yearListVo.getYear()), width);
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
@@ -284,83 +288,20 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
-        if (result.isFailure()) {
-            // Handle error
-            return;
-        }
-//        else if (purchase.getSku().equals(ITEM_SKU)) {
-//            consumeItem();
-//            buyButton.setEnabled(false);
-//        }
-
-    }
-
-    private void stopDownload(String mFileName) {
-        File imageFile = new File(mFileName);
-        imageFile.delete();
-        SessionManager.setDownloadFailed(IssuesListingActivity.this, false);
-        loadToast.error();
-        finish();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mService != null) {
-            unbindService(mServiceConn);
-        }
-    }
-
-    public void buyClick() {
-        mHelper.launchPurchaseFlow(this, ITEM_SKU, 10001,
-                this, "mypurchasetokend");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mHelper.handleActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onConsumeFinished(Purchase purchase, IabResult result) {
-        Log.i(TAG, "onConsumeFinished");
-    }
-
-    @Override
-    public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results) {
-        Log.i(TAG, "onConsumeMultiFinished");
-    }
-
-    @Override
-    public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-        if (inv != null) {
-            skuList = new ArrayList<SkuDetails>();
-            purchaseList = new ArrayList<Purchase>();
-            for (int i = 0; i < productIDList.size(); i++) {
-                if (productIDList.get(i) != null) {
-                    SkuDetails sku = inv.getSkuDetails(productIDList.get(i));
-                    skuList.add(sku);
-                    Purchase purchase = inv.getPurchase(productIDList.get(i));
-                    if (purchase != null)
-                        purchaseList.add(purchase);
-                }
+        if(info != null) {
+            purchaseInfo = info;
+            String json = info.getOriginalJson();
+            Log.v(TAG,json);
+//            json = "{ \"data\": " + json + ", \"ref\": \"" + UserInfoManager.getInstance().getUserRegistrationVO().getRef() + "\" }";
+            try {
+//                placeRequest(INAPP_CONFIRMATION, BooleanResponse.class, new JSONObject(json));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (purchaseList != null && purchaseList.size() > 0) {
-                mHelper.consumeAsync(purchaseList, this);
-            }
-
         } else {
-            showToast("Not able to retreive data. Please try again.");
-            this.finish();
+//            hideProgressDialog();
+            finish();
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (task != null)
-            task.cancel(true);
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -368,7 +309,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         String mPath;
 
         public DownloadFileFromURL(String issueYear) {
-            this.mPath = root + File.separator + "Outlook/Magazines/" + magazineType + "-issues-" + issueYear + ".json";
+            this.mPath = root + File.separator + "Outlook/Magazines/"+magazineType+"-issues-" + issueYear + ".json";
             File file = new File(mPath);
             if (file.exists()) {
                 file.delete();
@@ -394,9 +335,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
-                        "?mag_id=" + params[0] + "&year=" + params[1] +
-                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataInt(OutlookConstants.USERID)
-                        + "&"+ OutlookConstants.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN)
+                "?mag_id="+params[0]+"&year="+params[1]+
+                        "&user_id=5&token="+
+                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
                 );
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
@@ -447,5 +388,73 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             loadGridView(mPath);
             loadToast.success();
         }
+    }
+
+    private void stopDownload(String mFileName) {
+        File imageFile = new File(mFileName);
+        imageFile.delete();
+        SessionManager.setDownloadFailed(IssuesListingActivity.this, false);
+        loadToast.error();
+        finish();
+    }
+
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+    }
+
+    public void buyClick() {
+        mHelper.launchPurchaseFlow(this, ITEM_SKU, 10001,
+                this, "mypurchasetokend");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mHelper.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onConsumeFinished(Purchase purchase, IabResult result) {
+        Log.i(TAG, "onConsumeFinished");
+    }
+
+    @Override
+    public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results) {
+        Log.i(TAG, "onConsumeMultiFinished");
+    }
+
+    @Override
+    public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+//        if(inv!=null) {
+//            String applePrice =
+//                    inv.getSkuDetails(ITEM_SKU).getPrice();
+//        } else {
+//            showToast("Not able to retreive data. Please try again.");
+//            this.finish();
+//        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(task != null)
+            task.cancel(true);
     }
 }
