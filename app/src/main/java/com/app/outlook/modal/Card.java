@@ -3,10 +3,12 @@ package com.app.outlook.modal;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by srajendrakumar on 03/11/15.
  */
-public class Card {
+public class Card implements Serializable {
 
     @SerializedName("title")
     @Expose

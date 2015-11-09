@@ -12,6 +12,7 @@ import com.app.outlook.R;
 import com.app.outlook.fragments.MagazineDetailsFragment;
 import com.app.outlook.fragments.SectionDetailsHolderFragment;
 import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.Category;
 import com.app.outlook.modal.IntentConstants;
 
 import java.util.ArrayList;
@@ -66,7 +67,8 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         onBackPressed();
     }
 
-    private void changeFragment(Fragment fragment, boolean backStack) {
+    public void changeFragment(Fragment fragment, boolean backStack) {
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_exit);
@@ -75,6 +77,7 @@ public class MagazineDetailsActivity extends AppBaseActivity {
             transaction.hide(magazineDetailsFragment);
             transaction.addToBackStack(null);
         }
+
         transaction.commit();
     }
 

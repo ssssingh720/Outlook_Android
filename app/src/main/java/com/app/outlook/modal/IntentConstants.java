@@ -13,6 +13,9 @@ public class IntentConstants {
     public static String TYPE = "type";
     public static String POSITION = "position";
     public static String CATEGORY_POSITION = "category_position";
+    public static String SUB_CATEGORY_POSITION = "sub_category_position";
+    public static String CATEGORY_TYPE = "category_type";
+    public static String CATEGORY = "category";
     public static String CARD_POSITION = "card_position";
     public final static String CARD_HOLDER_POSITION = "card_holder_position";
     public final static String ITEM_POSITION = "item_position";

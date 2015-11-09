@@ -51,7 +51,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     @Bind(R.id.container)
     ViewPager mPager;
     private PageAdapter mAdapter;
-    private int categoryPosition = 0;
+    private int categoryPosition = 0,subCategoryPosition = 0;
     private int currentCardPosition = 0;
     private int currentPageCount = 0;
     ArrayList<String> mContents = new ArrayList<>();
@@ -60,7 +60,8 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     ListView cardsList;
     @Bind(R.id.articleOptionView)
     CardView articleOptionView;
-    ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
+    private ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
+    private String categoryType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +71,9 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         currentCardPosition = getArguments().getInt(IntentConstants.CARD_POSITION, 0);
         issueID = getArguments().getString(IntentConstants.ISSUE_ID);
         magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID);
+        categoryType = getArguments().getString(IntentConstants.CATEGORY_TYPE);
         currentPageCount = getArguments().getInt(IntentConstants.ITEM_POSITION, 0);
+        subCategoryPosition = getArguments().getInt(IntentConstants.SUB_CATEGORY_POSITION, 0);
         ButterKnife.bind(this, mView);
         loadContents();
         initView();
@@ -105,6 +108,9 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 MagazineDetailsVo detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
                 List<Category> mCategories = detailsObject.getCategories();
                 Category selectedCategory = mCategories.get(categoryPosition);
+                if(categoryType != null && categoryType.equals("Type2")){
+                    selectedCategory = selectedCategory.getCategories().get(subCategoryPosition);
+                }
                 if(selectedCategory.getCategoryName() != null) {
                     ((ArticleDetailsActivity)getActivity()).setTitle(selectedCategory.getCategoryName());
                 }else{

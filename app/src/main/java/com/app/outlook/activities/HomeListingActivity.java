@@ -133,18 +133,20 @@ public class HomeListingActivity extends AppBaseActivity {
 
         Type listType = new TypeToken<ArrayList<MagazineTypeVo>>() {}.getType();
         magazineList = new Gson().fromJson(reader, listType);
-        PAGES = magazineList.size();
+        if(magazineList != null && !magazineList.isEmpty()) {
+            PAGES = magazineList.size();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(IntentConstants.MAGAZINE_LIST, magazineList);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(IntentConstants.MAGAZINE_LIST, magazineList);
 
-        magazineGridFragment = new HomeGridFragment();
-        magazineGridFragment.setArguments(bundle);
+            magazineGridFragment = new HomeGridFragment();
+            magazineGridFragment.setArguments(bundle);
 
-        magazineListFragment = new HomeListFragment();
-        magazineListFragment.setArguments(bundle);
+            magazineListFragment = new HomeListFragment();
+            magazineListFragment.setArguments(bundle);
 
-        changeFragment(magazineListFragment);
+            changeFragment(magazineListFragment);
+        }
     }
 
     @OnClick(R.id.gridView)
@@ -157,7 +159,7 @@ public class HomeListingActivity extends AppBaseActivity {
 
     @OnClick(R.id.imgSettings)
     public void onSettingsClick(){
-        startActivity(new Intent(this,SettingsActivity.class));
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     @OnClick(R.id.carouselView)
@@ -169,10 +171,12 @@ public class HomeListingActivity extends AppBaseActivity {
     }
 
     private void changeFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction()
-                .replace(R.id.contentPanel, fragment)
-                .commit();
+        if(!magazineList.isEmpty()) {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction()
+                    .replace(R.id.contentPanel, fragment)
+                    .commit();
+        }
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {

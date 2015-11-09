@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
@@ -16,9 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,19 +25,14 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
-import com.app.outlook.activities.MagazineDetailsActivity;
-import com.app.outlook.adapters.RegularGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
 import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
-import com.app.outlook.modal.Data;
-import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
-import com.app.outlook.modal.Item;
 import com.app.outlook.modal.MagazineDetailsVo;
+import com.app.outlook.modal.MagazineTypeVo;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import com.nirhart.parallaxscroll.views.ParallaxScrollView;
 import com.squareup.picasso.Picasso;
 
 import net.steamcrafted.loadtoast.LoadToast;
@@ -63,7 +55,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 22/09/15.
  */
-public class MagazineDetailsFragment extends BaseFragment implements View.OnClickListener {
+public class RegularsListingFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String TAG = "MagazineDetailsFragment";
     @Bind(R.id.sectionBreifListLyt)
@@ -80,7 +72,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private LoadToast loadToast;
     private MagazineDetailsVo detailsObject;
     private String issueID;
-    private DownloadFileFromURL task;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,6 +82,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
             magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
             issueID = getArguments().getString(IntentConstants.ISSUE_ID);
+            mSelectedCategory = Integer.parseInt(getArguments().getString(IntentConstants.CATEGORY_POSITION));
         } else {
             showToast("Sorry!! Unable to load magazine");
             getActivity().finish();
@@ -98,7 +90,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
         root = getActivity().getCacheDir().getAbsolutePath();
         //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
-        fetchMagazineDetails();
+        loadCards();
         return mView;
     }
 
@@ -120,48 +112,27 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         cardIds.recycle();
     }
 
-    private void fetchMagazineDetails() {
-
-        String filePath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
-        try {
-            Log.d(TAG, "Magazine Path::" + filePath);
-            File file = new File(filePath);
-            if (file.exists()) {
-                String response = Util.readJsonFromSDCard(filePath);
-                System.out.println("Response::" + response);
-                JsonReader reader = new JsonReader(new StringReader(response));
-                reader.setLenient(true);
-                detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
-                mCategories = detailsObject.getCategories();
-                loadToast.success();
-
-                loadCards();
-            } else if (Util.isNetworkOnline(getActivity())) {
-                task = new DownloadFileFromURL();
-                task.execute(magazineID,issueID);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            loadToast.error();
-            stopDownload(filePath);
-            showToast("Something went wrong. Try again later");
-        }
-    }
-
     private void loadCards() {
         //sectionBreifListLyt
+        mCategories = new ArrayList<>();
+        Category category = (Category) getArguments().getSerializable(IntentConstants.CATEGORY);
+        mCategories.add(category);
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         for(int i=0;i<mCategories.size();i++) {
             View title = inflater.inflate(R.layout.template_eight, null);
-            ((TextView) title.findViewById(R.id.categoryTitle)).setText(mCategories.get(i).getCategoryName().toUpperCase());
+            if(mCategories.get(i).getCategoryName() != null && !mCategories.get(i).getCategoryName().isEmpty())
+                ((TextView) title.findViewById(R.id.categoryTitle)).setText(mCategories.get(i).getCategoryName().toUpperCase());
             sectionBreifListLyt.addView(title);
             if(mCategories.get(i).getCategoryType().equals("Type1") && !mCategories.get(i).getCards().isEmpty() ) {
                 List<Card> cards = mCategories.get(i).getCards();
                 for (int j = 0; j < cards.size(); j++) {
                     View cardView = loadCardsView(j,cards.get(j));
                     cardView.setTag(i + "," + j+",Type1");
+
                     if(cards.get(j).getPaid())
                         cardView.setOnClickListener(this);
+
                     sectionBreifListLyt.addView(cardView);
                 }
             }else if(mCategories.get(i).getCategoryType().equals("Type2")){
@@ -279,139 +250,20 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         String tag = (String) v.getTag();
         String[] tags = tag.split(",");
         if(tags[2].equals("Type1")) {
-            openSectionDetails(Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
-        }else{
-            RegularsListingFragment fragment = new RegularsListingFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
-                bundle.putString(IntentConstants.ISSUE_ID, issueID);
-                bundle.putString(IntentConstants.CATEGORY_POSITION, tags[0]);
-                bundle.putSerializable(IntentConstants.CATEGORY, mCategories.get(Integer.parseInt(tags[0])).
-                        getCategories().get(Integer.parseInt(tags[1])));
-                fragment.setArguments(bundle);
-            ((MagazineDetailsActivity) getActivity()).changeFragment(fragment,true);
+            openSectionDetails(mSelectedCategory,Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
         }
 
     }
 
-    private void openSectionDetails(int categoryPosition, int cardPosition) {
-//        ((MagazineDetailsActivity) getActivity()).openSectionDetails(categoryPosition,cardPosition);
+    private void openSectionDetails(int categoryPosition,int subCategoryPosition, int cardPosition) {
         Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
         intent.putExtra(IntentConstants.CATEGORY_POSITION, categoryPosition);
+        intent.putExtra(IntentConstants.SUB_CATEGORY_POSITION, subCategoryPosition);
         intent.putExtra(IntentConstants.CARD_POSITION, cardPosition);
         intent.putExtra(IntentConstants.ISSUE_ID, issueID);
         intent.putExtra(IntentConstants.MAGAZINE_ID, magazineID);
+        intent.putExtra(IntentConstants.CATEGORY_TYPE, "Type2");
         startActivity(intent);
     }
 
-    class DownloadFileFromURL extends AsyncTask<String, String, String> {
-
-        String mPath;
-
-        public DownloadFileFromURL() {
-            this.mPath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
-            File file = new File(mPath);
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loadToast.show();
-            File parentFolder = new File(root + File.separator + "Outlook");
-            File subFolder = new File(root + File.separator + "Outlook/Magazines");
-            if (!parentFolder.exists()) {
-                parentFolder.mkdir();
-            }
-            if (!subFolder.exists()) {
-                subFolder.mkdir();
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            int count;
-            try {
-                URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "?mag_id=" + params[0]
-                +"&issue_id="+ params[1]+"&user_id=5&token="+
-                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
-                );
-                URLConnection connection = url.openConnection();
-                connection.connect();
-                // getting file length
-                int lenghtOfFile = connection.getContentLength();
-
-                // input stream to read file - with 8k buffer
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
-
-                // Output stream to write file
-                OutputStream output = new FileOutputStream(mPath);
-
-                byte data[] = new byte[1024];
-
-                long total = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-
-                    // writing data to file
-                    output.write(data, 0, count);
-                }
-
-                // flushing output
-                output.flush();
-
-                // closing streams
-                output.close();
-                input.close();
-
-            } catch (Exception e) {
-                SessionManager.setDownloadFailed(getActivity(), true);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            try {
-                if (SessionManager.isDownloadFailed(getActivity())) {
-                    stopDownload(mPath);
-                }
-                fetchMagazineDetails();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void stopDownload(String mFileName) {
-        File imageFile = new File(mFileName);
-        imageFile.delete();
-        SessionManager.setDownloadFailed(getActivity(), false);
-        loadToast.error();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Do something after 1 second
-                        getActivity().finish();
-                    }
-                }, 1000);
-            }
-        });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(task != null)
-            task.cancel(true);
-    }
 }

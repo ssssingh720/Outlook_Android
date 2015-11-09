@@ -1,5 +1,6 @@
 package com.app.outlook.modal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -9,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by srajendrakumar on 16/10/15.
  */
 
-public class Category {
+public class Category implements Serializable{
 
     @SerializedName("category_name")
     @Expose
