@@ -29,6 +29,7 @@ import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Issue;
@@ -256,8 +257,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         loadToast.show();
         String methodName = APIMethods.ISSUE_LIST +
                 "?mag_id="+magazineType+"&year="+year+"&month="+month+
-        "&user_id=5&token="+
-                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+                "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataInt(OutlookConstants.USERID)
+                + "&"+ OutlookConstants.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN)
         ;
         placeRequest(methodName, YearListVo.class, null, false);
     }
@@ -336,8 +337,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
                 "?mag_id="+params[0]+"&year="+params[1]+
-                        "&user_id=5&token="+
-                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataInt(OutlookConstants.USERID)
+                        + "&"+ OutlookConstants.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN)
                 );
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
