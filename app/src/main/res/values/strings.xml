@@ -42,4 +42,6 @@
     <string name="signin_to_conitinue">SIGN IN TO CONTINUE</string>
     <string name="facebook_app_id">1067468666675015</string>
     <string name="play_services_error_fmt">Google Play Services Error: %i</string>
+    <string name="no_internet">Please check your internet connectivity.</string>
+    <string name="empty_email_password">Please enter a valid email and password.</string>
 </resources>
