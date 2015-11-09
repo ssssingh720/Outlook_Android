@@ -47,6 +47,9 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationA
 
 import net.steamcrafted.loadtoast.LoadToast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,7 +83,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "testproduct_managedproduct";
+    static final String ITEM_SKU = "outlook.test.managedproduct";//"android.test.purchased";
     private ArrayList<String> productIDList;
     private ArrayList<SkuDetails> skuList;
     private String selectedSKU;
@@ -109,10 +112,20 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                                                        result);
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
+                                               queryList();
+
                                            }
                                        }
                                    });
         initView();
+    }
+
+    private void queryList(){
+        List additionalSkuList = new ArrayList();
+        additionalSkuList.add(ITEM_SKU);
+//                                               additionalSkuList.add(SKU_BANANA);
+        mHelper.queryInventoryAsync(true, additionalSkuList,
+                this);
     }
 
     private void initView() {
@@ -143,11 +156,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-//                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
-//                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
-//                    startActivity(intent);
-                    buyClick();
+                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+                    startActivity(intent);
+//                    buyClick();
                 }
 
             }
@@ -242,7 +255,10 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private void getFilteredList(int year, int month){
         loadToast.show();
         String methodName = APIMethods.ISSUE_LIST +
-                "?mag_id="+magazineType+"&year="+year+"&month="+month;
+                "?mag_id="+magazineType+"&year="+year+"&month="+month+
+        "&user_id=5&token="+
+                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+        ;
         placeRequest(methodName, YearListVo.class, null, false);
     }
 
@@ -272,15 +288,20 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
-        if (result.isFailure()) {
-            // Handle error
-            return;
+        if(info != null) {
+            purchaseInfo = info;
+            String json = info.getOriginalJson();
+            Log.v(TAG,json);
+//            json = "{ \"data\": " + json + ", \"ref\": \"" + UserInfoManager.getInstance().getUserRegistrationVO().getRef() + "\" }";
+            try {
+//                placeRequest(INAPP_CONFIRMATION, BooleanResponse.class, new JSONObject(json));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+//            hideProgressDialog();
+            finish();
         }
-//        else if (purchase.getSku().equals(ITEM_SKU)) {
-//            consumeItem();
-//            buyButton.setEnabled(false);
-//        }
-
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -421,26 +442,13 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @Override
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-        if(inv!=null) {
-            skuList = new ArrayList<SkuDetails>();
-            purchaseList = new ArrayList<Purchase>();
-            for (int i = 0; i < productIDList.size(); i++) {
-                if (productIDList.get(i) != null) {
-                    SkuDetails sku = inv.getSkuDetails(productIDList.get(i));
-                    skuList.add(sku);
-                    Purchase purchase = inv.getPurchase(productIDList.get(i));
-                    if (purchase != null)
-                        purchaseList.add(purchase);
-                }
-            }
-            if (purchaseList != null && purchaseList.size() > 0) {
-                mHelper.consumeAsync(purchaseList, this);
-            }
-
-        } else {
-            showToast("Not able to retreive data. Please try again.");
-            this.finish();
-        }
+//        if(inv!=null) {
+//            String applePrice =
+//                    inv.getSkuDetails(ITEM_SKU).getPrice();
+//        } else {
+//            showToast("Not able to retreive data. Please try again.");
+//            this.finish();
+//        }
     }
 
     @Override
