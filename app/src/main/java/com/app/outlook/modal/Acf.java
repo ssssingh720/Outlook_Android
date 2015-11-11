@@ -2,6 +2,7 @@ package com.app.outlook.modal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -48,216 +49,168 @@ public class Acf {
     private List<WeeklyIssueVo> december = new ArrayList<WeeklyIssueVo>();
 
     /**
-     *
-     * @return
-     * The january
+     * @return The january
      */
     public List<WeeklyIssueVo> getJanuary() {
         return january;
     }
 
     /**
-     *
-     * @param january
-     * The january
+     * @param january The january
      */
     public void setJanuary(List<WeeklyIssueVo> january) {
         this.january = january;
     }
 
     /**
-     *
-     * @return
-     * The february
+     * @return The february
      */
     public List<WeeklyIssueVo> getFebruary() {
         return february;
     }
 
     /**
-     *
-     * @param february
-     * The february
+     * @param february The february
      */
     public void setFebruary(List<WeeklyIssueVo> february) {
         this.february = february;
     }
 
     /**
-     *
-     * @return
-     * The march
+     * @return The march
      */
     public List<WeeklyIssueVo> getMarch() {
         return march;
     }
 
     /**
-     *
-     * @param march
-     * The march
+     * @param march The march
      */
     public void setMarch(List<WeeklyIssueVo> march) {
         this.march = march;
     }
 
     /**
-     *
-     * @return
-     * The april
+     * @return The april
      */
     public List<WeeklyIssueVo> getApril() {
         return april;
     }
 
     /**
-     *
-     * @param april
-     * The april
+     * @param april The april
      */
     public void setApril(List<WeeklyIssueVo> april) {
         this.april = april;
     }
 
     /**
-     *
-     * @return
-     * The may
+     * @return The may
      */
     public List<WeeklyIssueVo> getMay() {
         return may;
     }
 
     /**
-     *
-     * @param may
-     * The may
+     * @param may The may
      */
     public void setMay(List<WeeklyIssueVo> may) {
         this.may = may;
     }
 
     /**
-     *
-     * @return
-     * The june
+     * @return The june
      */
     public List<WeeklyIssueVo> getJune() {
         return june;
     }
 
     /**
-     *
-     * @param june
-     * The june
+     * @param june The june
      */
     public void setJune(List<WeeklyIssueVo> june) {
         this.june = june;
     }
 
     /**
-     *
-     * @return
-     * The july
+     * @return The july
      */
     public List<WeeklyIssueVo> getJuly() {
         return july;
     }
 
     /**
-     *
-     * @param july
-     * The july
+     * @param july The july
      */
     public void setJuly(List<WeeklyIssueVo> july) {
         this.july = july;
     }
 
     /**
-     *
-     * @return
-     * The august
+     * @return The august
      */
     public List<WeeklyIssueVo> getAugust() {
         return august;
     }
 
     /**
-     *
-     * @param august
-     * The august
+     * @param august The august
      */
     public void setAugust(List<WeeklyIssueVo> august) {
         this.august = august;
     }
 
     /**
-     *
-     * @return
-     * The september
+     * @return The september
      */
     public List<WeeklyIssueVo> getSeptember() {
         return september;
     }
 
     /**
-     *
-     * @param september
-     * The september
+     * @param september The september
      */
     public void setSeptember(List<WeeklyIssueVo> september) {
         this.september = september;
     }
 
     /**
-     *
-     * @return
-     * The october
+     * @return The october
      */
     public List<WeeklyIssueVo> getOctober() {
         return october;
     }
 
     /**
-     *
-     * @param october
-     * The october
+     * @param october The october
      */
     public void setOctober(List<WeeklyIssueVo> october) {
         this.october = october;
     }
 
     /**
-     *
-     * @return
-     * The november
+     * @return The november
      */
     public List<WeeklyIssueVo> getNovember() {
         return november;
     }
 
     /**
-     *
-     * @param november
-     * The november
+     * @param november The november
      */
     public void setNovember(List<WeeklyIssueVo> november) {
         this.november = november;
     }
 
     /**
-     *
-     * @return
-     * The december
+     * @return The december
      */
     public List<WeeklyIssueVo> getDecember() {
         return december;
     }
 
     /**
-     *
-     * @param december
-     * The december
+     * @param december The december
      */
     public void setDecember(List<WeeklyIssueVo> december) {
         this.december = december;

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.IssuesListingActivity;
+import com.app.outlook.listener.OnPageClickedListener;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
@@ -35,6 +36,8 @@ public class HomeListItemFragment extends BaseFragment {
     MagazineTypeVo magazine;
     @Bind(R.id.cardView)
     CardView cardView;
+    private int currentPosition = 0;
+    private OnPageClickedListener onPageClickedListener;
 
     public static Fragment newInstance(Context context, int pos,
                                        float scale) {
@@ -52,6 +55,7 @@ public class HomeListItemFragment extends BaseFragment {
 
         CarouselLinearLayout root = (CarouselLinearLayout) mView.findViewById(R.id.root);
         float scale = this.getArguments().getFloat("scale");
+        currentPosition = this.getArguments().getInt("pos");
         root.setScaleBoth(scale);
 
         init();
@@ -73,24 +77,28 @@ public class HomeListItemFragment extends BaseFragment {
         magazineImg.setLayoutParams(lp);
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
-        if(!magazine.getCoverImage().isEmpty())
+        if (!magazine.getCoverImage().isEmpty())
             Picasso.with(getActivity()).load(magazine.getCoverImage()).into(magazineImg);
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (magazine.getId() == 1)
-                SharedPrefManager prefManager = SharedPrefManager.getInstance();
-                prefManager.init(getActivity());
-                if (magazine.getId().equals("0")) {
-                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
-                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
-                }else if(magazine.getId().equals("1")) {
-//                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
-                }
-//                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
+
+                onPageClickedListener.onPageClicked();
             }
         });
 
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
+    public OnPageClickedListener getOnPageClickedListener() {
+        return onPageClickedListener;
+    }
+
+    public void setOnPageClickedListener(OnPageClickedListener onPageClickedListener) {
+        this.onPageClickedListener = onPageClickedListener;
     }
 }

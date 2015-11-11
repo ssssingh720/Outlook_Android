@@ -20,15 +20,11 @@ import java.util.Calendar;
 public class MonthYearPicker {
 
     private static final int MIN_YEAR = 2000;
-
-    private static int MAX_YEAR = 2099;
-
     private static final String[] PICKER_DISPLAY_MONTHS_NAMES = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
             "Nov", "Dec"};
-
     private static final String[] MONTHS = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September",
             "October", "November", "December"};
-
+    private static int MAX_YEAR = 2099;
     private View view;
     private Activity activity;
     private AlertDialog.Builder builder;
@@ -36,6 +32,8 @@ public class MonthYearPicker {
     private boolean build = false;
     private MNumberPicker monthNumberPicker;
     private MNumberPicker yearNumberPicker;
+    private int currentYear;
+    private int currentMonth;
 
     /**
      * Instantiates a new month year picker.
@@ -56,10 +54,6 @@ public class MonthYearPicker {
     public void build(DialogInterface.OnClickListener positiveButtonListener, DialogInterface.OnClickListener negativeButtonListener) {
         this.build(-1, -1, positiveButtonListener, negativeButtonListener);
     }
-
-    private int currentYear;
-
-    private int currentMonth;
 
     /**
      * Builds the month year alert dialog.

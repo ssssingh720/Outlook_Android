@@ -2,6 +2,7 @@ package com.app.outlook.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -39,17 +40,30 @@ public class SectionDetailsFragment extends BaseFragment {
         int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
         String content = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
         final String mimeType = "text/html";
-        final String encoding = "UTF-8";
+        final String encoding = "utf-8";
+        webview.getSettings().setDefaultTextEncodingName(encoding);
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setUseWideViewPort(true);
+        webview.getSettings().setSupportZoom(false);
+        webview.getSettings().setUseWideViewPort(false);
+        webview.setFocusableInTouchMode(false);
+        webview.setFocusable(false);
         webview.getSettings().setLoadsImagesAutomatically(true);
-        if(Util.isNetworkOnline(getActivity())) {
+        if (Util.isNetworkOnline(getActivity())) {
             webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-        }
-        else{
+        } else {
             webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-        webview.loadData(content, mimeType, encoding);
+//        webview.loadData(content, mimeType, encoding);
+        webview.loadDataWithBaseURL(null,content, mimeType, encoding,null);
+
+        webview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
         return mView;
     }
 

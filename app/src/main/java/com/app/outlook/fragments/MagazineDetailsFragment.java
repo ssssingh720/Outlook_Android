@@ -31,6 +31,7 @@ import com.app.outlook.activities.ArticleDetailsActivity;
 import com.app.outlook.activities.MagazineDetailsActivity;
 import com.app.outlook.adapters.RegularGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
@@ -38,6 +39,7 @@ import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.app.outlook.modal.MagazineDetailsVo;
+import com.app.outlook.modal.OutlookConstants;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
@@ -286,6 +288,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
                 bundle.putString(IntentConstants.ISSUE_ID, issueID);
                 bundle.putString(IntentConstants.CATEGORY_POSITION, tags[0]);
+                bundle.putString(IntentConstants.SUB_CATEGORY_POSITION, tags[1]);
                 bundle.putSerializable(IntentConstants.CATEGORY, mCategories.get(Integer.parseInt(tags[0])).
                         getCategories().get(Integer.parseInt(tags[1])));
                 fragment.setArguments(bundle);
@@ -335,9 +338,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "?mag_id=" + params[0]
-                +"&issue_id="+ params[1]+"&user_id=5&token="+
-                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
-                );
+                +"&issue_id="+ params[1]+
+                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
+                        + "&"+ OutlookConstants.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN));
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length

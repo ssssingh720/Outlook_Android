@@ -22,72 +22,56 @@ public class Issue {
     private String sku;
 
     /**
-     *
-     * @return
-     * The issueId
+     * @return The issueId
      */
     public Integer getIssueId() {
         return issueId;
     }
 
     /**
-     *
-     * @param issueId
-     * The issue_id
+     * @param issueId The issue_id
      */
     public void setIssueId(Integer issueId) {
         this.issueId = issueId;
     }
 
     /**
-     *
-     * @return
-     * The image
+     * @return The image
      */
     public String getImage() {
         return image;
     }
 
     /**
-     *
-     * @param image
-     * The image
+     * @param image The image
      */
     public void setImage(String image) {
         this.image = image;
     }
 
     /**
-     *
-     * @return
-     * The purchase
+     * @return The purchase
      */
     public Boolean getPurchase() {
         return purchase;
     }
 
     /**
-     *
-     * @param purchase
-     * The purchase
+     * @param purchase The purchase
      */
     public void setPurchase(Boolean purchase) {
         this.purchase = purchase;
     }
 
     /**
-     *
-     * @return
-     * The sku
+     * @return The sku
      */
     public String getSku() {
         return sku;
     }
 
     /**
-     *
-     * @param sku
-     * The sku
+     * @param sku The sku
      */
     public void setSku(String sku) {
         this.sku = sku;

@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 public class SharedPrefManager {
-    private String PREFS_NAME = "outlook";
     public static final String VERSION_DATA = "version_data";
     private volatile static SharedPrefManager instance;
+    private String PREFS_NAME = "outlook";
     private Context context;
 
     public SharedPrefManager() {
@@ -22,6 +22,15 @@ public class SharedPrefManager {
             }
         }
         return instance;
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        if (TextUtils.isEmpty(target)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target)
+                    .matches();
+        }
     }
 
     public void init(Context context) {
@@ -142,15 +151,6 @@ public class SharedPrefManager {
         SharedPreferences shared = context.getSharedPreferences(
                 PREFS_NAME, 0);
         return shared.getInt(key, 0);
-    }
-
-    public final static boolean isValidEmail(CharSequence target) {
-        if (TextUtils.isEmpty(target)) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target)
-                    .matches();
-        }
     }
 
 }

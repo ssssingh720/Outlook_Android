@@ -37,9 +37,9 @@ public class RequestManager<T> {
     public static final boolean IS_LIVE = true;
 
     public static final String TESTING_SERVER = "http://52.76.121.132/";
-//    public static final String TESTING_SERVER = "http://outlook.jumpcatch.com/";
+    //    public static final String TESTING_SERVER = "http://outlook.jumpcatch.com/";
     public static final String LIVE_SERVER = "http://52.76.121.132/";
-//    public static final String LIVE_SERVER = "http://outlook.jumpcatch.com/";
+    //    public static final String LIVE_SERVER = "http://outlook.jumpcatch.com/";
     public static final String VERSION = "v1";
 
     public static final String TEST_BASEFEED_URL = TESTING_SERVER;
@@ -118,6 +118,7 @@ public class RequestManager<T> {
             feedParams.put(FeedParams.AUTHKEY,
                     SessionManager.getSessionId(mCtx));
         }
+
         Log.d("Requestmanager", "SearchURL::" + feedurl);
         GsonRequest<T> jsObjRequest = new GsonRequest<T>(isPOST ? Method.POST : Method.GET,
                 feedurl,
@@ -134,7 +135,7 @@ public class RequestManager<T> {
             jsObjRequest.setHeaders(headers);
         }
 
-
+http://52.76.121.132/get-issues/?mag_id=0&year=2015&month=1&user_id=5&token=rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6
         jsObjRequest.setTag("GN");
         int socketTimeout = 60000;//60 seconds
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

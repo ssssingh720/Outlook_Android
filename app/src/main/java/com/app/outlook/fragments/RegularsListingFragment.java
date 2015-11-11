@@ -66,7 +66,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
     TypedArray categoryIds;
     TypedArray cardIds;
     List<Category> mCategories = new ArrayList<>();
-    int mSelectedCategory = 0;
+    int mSelectedCategory = 0,mSelectedSubCategory = 0;
     private String magazineID;
     private String root;
     private LoadToast loadToast;
@@ -83,6 +83,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
             magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
             issueID = getArguments().getString(IntentConstants.ISSUE_ID);
             mSelectedCategory = Integer.parseInt(getArguments().getString(IntentConstants.CATEGORY_POSITION));
+            mSelectedSubCategory = Integer.parseInt(getArguments().getString(IntentConstants.SUB_CATEGORY_POSITION));
         } else {
             showToast("Sorry!! Unable to load magazine");
             getActivity().finish();
@@ -135,9 +136,6 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
 
                     sectionBreifListLyt.addView(cardView);
                 }
-            }else if(mCategories.get(i).getCategoryType().equals("Type2")){
-                View cardView = loadRegularView(i,mCategories.get(i).getCategories());
-                sectionBreifListLyt.addView(cardView);
             }
         }
 
@@ -149,44 +147,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
         cardView = loadCardItem(position, cardView, card);
         return cardView;
     }
-    private View loadRegularView(int position,List<Category> data){
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View cardView = inflater.inflate(R.layout.template_nine, null);
-        cardView = loadRegularGridItem(position,cardView, data);
-        return cardView;
-    }
 
-    private View loadRegularGridItem(int position,View view, List<Category> data){
-
-        GridLayout categoryGrid = (GridLayout) view.findViewById(R.id.categoryGrid);
-
-        for(int i= 0; i< data.size();i++) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View categoryGridView = inflater.inflate(R.layout.template_ten, null);
-            ImageView image = (ImageView) categoryGridView.findViewById(R.id.categoryImg);
-            TextView nameTxt = (TextView) categoryGridView.findViewById(R.id.categoryName);
-
-            Category category = data.get(i);
-            if (category.getCategoryIcon() != null && !category.getCategoryIcon().isEmpty())
-                Picasso.with(getActivity()).load(category.getCategoryIcon()).fit().into(image);
-
-            if (category.getCategoryName() != null && !category.getCategoryName().isEmpty())
-                nameTxt.setText(category.getCategoryName());
-
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
-            width =((width - Util.dipToPixels(getActivity(), 32)) / 4);
-            LinearLayout.LayoutParams linearLytParam = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-            categoryGridView.setLayoutParams(linearLytParam);
-
-            categoryGridView.setTag(position + "," + i + ",Type2");
-            categoryGridView.setOnClickListener(this);
-            categoryGrid.addView(categoryGridView);
-        }
-        return view;
-    }
 
     public void removeAllSectionBreifListLyt() {
         sectionBreifListLyt.removeAllViews();
@@ -250,7 +211,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
         String tag = (String) v.getTag();
         String[] tags = tag.split(",");
         if(tags[2].equals("Type1")) {
-            openSectionDetails(mSelectedCategory,Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
+            openSectionDetails(mSelectedCategory,mSelectedSubCategory, Integer.parseInt(tags[1]));
         }
 
     }

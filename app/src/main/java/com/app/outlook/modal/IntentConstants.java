@@ -5,7 +5,11 @@ package com.app.outlook.modal;
  */
 public class IntentConstants {
 
-    public static final String THEME = "theme" ;
+    public static final String THEME = "theme";
+    public final static String CARD_HOLDER_POSITION = "card_holder_position";
+    public final static String ITEM_POSITION = "item_position";
+    public final static String CONTENTS = "contents";
+    public final static String WEB_CONTENT = "web_content";
     public static String MAGAZINE_LIST = "magazineList";
     public static String MAGAZINE = "magazine";
     public static String MAGAZINE_ID = "magazine_id";
@@ -17,8 +21,4 @@ public class IntentConstants {
     public static String CATEGORY_TYPE = "category_type";
     public static String CATEGORY = "category";
     public static String CARD_POSITION = "card_position";
-    public final static String CARD_HOLDER_POSITION = "card_holder_position";
-    public final static String ITEM_POSITION = "item_position";
-    public final static String CONTENTS = "contents";
-    public final static String WEB_CONTENT = "web_content";
 }

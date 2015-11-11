@@ -15,17 +15,16 @@
         android:id="@+id/articleOptionView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:visibility="gone"
-        android:layout_alignParentRight="true">
+        android:layout_marginTop="5dp"
+        android:visibility="gone">
 
         <ListView
             android:id="@+id/cardsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:choiceMode="singleChoice"
-            />
+            android:choiceMode="singleChoice" />
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

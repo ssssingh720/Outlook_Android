@@ -16,6 +16,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.android.volley.VolleyError;
@@ -29,6 +30,7 @@ import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Issue;
@@ -59,6 +61,7 @@ import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -93,14 +96,18 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private DownloadFileFromURL task;
     private int currentYear;
     private int currentMonth;
+    private YearListVo yearListVo;
+    @Bind(R.id.toolbar_title)
+    ImageView toolbar_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
 
+        magazineType = getIntent().getIntExtra(IntentConstants.TYPE, 0);
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
         mHelper.startSetup(new
@@ -117,7 +124,14 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                                            }
                                        }
                                    });
+        setLogo();
         initView();
+    }
+
+    private void setLogo() {
+        if(magazineType == 0){
+            toolbar_title.setImageResource(R.drawable.logo_outlook);
+        }
     }
 
     private void queryList(){
@@ -135,6 +149,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         final Calendar instance = Calendar.getInstance();
         currentMonth = instance.get(Calendar.MONTH);
         currentYear = instance.get(Calendar.YEAR);
+        issueYear = currentYear+"";
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -147,8 +162,6 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
                 .setProgressColor(getResources().getColor(R.color.app_red));
-
-        magazineType = getIntent().getIntExtra(IntentConstants.TYPE, 0);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -169,6 +182,15 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         fetchIssueList();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(task != null && task.isCancelled() && yearListVo == null ){
+                fetchIssueList();
+        }
+    }
+
     @OnClick(R.id.back)
     public void onMBackClick() {
         finish();
@@ -177,13 +199,13 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     @OnClick(R.id.calendarImg)
     public void onCalendaerClick() {
         final MonthYearPicker myp = new MonthYearPicker(IssuesListingActivity.this);
-        myp.build(currentMonth,currentYear,new DialogInterface.OnClickListener() {
+        myp.build(currentMonth, currentYear, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 currentMonth = myp.getSelectedMonth();
                 currentYear = myp.getSelectedYear();
-                getFilteredList(myp.getSelectedYear(),myp.getSelectedMonth()+1);
+                getFilteredList(myp.getSelectedYear(), myp.getSelectedMonth() + 1);
             }
         }, null);
         myp.show();
@@ -215,7 +237,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.setLenient(true);
 
-        YearListVo yearListVo = new Gson().fromJson(reader, YearListVo.class);
+        yearListVo = new Gson().fromJson(reader, YearListVo.class);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -254,12 +276,16 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     private void getFilteredList(int year, int month){
         loadToast.show();
+        try{
         String methodName = APIMethods.ISSUE_LIST +
                 "?mag_id="+magazineType+"&year="+year+"&month="+month+
-        "&user_id=5&token="+
-                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
-        ;
+                "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
+                + "&"+ OutlookConstants.TOKEN+"="+ URLEncoder.encode(SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN), "UTF-8");
+
         placeRequest(methodName, YearListVo.class, null, false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -336,8 +362,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
                 "?mag_id="+params[0]+"&year="+params[1]+
-                        "&user_id=5&token="+
-                        "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6"
+                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
+                        + "&"+ OutlookConstants.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN)
                 );
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
@@ -454,7 +480,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     @Override
     protected void onPause() {
         super.onPause();
-        if(task != null)
+        if(task != null) {
             task.cancel(true);
+            loadToast.error();
+        }
     }
 }

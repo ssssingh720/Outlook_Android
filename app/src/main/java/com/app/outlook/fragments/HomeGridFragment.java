@@ -30,10 +30,10 @@ import butterknife.ButterKnife;
  */
 public class HomeGridFragment extends BaseFragment {
 
-    private ArrayList<MagazineTypeVo> magazineList;
-    private HomeGridViewAdapter adapter;
     @Bind(R.id.gridView)
     GridView gridView;
+    private ArrayList<MagazineTypeVo> magazineList;
+    private HomeGridViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,11 +64,12 @@ public class HomeGridFragment extends BaseFragment {
                 prefManager.init(getActivity());
                 if (position == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
-                }else if(position == 1) {
+                    startActivity(new Intent(getActivity(), IssuesListingActivity.class));
+                } else if (position == 1) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
                 }
 
-                startActivity(new Intent(getActivity(), IssuesListingActivity.class));
+
             }
         });
     }

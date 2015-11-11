@@ -69,7 +69,7 @@ public class HomeListingActivity extends AppBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_home_listing);
         ButterKnife.bind(this);
 
@@ -122,6 +122,12 @@ public class HomeListingActivity extends AppBaseActivity {
         prefManager.init(this);
         prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
         setTheme(R.style.AppTheme);
+
+        if(task != null && task.isCancelled() ){
+            if(magazineList == null || magazineList.isEmpty()){
+                fetchMagazineList();
+            }
+        }
     }
 
     private void loadFragments(String filePath) {
@@ -209,9 +215,10 @@ public class HomeListingActivity extends AppBaseActivity {
         protected String doInBackground(String... id) {
             int count;
             try {
-                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST+"?user_id=5&token="+
-                "rajendra@inkoniq.com|1446873092|dU73W1qQDCOhfQn4N0XFvp923woZeq6k1eBxyYSC5kg|93d274e078f9a404ce19dc355750c62865a7489f510ab815121bfdb38e9308d6");
-                Log.d(TAG, "Download Json URL::" + url);
+                URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST+"?"+
+                        OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
+                        + "&"+ OutlookConstants.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN));
+                        Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
@@ -273,7 +280,10 @@ public class HomeListingActivity extends AppBaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(task != null)
+        if(task != null ) {
             task.cancel(true);
+            loadToast.error();
+        }
     }
+
 }

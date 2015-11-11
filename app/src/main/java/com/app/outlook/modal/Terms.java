@@ -2,6 +2,7 @@ package com.app.outlook.modal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,18 +16,14 @@ public class Terms {
     private List<TermsCategoryVo> category = new ArrayList<TermsCategoryVo>();
 
     /**
-     *
-     * @return
-     * The category
+     * @return The category
      */
     public List<TermsCategoryVo> getCategory() {
         return category;
     }
 
     /**
-     *
-     * @param category
-     * The category
+     * @param category The category
      */
     public void setCategory(List<TermsCategoryVo> category) {
         this.category = category;

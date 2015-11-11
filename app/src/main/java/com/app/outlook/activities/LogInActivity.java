@@ -461,6 +461,8 @@ void forgotPassword(){
     /*saving Login data & move to next screen*/
     private void saveLogInToken(UserProfileVo profile) {
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID,profile.getUserId());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
         Log.i(TAG, profile.getToken() + "email" + profile.getEmail() + "name" + profile.getName());

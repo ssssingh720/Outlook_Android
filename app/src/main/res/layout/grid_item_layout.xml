@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MissingPrefix"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -40,9 +40,10 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Medium Text"
-        android:textSize="@dimen/text_big"
-        fontPath="fonts/Didot.ttf" />
+        android:textStyle="bold"
+        android:textColor="@color/magazine_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/text_big" />
 
 </LinearLayout>

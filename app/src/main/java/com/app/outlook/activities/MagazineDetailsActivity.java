@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.ImageView;
 
 import com.app.outlook.R;
 import com.app.outlook.fragments.MagazineDetailsFragment;
@@ -17,6 +18,7 @@ import com.app.outlook.modal.IntentConstants;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,12 +30,16 @@ public class MagazineDetailsActivity extends AppBaseActivity {
     public static final String EXTRA_NAME = "cheese_name";
 
     MagazineDetailsFragment magazineDetailsFragment;
-    private String TAG = "MagazineDetailsActivity";
     ArrayList<String> mContent = new ArrayList<>();
+    private String TAG = "MagazineDetailsActivity";
+    String magazineID;
+    @Bind(R.id.toolbar_title)
+    ImageView toolbar_title;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_fragment);
         ButterKnife.bind(this);
 
@@ -41,19 +47,11 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-//        getSupportFragmentManager().addOnBackStackChangedListener(
-//                new FragmentManager.OnBackStackChangedListener() {
-//                    public void onBackStackChanged() {
-//                        if (sectionDetailsHolderFragment.isRemoving()) {
-//                            FragmentManager manager = getSupportFragmentManager();
-//                            FragmentTransaction transaction = manager.beginTransaction();
-//                            transaction.show(magazineDetailsFragment);
-//                        }
-//                    }
-//                });
 
         magazineDetailsFragment = new MagazineDetailsFragment();
-        String magazineID = getIntent().getStringExtra(IntentConstants.MAGAZINE_ID);
+        magazineID = getIntent().getStringExtra(IntentConstants.MAGAZINE_ID);
+        setLogo();
+
         String issueID = getIntent().getStringExtra(IntentConstants.ISSUE_ID);
         Bundle bundle = new Bundle();
         bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
@@ -61,6 +59,13 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         magazineDetailsFragment.setArguments(bundle);
         changeFragment(magazineDetailsFragment, false);
     }
+
+    private void setLogo() {
+        if(Integer.parseInt(magazineID) == 0){
+            toolbar_title.setImageResource(R.drawable.logo_outlook);
+        }
+    }
+
 
     @OnClick(R.id.back)
     public void onMBackClick() {

@@ -25,6 +25,15 @@ import org.json.JSONObject;
  * Represents an in-app product's listing details.
  */
 public class SkuDetails implements Parcelable {
+    public static final Creator CREATOR = new Creator() {
+        public SkuDetails createFromParcel(Parcel in) {
+            return new SkuDetails(in);
+        }
+
+        public SkuDetails[] newArray(int size) {
+            return new SkuDetails[size];
+        }
+    };
     String mItemType;
     String mSku;
     String mType;
@@ -48,11 +57,35 @@ public class SkuDetails implements Parcelable {
         mDescription = o.optString("description");
     }
 
-    public String getSku() { return mSku; }
-    public String getType() { return mType; }
-    public String getPrice() { return mPrice; }
-    public String getTitle() { return mTitle; }
-    public String getDescription() { return mDescription; }
+    public SkuDetails(Parcel in) {
+        mItemType = in.readString();
+        mSku = in.readString();
+        mType = in.readString();
+        mPrice = in.readString();
+        mTitle = in.readString();
+        mDescription = in.readString();
+        mJson = in.readString();
+    }
+
+    public String getSku() {
+        return mSku;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public String getPrice() {
+        return mPrice;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
 
     @Override
     public String toString() {
@@ -62,16 +95,6 @@ public class SkuDetails implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public SkuDetails(Parcel in){
-        mItemType = in.readString();
-        mSku = in.readString();
-        mType = in.readString();
-        mPrice = in.readString();
-        mTitle = in.readString();
-        mDescription = in.readString();
-        mJson = in.readString();
     }
 
     @Override
@@ -84,14 +107,4 @@ public class SkuDetails implements Parcelable {
         parcel.writeString(mDescription);
         parcel.writeString(mJson);
     }
-
-    public static final Creator CREATOR = new Creator() {
-        public SkuDetails createFromParcel(Parcel in) {
-            return new SkuDetails(in);
-        }
-
-        public SkuDetails[] newArray(int size) {
-            return new SkuDetails[size];
-        }
-    };
 }

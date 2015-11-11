@@ -36,144 +36,112 @@ public class Card implements Serializable {
     private String content;
 
     /**
-     *
-     * @return
-     * The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     *
-     * @param title
-     * The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     *
-     * @return
-     * The subsection
+     * @return The subsection
      */
     public String getSubsection() {
         return subsection;
     }
 
     /**
-     *
-     * @param subsection
-     * The subsection
+     * @param subsection The subsection
      */
     public void setSubsection(String subsection) {
         this.subsection = subsection;
     }
 
     /**
-     *
-     * @return
-     * The tag
+     * @return The tag
      */
     public String getTag() {
         return tag;
     }
 
     /**
-     *
-     * @param tag
-     * The tag
+     * @param tag The tag
      */
     public void setTag(String tag) {
         this.tag = tag;
     }
 
     /**
-     *
-     * @return
-     * The paid
+     * @return The paid
      */
     public boolean getPaid() {
         return paid;
     }
 
     /**
-     *
-     * @param paid
-     * The paid
+     * @param paid The paid
      */
     public void setPaid(boolean paid) {
         this.paid = paid;
     }
 
     /**
-     *
-     * @return
-     * The byline
+     * @return The byline
      */
     public String getByline() {
         return byline;
     }
 
     /**
-     *
-     * @param byline
-     * The byline
+     * @param byline The byline
      */
     public void setByline(String byline) {
         this.byline = byline;
     }
 
     /**
-     *
-     * @return
-     * The image
+     * @return The image
      */
     public String getImage() {
         return image;
     }
 
     /**
-     *
-     * @param image
-     * The image
+     * @param image The image
      */
     public void setImage(String image) {
         this.image = image;
     }
 
     /**
-     *
-     * @return
-     * The author
+     * @return The author
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     *
-     * @param author
-     * The author
+     * @param author The author
      */
     public void setAuthor(String author) {
         this.author = author;
     }
 
     /**
-     *
-     * @return
-     * The content
+     * @return The content
      */
     public String getContent() {
         return content;
     }
 
     /**
-     *
-     * @param content
-     * The content
+     * @param content The content
      */
     public void setContent(String content) {
         this.content = content;

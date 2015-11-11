@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Madhumita on 05-11-2015.
  */
-public class UserProfileVo extends BaseVO{
+public class UserProfileVo extends BaseVO {
     @SerializedName("user_id")
     @Expose
     private String userId;

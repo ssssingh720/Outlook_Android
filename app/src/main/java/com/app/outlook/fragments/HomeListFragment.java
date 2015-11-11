@@ -1,22 +1,30 @@
 package com.app.outlook.fragments;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.outlook.R;
 import com.app.outlook.activities.HomeListingActivity;
+import com.app.outlook.activities.IssuesListingActivity;
+import com.app.outlook.listener.OnPageClickedListener;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineTypeVo;
+import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.app.outlook.views.CirclePageIndicator;
 import com.google.gson.Gson;
@@ -29,26 +37,26 @@ import butterknife.ButterKnife;
 /**
  * Created by srajendrakumar on 09/09/15.
  */
-public class HomeListFragment extends BaseFragment {
+public class HomeListFragment extends BaseFragment implements OnPageClickedListener {
 
     @Bind(R.id.view_pager)
     public ViewPager mViewPager;
     @Bind(R.id.page_indicator)
     public CirclePageIndicator pageIndicator;
-    private CarouselLinearLayout cur = null;
-    private CarouselLinearLayout next = null;
     public ListPagerAdapter adapter;
-    private ArrayList<MagazineTypeVo> magazineList;
     @Bind(R.id.magazineName)
     TextView magazineName;
     @Bind(R.id.magazineDescp)
     TextView magazineDescp;
-
+    private CarouselLinearLayout cur = null;
+    private CarouselLinearLayout next = null;
+    private int currentPosition = 0;
+    private ArrayList<MagazineTypeVo> magazineList;
     ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            Log.d("MyPagerAdapter", "onPageScrolled::" + position);
+            currentPosition = position;
             if (positionOffset >= 0f && positionOffset <= 1f) {
                 cur = adapter.getRootView(position);
                 cur.setScaleBoth(HomeListingActivity.BIG_SCALE
@@ -64,9 +72,8 @@ public class HomeListFragment extends BaseFragment {
 
         @Override
         public void onPageSelected(int position) {
-            Log.d("MyPagerAdapter", "onPageSelected::" + position);
-
-            magazineName.setText(magazineList.get(position).getName());
+            currentPosition = position;
+            magazineName.setText(magazineList.get(position).getName().toUpperCase());
             magazineDescp.setText(magazineList.get(position).getDescription());
         }
 
@@ -74,6 +81,7 @@ public class HomeListFragment extends BaseFragment {
         public void onPageScrollStateChanged(int state) {
             Log.d("MyPagerAdapter", "onPageScrollStateChanged::");
         }
+
     };
 
     @Override
@@ -105,9 +113,30 @@ public class HomeListFragment extends BaseFragment {
         // Set margin for pages as a negative number, so a part of next and
         // previous pages will be showed
         mViewPager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.view_pager_padding));
+//        mViewPager.setPadding(40, 0, 40, 0);
+//        mViewPager.setClipToPadding(false);
+//        mViewPager.setClipChildren(false);
+//        mViewPager.setPageMargin(-180);
 
-        magazineName.setText(magazineList.get(0).getName());
+        magazineName.setText(magazineList.get(0).getName().toUpperCase());
         magazineDescp.setText(magazineList.get(0).getDescription());
+
+    }
+
+    @Override
+    public void onPageClicked() {
+        SharedPrefManager prefManager = SharedPrefManager.getInstance();
+                prefManager.init(getActivity());
+                if (currentPosition == 0) {
+                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+
+                    Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
+                    intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());
+                    startActivity(intent);
+
+                } else if (currentPosition == 1) {
+//                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
+                }
 
     }
 
@@ -132,7 +161,8 @@ public class HomeListFragment extends BaseFragment {
             position = position % HomeListingActivity.PAGES;
             Bundle bundle = new Bundle();
             bundle.putString(IntentConstants.MAGAZINE, new Gson().toJson(magazineList.get(position)));
-            Fragment listFragment = HomeListItemFragment.newInstance(getActivity(), position, scale);
+            HomeListItemFragment listFragment = (HomeListItemFragment) HomeListItemFragment.newInstance(getActivity(), position, scale);
+            listFragment.setOnPageClickedListener(HomeListFragment.this);
             listFragment.setArguments(bundle);
 
             return listFragment;

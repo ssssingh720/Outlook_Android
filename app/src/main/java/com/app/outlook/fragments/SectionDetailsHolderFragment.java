@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -132,7 +134,11 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 if(adapter.getCount() > 4){
                     View item = adapter.getView(0, null, cardsList);
                     item.measure(0, 0);
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (5.5 * item.getMeasuredHeight()));
+//                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (5.5 * item.getMeasuredHeight()));
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) cardsList.getLayoutParams();
+                    params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+                    params.height = (int) (5.5 * item.getMeasuredHeight());
+
                     cardsList.setLayoutParams(params);
                 }
 
@@ -141,7 +147,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         currentCardPosition = position;
                         mPager.setCurrentItem(currentCardPosition);
-                        onSelectionClick();
+                        articleOptionView.setVisibility(View.GONE);
                     }
                 });
 
@@ -168,11 +174,12 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 currentCardPosition = position;
                 cardsList.setSelection(currentCardPosition);
                 cardsList.setItemChecked(currentCardPosition, true);
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                articleOptionView.setVisibility(View.GONE);
             }
 
             @Override

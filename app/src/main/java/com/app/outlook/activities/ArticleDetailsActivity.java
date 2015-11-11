@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.outlook.R;
@@ -20,21 +21,21 @@ import butterknife.OnClick;
  */
 public class ArticleDetailsActivity extends AppBaseActivity {
 
-    private SectionDetailsHolderFragment sectionDetailsHolderFragment;
     @Bind(R.id.toolbar_title)
     TextView titleTxt;
+    private SectionDetailsHolderFragment sectionDetailsHolderFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_article_details);
         ButterKnife.bind(this);
 
         sectionDetailsHolderFragment = new SectionDetailsHolderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION,0));
-        bundle.putInt(IntentConstants.CARD_POSITION, getIntent().getIntExtra(IntentConstants.CARD_POSITION,0));
+        bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION, 0));
+        bundle.putInt(IntentConstants.CARD_POSITION, getIntent().getIntExtra(IntentConstants.CARD_POSITION, 0));
         bundle.putString(IntentConstants.ISSUE_ID, getIntent().getStringExtra(IntentConstants.ISSUE_ID));
         bundle.putString(IntentConstants.MAGAZINE_ID, getIntent().getStringExtra(IntentConstants.MAGAZINE_ID));
         bundle.putInt(IntentConstants.SUB_CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.SUB_CATEGORY_POSITION, 0));
@@ -49,8 +50,8 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         transaction.commit();
     }
 
-    public void setTitle(String title){
-        titleTxt.setText(title);
+    public void setTitle(String title) {
+        titleTxt.setText(title.toUpperCase());
     }
 
     @OnClick(R.id.toolbar_back)

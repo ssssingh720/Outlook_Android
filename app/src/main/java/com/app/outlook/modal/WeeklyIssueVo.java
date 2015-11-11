@@ -21,54 +21,42 @@ public class WeeklyIssueVo {
     private ArrayList<Integer> selectIssuePost;
 
     /**
-     *
-     * @return
-     * The displayName
+     * @return The displayName
      */
     public String getDisplayName() {
         return displayName;
     }
 
     /**
-     *
-     * @param displayName
-     * The display_name
+     * @param displayName The display_name
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     *
-     * @return
-     * The coverImage
+     * @return The coverImage
      */
     public String getCoverImage() {
         return coverImage;
     }
 
     /**
-     *
-     * @param coverImage
-     * The cover_image
+     * @param coverImage The cover_image
      */
     public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
 
     /**
-     *
-     * @return
-     * The selectIssuePost
+     * @return The selectIssuePost
      */
     public ArrayList<Integer> getSelectIssuePost() {
         return selectIssuePost;
     }
 
     /**
-     *
-     * @param selectIssuePost
-     * The select_issue_post
+     * @param selectIssuePost The select_issue_post
      */
     public void setSelectIssuePost(ArrayList<Integer> selectIssuePost) {
         this.selectIssuePost = selectIssuePost;
