@@ -42,13 +42,15 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -94,10 +96,6 @@ public class LogInActivity extends AppBaseActivity implements
     //Facebook Callbacks
     CallbackManager callbackManager;
     private GoogleApiClient mGoogleApiClient;
-    /* Is there a ConnectionResult resolution in progress? */
-    private boolean mIsResolving = false;
-    /* Should we automatically resolve ConnectionResults when possible? */
-    private boolean mShouldResolve = false;
     private LoadToast loadToast;
     private Dialog forgotPasswordPopUp;
     /*Facebok login Module starts here & Callback methods*/
@@ -142,11 +140,11 @@ public class LogInActivity extends AppBaseActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // [START restore_saved_instance_state]
+       /* // [START restore_saved_instance_state]
         if (savedInstanceState != null) {
             mIsResolving = savedInstanceState.getBoolean(KEY_IS_RESOLVING);
             mShouldResolve = savedInstanceState.getBoolean(KEY_SHOULD_RESOLVE);
-        }
+        }*/
         // initialize g+ & FB sdks
         initializeSDK();
         setContentView(R.layout.activity_login);
@@ -198,8 +196,8 @@ public class LogInActivity extends AppBaseActivity implements
     @OnClick(R.id.google_button)
     void googleLogin() {
         if (Util.isNetworkOnline(LogInActivity.this)) {
-            mShouldResolve = true;
-        mGoogleApiClient.connect();
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     else{
         showToast(getResources().getString(R.string.no_internet));
@@ -278,12 +276,18 @@ void forgotPassword(){
 
     /*initializing the g+ & fb SDK*/
     private void initializeSDK() {
-        //GoogleAPIClient
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // [END configure_signin]
+
+        // [START build_client]
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
+                .enableAutoManage(this /* Activity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
         //FaceBookSDK Initialize
@@ -295,8 +299,8 @@ void forgotPassword(){
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_RESOLVING, mIsResolving);
-        outState.putBoolean(KEY_SHOULD_RESOLVE, mShouldResolve);
+        //outState.putBoolean(KEY_IS_RESOLVING, mIsResolving);
+        //outState.putBoolean(KEY_SHOULD_RESOLVE, mShouldResolve);
     }
 
     @Override
@@ -305,24 +309,38 @@ void forgotPassword(){
         Log.d("LogIn", "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
         if (requestCode == RC_SIGN_IN) {
             // If the error resolution was not successful we should not resolve further errors.
-            if (resultCode != RESULT_OK) {
-                mShouldResolve = false;
-            }
-
-            mIsResolving = false;
-            mGoogleApiClient.connect();
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
-
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            Log.i(TAG + "signin", acct.getDisplayName() + acct.getEmail());
+            String personName = acct.getDisplayName();
+            Log.d(TAG, "requestGoogleData Person Name::" + personName);
+            String email = acct.getEmail();
+            Log.d(TAG, "email::" + email);
+            UserProfileVo profile = new UserProfileVo();
+            profile.setName(personName);
+            profile.setEmail(email);
+            saveSocialLogInData(profile);
+            doEmailLogIn(profile.getEmail(), profile.getEmail());
+        } else {
+            showToast("Unable to Login through g+");
+        }
+    }
     /* g+ connected */
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("LogIn", "onConnected:" + bundle);
         // Show the signed-in UI
         loadToast.success();
-        requestGoogleData(true);
+        //requestGoogleData(true);
     }
 
     /* g+ connection suspended */
@@ -336,14 +354,11 @@ void forgotPassword(){
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("LogIn", "onConnectionFailed:" + connectionResult);
 
-        if (!mIsResolving && mShouldResolve) {
             if (connectionResult.hasResolution()) {
                 try {
                     connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-                    mIsResolving = true;
                 } catch (IntentSender.SendIntentException e) {
                     Log.e(TAG, "Could not resolve ConnectionResult.", e);
-                    mIsResolving = false;
                     mGoogleApiClient.connect();
                 }
             } else {
@@ -351,10 +366,7 @@ void forgotPassword(){
                 // error dialog.
                 showErrorDialog(connectionResult);
             }
-        } else {
-            // Show the signed-out UI
-            requestGoogleData(false);
-        }
+
     }
 
     /*g+ Error dialog*/
@@ -368,39 +380,17 @@ void forgotPassword(){
                     new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
-                            mShouldResolve = false;
-                            requestGoogleData(false);
+
                         }
                     }).show();
         } else {
             // No default Google Play Services error, display a message to the user.
             String errorString = getString(R.string.play_services_error_fmt, errorCode);
             Toast.makeText(this, errorString, Toast.LENGTH_SHORT).show();
-            mShouldResolve = false;
-            requestGoogleData(false);
+
         }
     }
 
-    /*google data*/
-    private void requestGoogleData(boolean isSignedIn) {
-        Log.d(TAG, "requestGoogleData isSignedIn::" + isSignedIn);
-        if (isSignedIn) {
-            if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-                Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                String personName = currentPerson.getDisplayName();
-                Log.d(TAG, "requestGoogleData Person Name::" + personName);
-                String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-                Log.d(TAG, "email::" + email);
-                UserProfileVo profile = new UserProfileVo();
-                profile.setName(personName);
-                profile.setEmail(email);
-                saveSocialLogInData(profile);
-                doEmailLogIn(profile.getEmail(), profile.getEmail());
-            }
-        } else {
-            // Show signed-out message
-        }
-    }
 
 
     /*facebook data*/
