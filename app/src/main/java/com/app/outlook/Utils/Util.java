@@ -368,6 +368,11 @@ public class Util {
 
         return null;
     }
+    public static boolean isEmptyString(String user) {
+        if (user == null) return true;
+        if (user.trim().length() == 0) return true;
+        return false;
+    }
 
     /**
      * Get the value of the data column for this Uri. This is useful for

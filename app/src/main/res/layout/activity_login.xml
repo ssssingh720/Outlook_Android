@@ -22,8 +22,7 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/icon_outlook" />
+                android:src="@drawable/icon_outlook_group" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -140,7 +139,7 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/signin_to_conitinue"
                     android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
             </RelativeLayout>
 
         </RelativeLayout>
@@ -177,31 +176,36 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_alignEnd="@+id/signup_txt"
-                android:layout_alignLeft="@+id/signup_txt"
+                android:layout_alignEnd="@+id/signup_text"
+                android:layout_alignLeft="@+id/signup_text"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/signup_txt"
-                android:layout_alignStart="@+id/signup_txt"
+                android:layout_alignRight="@+id/signup_text"
+                android:layout_alignStart="@+id/signup_text"
                 android:layout_marginBottom="30dp"
                 android:background="@color/grey1"
-                android:visibility="invisible" />
+                android:visibility="visible" />
 
             <TextView
-                android:id="@+id/signup_txt"
+                android:id="@+id/signup_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textView9"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="Sign Up"
-                android:textSize="11sp"
-                android:visibility="invisible" />
+                android:textSize="12sp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="1dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:visibility="visible" />
 
             <View
                 android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_above="@+id/signup_txt"
+                android:layout_above="@+id/signup_text"
                 android:layout_alignEnd="@+id/password_forgot"
                 android:layout_alignLeft="@+id/password_forgot"
                 android:layout_alignRight="@+id/password_forgot"

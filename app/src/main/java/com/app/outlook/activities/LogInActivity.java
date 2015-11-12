@@ -30,7 +30,6 @@ import com.app.outlook.modal.BaseVO;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.UserProfileVo;
-import com.app.outlook.modal.YearListVo;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -48,9 +47,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -93,6 +90,8 @@ public class LogInActivity extends AppBaseActivity implements
     EditText mPasswordEditField;
     @Bind(R.id.password_forgot)
     TextView mForgotPassword;
+    @Bind(R.id.signup_text)
+    TextView mSignUp;
     //Facebook Callbacks
     CallbackManager callbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -224,7 +223,10 @@ public class LogInActivity extends AppBaseActivity implements
 void forgotPassword(){
     displayForgotPasswordPopUp();
 }
-
+@OnClick(R.id.signup_text)
+void signUp(){
+    startActivity(new Intent(LogInActivity.this, SignUpActivity.class));
+}
     private void displayForgotPasswordPopUp() {
         forgotPasswordPopUp=new Dialog(LogInActivity.this, R.style.DialogSlideAnim);
         forgotPasswordPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -238,18 +240,16 @@ void forgotPassword(){
             @Override
             public void onClick(View v) {
                 String email = emailField.getText().toString().trim();
-    if (email.length()>0 && SharedPrefManager.isValidEmail(email)){
-        if (Util.isNetworkOnline(LogInActivity.this)) {
-            recoverPassword(email);
-            hidePopupDialog();
-        }
-        else{
-            showToast(getResources().getString(R.string.no_internet));
-        }
-    }
-    else{
-        showToast(getResources().getString(R.string.email_to_get_password));
-    }
+                if (email.length() > 0 && SharedPrefManager.isValidEmail(email)) {
+                    if (Util.isNetworkOnline(LogInActivity.this)) {
+                        recoverPassword(email);
+                        hidePopupDialog();
+                    } else {
+                        showToast(getResources().getString(R.string.no_internet));
+                    }
+                } else {
+                    showToast(getResources().getString(R.string.email_to_get_password));
+                }
             }
         });
         forgotPasswordPopUp.show();
@@ -269,7 +269,7 @@ void forgotPassword(){
         loadToast.show();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.EMAIL, email);
-        params.put(FeedParams.USERNAME, password);
+        params.put(FeedParams.PASSWORD, password);
         placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
 
     }
