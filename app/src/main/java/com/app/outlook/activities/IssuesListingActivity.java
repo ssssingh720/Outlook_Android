@@ -1,5 +1,6 @@
 package com.app.outlook.activities;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.android.volley.VolleyError;
@@ -53,8 +55,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
@@ -86,7 +91,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "outlook.test.managedproduct";//"android.test.purchased";
+    static final String ITEM_SKU = "android.test.purchased";
     private ArrayList<String> productIDList;
     private ArrayList<SkuDetails> skuList;
     private String selectedSKU;
@@ -120,7 +125,6 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
                                                queryList();
-
                                            }
                                        }
                                    });
@@ -169,11 +173,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Magazine magazine = adapter.getItem(position);
                 String postID = magazine.getPostId();
                 if (postID != null) {
-                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
-                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
-                    startActivity(intent);
-//                    buyClick();
+//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+//                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+//                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+//                    startActivity(intent);
+                    buyClick();
                 }
 
             }
@@ -318,6 +322,41 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             purchaseInfo = info;
             String json = info.getOriginalJson();
             Log.v(TAG,json);
+
+            mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
+
+            new AlertDialog.Builder(IssuesListingActivity.this)
+                    .setTitle("Purchase Details")
+                    .setMessage(json)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+            try {
+            File subFolder = new File(root + File.separator + "Outlook/Magazines");
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
+            String mPath = root + File.separator + "Outlook/Magazines/" + "purchase.json";
+            File file = new File(mPath);
+
+            String content = info.getOrderId()+","+info.getToken()+","+info.getOriginalJson();
+            FileWriter fw = null;
+
+                fw = new FileWriter(mPath);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(content);
+                bw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
 //            json = "{ \"data\": " + json + ", \"ref\": \"" + UserInfoManager.getInstance().getUserRegistrationVO().getRef() + "\" }";
             try {
 //                placeRequest(INAPP_CONFIRMATION, BooleanResponse.class, new JSONObject(json));
