@@ -13,7 +13,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId "com.app.outlooktest"
+        applicationId "com.app.outlook"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 5
@@ -35,6 +35,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile 'com.google.android.gms:play-services-analytics:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.17'

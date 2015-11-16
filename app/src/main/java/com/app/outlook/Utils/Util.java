@@ -39,6 +39,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.app.outlook.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -987,5 +989,22 @@ public class Util {
             }
 
         }
+
+    }
+    public static boolean checkPlayServices(Activity context) {
+        GoogleApiAvailability
+                apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(context, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                //Log.i(TAG, "This device is not supported.");
+                //finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
