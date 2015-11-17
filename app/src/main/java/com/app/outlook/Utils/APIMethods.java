@@ -12,6 +12,6 @@ public class APIMethods {
     public static final String ISSUE_LIST = "get-issues/";
     public static final String REGISTER = "register/";
     public static final String RESET_PASSWORD = "reset-password/";
-public static final String LOGIN = "api-login/";
-public static final String VALIDATE_PURCHASE = "/validate-purchase/";
+    public static final String LOGIN = "api-login/";
+    public static final String VALIDATE_PURCHASE = "validate-purchase/";
 }

@@ -124,7 +124,8 @@ public class RequestManager<T> {
 
 
         try {
-            if(SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID) != null) {
+            if(SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID) != null
+                    && !SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID).isEmpty()) {
                 feedurl = feedurl + urlParam + FeedParams.USER_ID + "=" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
                         + "&" + FeedParams.TOKEN + "=" + URLEncoder.encode(SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN), "UTF-8");
             }
