@@ -10,7 +10,9 @@
         "mobilesdk_app_id": "1:105915870368:android:31949d92820bc267",
         "client_id": "android:com.app.outlook",
         "client_type": 1,
-        "android_client_info": {"package_name": "com.app.outlook"}
+        "android_client_info": {
+          "package_name": "com.app.outlook"
+        }
       },
       "oauth_client": [
         {
@@ -24,17 +26,26 @@
       ],
       "api_key": [],
       "services": {
-        "analytics_service": {"status": 1},
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-70066871-1"
+          }
+        },
         "cloud_messaging_service": {
-          "status": 1,
+          "status": 2,
           "apns_config": []
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {"status": 2},
-        "ads_service": {"status": 1}
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
       }
     }
   ],

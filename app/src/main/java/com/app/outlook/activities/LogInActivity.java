@@ -154,6 +154,7 @@ public class LogInActivity extends AppBaseActivity implements
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+
     private void initView() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -207,28 +208,32 @@ public class LogInActivity extends AppBaseActivity implements
     void emailLogin() {
         String email = mEmailEditField.getText().toString().trim();
         String password = mPasswordEditField.getText().toString().trim();
-        if (email.length()>0 && SharedPrefManager.isValidEmail(email) && password.length() > 0) {
+        if (email.length() > 0 && password.length() > 0) {
             if (Util.isNetworkOnline(LogInActivity.this)) {
                 doEmailLogIn(email, password);
             }
             else{
                 showToast(getResources().getString(R.string.no_internet));
             }
-        }
-        else{
+        } else{
             showToast(getResources().getString(R.string.empty_email_password));
         }
     }
-@OnClick (R.id.password_forgot)
-void forgotPassword(){
-    displayForgotPasswordPopUp();
-}
-@OnClick(R.id.signup_text)
-void signUp(){
-    startActivity(new Intent(LogInActivity.this, SignUpActivity.class));
-}
+
+
+
+    @OnClick(R.id.password_forgot)
+    void forgotPassword() {
+        displayForgotPasswordPopUp();
+    }
+
+    @OnClick(R.id.signup_text)
+    void signUp() {
+        startActivity(new Intent(LogInActivity.this, SignUpActivity.class));
+    }
+
     private void displayForgotPasswordPopUp() {
-        forgotPasswordPopUp=new Dialog(LogInActivity.this, R.style.DialogSlideAnim);
+        forgotPasswordPopUp = new Dialog(LogInActivity.this, R.style.DialogSlideAnim);
         forgotPasswordPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE);
         forgotPasswordPopUp.setContentView(R.layout.popup_forgot_password);
         forgotPasswordPopUp.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -261,22 +266,29 @@ void signUp(){
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.EMAIL, email);
         placeRequest(APIMethods.RESET_PASSWORD, BaseVO.class, params, true);
-
     }
 
-    /*login api call*/
-    private void doEmailLogIn(String email, String password) {
+    /*login api call after social login*/
+    private void afterSocialLogIn(String email, String password) {
         loadToast.show();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.EMAIL, email);
         params.put(FeedParams.USERNAME, password);
         placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
+    }
+    /*login api call [Email]*/
+    private void doEmailLogIn(String email, String password) {
+        loadToast.show();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(FeedParams.EMAIL, email);
+        params.put(FeedParams.USERNAME, password);
+        placeRequest(APIMethods.LOGIN, UserProfileVo.class, params, true);
 
     }
 
     /*initializing the g+ & fb SDK*/
     private void initializeSDK() {
-
+        registerGCM();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -329,7 +341,7 @@ void signUp(){
             profile.setName(personName);
             profile.setEmail(email);
             saveSocialLogInData(profile);
-            doEmailLogIn(profile.getEmail(), profile.getEmail());
+            afterSocialLogIn(profile.getEmail(), profile.getEmail());
         } else {
             showToast("Unable to Login through g+");
         }
@@ -406,7 +418,7 @@ void signUp(){
                         profile.setName(json.getString("name"));
                         profile.setEmail(json.getString("email"));
                         saveSocialLogInData(profile);
-                        doEmailLogIn(profile.getEmail(), profile.getEmail());
+                        afterSocialLogIn(profile.getEmail(), profile.getEmail());
                     }
                 } catch (JSONException e) {
                     //cancelAllLogins();
@@ -429,8 +441,13 @@ void signUp(){
         loadToast.success();
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
         UserProfileVo userInfo = (UserProfileVo) response;
-        userInfo.setEmail(mEmailEditField.getText().toString().trim());
-        saveLogInToken(userInfo);
+        //userInfo.setEmail(mEmailEditField.getText().toString().trim());
+            saveTokenAfterSocialLogIn(userInfo);
+        }
+        if (apiMethod.equalsIgnoreCase(APIMethods.LOGIN)){
+            UserProfileVo userInfo = (UserProfileVo) response;
+            userInfo.setEmail(mEmailEditField.getText().toString().trim());
+            saveLogInToken(userInfo);
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.RESET_PASSWORD)){
             showToast("Password has been sent to your registered email");
@@ -450,19 +467,33 @@ void signUp(){
 
     /*saving Login data & move to next screen*/
     private void saveLogInToken(UserProfileVo profile) {
-        SharedPrefManager.getInstance().setSharedData(FeedParams.TOKEN, profile.getToken());
-        SharedPrefManager.getInstance().setSharedData(FeedParams.USER_ID,profile.getUserId());
-        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profile.getEmail());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID, profile.getUserId());
+        if (profile.getEmail()!=null) {
+            SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
+        }
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-        Log.i(TAG, profile.getToken() + "email" + profile.getEmail() + "name" + profile.getName());
+        Log.i(TAG, profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.PROFILE_EMAIL) + "name" + profile.getName());
+        String token=SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.GCM_TOKEN);
+        Log.d(TAG + "gcmToken", token);
         finish();
     }
 
     private void saveSocialLogInData(UserProfileVo profileVo) {
-        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profileVo.getEmail());
-        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_NAME, profileVo.getName());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profileVo.getEmail());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME, profileVo.getName());
     }
+    private void saveTokenAfterSocialLogIn(UserProfileVo profile){
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID, profile.getUserId());
+        SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
+        startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
+        Log.i(TAG+"Social", profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.PROFILE_EMAIL) + "name" + profile.getName());
+
+        finish();
+    }
+
     private void hidePopupDialog() {
         if (forgotPasswordPopUp.isShowing()) {
             forgotPasswordPopUp.dismiss();

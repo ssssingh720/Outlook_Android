@@ -1,18 +1,28 @@
 package com.app.outlook.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.app.outlook.R;
+import com.app.outlook.Utils.AnalyticsTracker;
+import com.app.outlook.Utils.Util;
 import com.app.outlook.fragments.BaseFragment;
 import com.app.outlook.listener.ServerCallback;
 import com.app.outlook.manager.PageManager;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.networking.RequestManager;
+import com.app.outlook.services.RegistrationIntentService;
 
 import java.util.HashMap;
 
@@ -24,14 +34,17 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AppBaseActivity extends AppCompatActivity implements ServerCallback {
 
     public static final int MAX_PAGE_BUFFER = 3;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
     protected PageManager pageManager = new PageManager(this,
             MAX_PAGE_BUFFER);
     private Toast mToast;
+    private AnalyticsTracker mAnalyticsTracker=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPrefManager prefManager = SharedPrefManager.getInstance();
         prefManager.init(this);
+        mAnalyticsTracker= new AnalyticsTracker(this);
         int theme = prefManager.getSharedDataInt(OutlookConstants.theme);
         if (theme != 0)
             setTheme(theme);
@@ -102,6 +115,43 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
     public void onErrorResponse(VolleyError error, String apiMethod) {
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(OutlookConstants.REGISTRATION_COMPLETE));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    /**
+     * method to get GCM token*/
+    public void registerGCM() {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(OutlookConstants.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                    Log.d("LogActivity", getString(R.string.gcm_send_message));
+                } else {
+                    Log.d("LOgActivity", getString(R.string.token_error_message));
+                }
+            }
+        };
+
+        if (Util.checkPlayServices(AppBaseActivity.this)) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
 
     /**
      * Method to show the Toast message
@@ -165,3 +215,4 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
     }
 
 }
+

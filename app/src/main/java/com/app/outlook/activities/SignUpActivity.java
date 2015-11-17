@@ -92,4 +92,8 @@ public class SignUpActivity extends AppBaseActivity {
         }
 
     }
+    @OnClick(R.id.toolbar_back)
+    public void onMBackClick() {
+        finish();
+    }
 }
