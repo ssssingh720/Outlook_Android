@@ -5,6 +5,8 @@ import android.app.Activity;
 import com.app.outlook.OutLookApplication;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.app.outlook.OutLookApplication.TrackerName;
+
 
 /**
  * Created by Madhumita on 16-11-2015.
@@ -16,7 +18,7 @@ public class AnalyticsTracker {
     public AnalyticsTracker(Activity act) {
         activity = act;
         mTracker = ((OutLookApplication) activity.getApplication())
-                .getDefaultTracker();
+                .getTracker(TrackerName.APP_TRACKER);
     }
 
     public void sendEvent(int categoryId, int actionEventId) {
