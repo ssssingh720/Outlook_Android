@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_margin="@dimen/card_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:text="@string/subscribe_to_outlook"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tag_grey"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/text_big"
+        android:gravity="center"
+        android:text="@string/subscribe_to_get_full_access"/>
+    
+    <Button
+        android:id="@+id/btn_annual"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_stroke_bg"
+        android:layout_height="60dp" />
+    <Button
+        android:id="@+id/btn_half_year"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_stroke_bg"
+        android:layout_height="60dp" />
+    <Button
+        android:id="@+id/btn_quater"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_stroke_bg"
+        android:layout_height="60dp" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:gravity="bottom|right"
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/txtCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="@dimen/text_big"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/cancel"/>
+        <TextView
+            android:id="@+id/txtYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_big"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/yes"/>
+
+    </LinearLayout>
+</LinearLayout>

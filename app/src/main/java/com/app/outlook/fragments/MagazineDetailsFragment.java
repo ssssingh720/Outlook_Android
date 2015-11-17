@@ -36,6 +36,7 @@ import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.Data;
 import com.app.outlook.modal.DetailsObject;
+import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.app.outlook.modal.MagazineDetailsVo;
@@ -339,8 +340,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.MAGAZINE_DETAILS + "?mag_id=" + params[0]
                 +"&issue_id="+ params[1]+
-                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
-                        + "&"+ OutlookConstants.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN));
+                        "&"+ FeedParams.USER_ID+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
+                        + "&"+ FeedParams.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length

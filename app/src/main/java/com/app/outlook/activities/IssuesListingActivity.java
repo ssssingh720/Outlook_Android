@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,15 +32,18 @@ import com.app.outlook.Utils.Purchase;
 import com.app.outlook.Utils.SkuDetails;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.adapters.OutlookGridViewAdapter;
+import com.app.outlook.listener.OnIssueItemsClickListener;
 import com.app.outlook.manager.SessionManager;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.DetailsObject;
+import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Issue;
 import com.app.outlook.modal.IssuesVo;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.Month;
 import com.app.outlook.modal.OutlookConstants;
+import com.app.outlook.modal.PurchaseResponseVo;
 import com.app.outlook.modal.WeeklyIssueVo;
 import com.app.outlook.modal.YearListVo;
 import com.app.outlook.views.MonthYearPicker;
@@ -70,6 +74,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -79,25 +84,23 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 10/09/15.
  */
-public class IssuesListingActivity extends AppBaseActivity implements IabHelper.QueryInventoryFinishedListener, IabHelper.OnIabPurchaseFinishedListener, IabHelper.OnConsumeMultiFinishedListener,  IabHelper.OnConsumeFinishedListener{
+public class IssuesListingActivity extends AppBaseActivity implements IabHelper.QueryInventoryFinishedListener,
+        IabHelper.OnIabPurchaseFinishedListener, IabHelper.OnConsumeMultiFinishedListener,
+        IabHelper.OnConsumeFinishedListener,OnIssueItemsClickListener {
 
     private static final String TAG = "CategoryListingActivity";
     private OutlookGridViewAdapter adapter;
     @Bind(R.id.gridView)
     GridView gridView;
-    private int magazineType;
+    private String magazineType;
     private LoadToast loadToast;
     private String issueYear = "2015";
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "android.test.purchased";
-    private ArrayList<String> productIDList;
-    private ArrayList<SkuDetails> skuList;
-    private String selectedSKU;
-    private ArrayList<Purchase> purchaseList;
+    static final String ITEM_SKU = "outlook.test.managedproduct_two";
+    private int selectedPosition = -1;
     private Purchase purchaseInfo;
-    private SkuDetails selectedSKUItem;
     private DownloadFileFromURL task;
     private int currentYear;
     private int currentMonth;
@@ -112,7 +115,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
 
-        magazineType = getIntent().getIntExtra(IntentConstants.TYPE, 0);
+        magazineType = getIntent().getStringExtra(IntentConstants.TYPE);
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
         mHelper.startSetup(new
@@ -133,7 +136,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     }
 
     private void setLogo() {
-        if(magazineType == 0){
+        if(Integer.parseInt(magazineType) == 0){
             toolbar_title.setImageResource(R.drawable.logo_outlook);
         }
     }
@@ -167,22 +170,6 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
                 .setProgressColor(getResources().getColor(R.color.app_red));
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Magazine magazine = adapter.getItem(position);
-                String postID = magazine.getPostId();
-                if (postID != null) {
-//                    Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
-//                    intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
-//                    intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
-//                    startActivity(intent);
-                    buyClick();
-                }
-
-            }
-        });
-
         fetchIssueList();
     }
 
@@ -192,6 +179,10 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
         if(task != null && task.isCancelled() && yearListVo == null ){
                 fetchIssueList();
+        }
+
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -247,7 +238,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
+        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),
+                yearListVo.getYear()), width,magazineType,this);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
@@ -266,8 +258,10 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             for(int j=0 ; j< issueArray.size();j++){
                 Magazine magazine = new Magazine();
                 magazine.setImage(issueArray.get(j).getImage());
-                magazine.setIssueDate(monthArray.get(i).getName()+", " + issueYear);
-                magazine.setPostId(issueArray.get(j).getIssueId()+"");
+                magazine.setIssueDate(monthArray.get(i).getName() + ", " + issueYear);
+                magazine.setPostId(issueArray.get(j).getIssueId() + "");
+                magazine.setIsPurchased(issueArray.get(j).getPurchase());
+                magazine.setSku(issueArray.get(j).getSku());
                 months.add(magazine);
             }
             if(issueArray.size() % 2 == 1){
@@ -281,15 +275,29 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private void getFilteredList(int year, int month){
         loadToast.show();
         try{
-        String methodName = APIMethods.ISSUE_LIST +
-                "?mag_id="+magazineType+"&year="+year+"&month="+month+
-                "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
-                + "&"+ OutlookConstants.TOKEN+"="+ URLEncoder.encode(SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN), "UTF-8");
+            HashMap<String,String> params = new HashMap<>();
+            params.put(FeedParams.MAG_ID, magazineType + "");
+            params.put(FeedParams.YEAR,year+"");
+            params.put(FeedParams.MONTH,month+"");
 
-        placeRequest(methodName, YearListVo.class, null, false);
+        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false);
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void validatePurchase(String productID,String purchaseToken,String issueId){
+        loadToast.show();
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put(FeedParams.PLATFORM, OutlookConstants.PLATFORM);
+        params.put(FeedParams.PACKAGE_NAME,getApplicationContext().getPackageName());
+        params.put(FeedParams.PRODUCT_ID, productID);
+        params.put(FeedParams.PURCHASE_TOKEN,purchaseToken);
+        params.put(FeedParams.ISSUE_ID,issueId);
+        params.put(FeedParams.MAGAZINE_ID, magazineType + "");
+
+        placeRequest(APIMethods.VALIDATE_PURCHASE, PurchaseResponseVo.class, params, true);
     }
 
     @Override
@@ -297,23 +305,47 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         super.onAPIResponse(response, apiMethod);
         loadToast.success();
 
-        YearListVo yearListVo = (YearListVo) response;
+        if(apiMethod.equals(APIMethods.ISSUE_LIST)) {
+            YearListVo yearListVo = (YearListVo) response;
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,getMonthList(yearListVo.getMonths(),yearListVo.getYear()), width);
-        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
-        AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
-        animationAlphaAdapter.setAbsListView(gridView);
-        gridView.setAdapter(animationAlphaAdapter);
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,
+                    getMonthList(yearListVo.getMonths(), yearListVo.getYear()), width,magazineType,this);
+            SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
+            AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
+            animationAlphaAdapter.setAbsListView(gridView);
+            gridView.setAdapter(animationAlphaAdapter);
+        }else if(apiMethod.equals(APIMethods.VALIDATE_PURCHASE)){
+
+            PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
+
+            if(purchaseResponseVo.getResponse().getPurchaseState() == 0){
+                if(selectedPosition != -1) {
+                    Magazine magazine = adapter.getItem(selectedPosition);
+                    magazine.setIsPurchased(true);
+                    adapter.notifyDataSetChanged();
+
+                    onCoverImageClicked(selectedPosition);
+                    selectedPosition = -1;
+                }
+            }else {
+                Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod) {
         super.onErrorResponse(error, apiMethod);
         loadToast.error();
+
+        if(apiMethod.equals(APIMethods.VALIDATE_PURCHASE)){
+            Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -321,51 +353,50 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         if(info != null) {
             purchaseInfo = info;
             String json = info.getOriginalJson();
-            Log.v(TAG,json);
+            Log.v(TAG, json);
 
             mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
 
-            new AlertDialog.Builder(IssuesListingActivity.this)
-                    .setTitle("Purchase Details")
-                    .setMessage(json)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                            dialog.dismiss();
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-
-            try {
-            File subFolder = new File(root + File.separator + "Outlook/Magazines");
-            if (!subFolder.exists()) {
-                subFolder.mkdir();
-            }
-            String mPath = root + File.separator + "Outlook/Magazines/" + "purchase.json";
-            File file = new File(mPath);
-
-            String content = info.getOrderId()+","+info.getToken()+","+info.getOriginalJson();
-            FileWriter fw = null;
-
-                fw = new FileWriter(mPath);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(content);
-                bw.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-//            json = "{ \"data\": " + json + ", \"ref\": \"" + UserInfoManager.getInstance().getUserRegistrationVO().getRef() + "\" }";
-            try {
-//                placeRequest(INAPP_CONFIRMATION, BooleanResponse.class, new JSONObject(json));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            validatePurchase(purchaseInfo.getSku(),purchaseInfo.getToken(),purchaseInfo.getDeveloperPayload());
         } else {
 //            hideProgressDialog();
-            finish();
+//            finish();
+        }
+    }
+
+    @Override
+    public void onBuyClicked(int position) {
+        selectedPosition = position;
+            Toast.makeText(IssuesListingActivity.this,"onBuyClicked",Toast.LENGTH_SHORT).show();
+        Magazine magazine = adapter.getItem(position);
+        buyClick(magazine.getSku(), magazine.getPostId());
+    }
+
+    @Override
+    public void onDownloadClicked(int position) {
+        Toast.makeText(IssuesListingActivity.this,"onDownloadClicked",Toast.LENGTH_SHORT).show();
+
+        Magazine magazine = adapter.getItem(position);
+        String postID = magazine.getPostId();
+        if (postID != null) {
+            Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+            intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+            intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onCoverImageClicked(int position) {
+        Toast.makeText(IssuesListingActivity.this,"onCoverImageClicked",Toast.LENGTH_SHORT).show();
+
+        Magazine magazine = adapter.getItem(position);
+        String postID = magazine.getPostId();
+        if (postID != null) {
+            Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
+            intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+            intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            startActivity(intent);
         }
     }
 
@@ -401,8 +432,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
                 "?mag_id="+params[0]+"&year="+params[1]+
-                        "&"+ OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
-                        + "&"+ OutlookConstants.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN)
+                        "&"+ FeedParams.USER_ID+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
+                        + "&"+ FeedParams.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN)
                 );
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
@@ -484,9 +515,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
     }
 
-    public void buyClick() {
-        mHelper.launchPurchaseFlow(this, ITEM_SKU, 10001,
-                this, "mypurchasetokend");
+    public void buyClick(String sku,String issueId) {
+        mHelper.launchPurchaseFlow(this, ITEM_SKU, OutlookConstants.MAKE_GPAYMENT,
+                this, issueId);
     }
 
     @Override
@@ -524,4 +555,6 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             loadToast.error();
         }
     }
+
+
 }

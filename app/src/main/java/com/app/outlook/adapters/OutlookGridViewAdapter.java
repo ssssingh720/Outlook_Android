@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
+import com.app.outlook.listener.OnIssueItemsClickListener;
 import com.app.outlook.modal.Magazine;
 import com.squareup.picasso.Picasso;
 
@@ -28,17 +30,22 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
     private Context context;
     private ArrayList<Magazine> data;
     private int width;
+    private String magazineID;
+    private OnIssueItemsClickListener onIssueItemsClickListener;
 
-    public OutlookGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data, int width) {
+    public OutlookGridViewAdapter(Context context, int layoutResourceId, ArrayList<Magazine> data, int width,
+                                  String magazineID,OnIssueItemsClickListener onIssueItemsClickListener) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
         this.width = width;
+        this.magazineID = magazineID;
+        this.onIssueItemsClickListener = onIssueItemsClickListener;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder holder;
 
@@ -50,6 +57,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.dateTxt = (TextView) row.findViewById(R.id.dateTxt);
             holder.headerLyt = (LinearLayout) row.findViewById(R.id.headerLyt);
             holder.mainLyt = (LinearLayout) row.findViewById(R.id.mainLyt);
+            holder.buyBtn = (Button) row.findViewById(R.id.buyBtn);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -68,6 +76,12 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.mainLyt.setVisibility(View.VISIBLE);
             Picasso.with(context).load(magazine.getImage())
                     .placeholder(R.color.cool_grey).fit().centerCrop().into(holder.image);
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onIssueItemsClickListener.onCoverImageClicked(position);
+                }
+            });
 
             holder.dateTxt.setText(magazine.getIssueDate());
             if (position > 0 && data.get(position - 1).getIssueDate() != null
@@ -82,8 +96,31 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             } else {
                 holder.headerLyt.setVisibility(View.VISIBLE);
             }
-        }
 
+
+            if (magazine.isPurchased()) {
+                if (Util.checkFiledownLoaded(context.getCacheDir().getAbsolutePath(), magazineID, magazine.getPostId())) {
+                    holder.buyBtn.setVisibility(View.GONE);
+                } else {
+                    holder.buyBtn.setText(context.getResources().getString(R.string.download));
+                    holder.buyBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onIssueItemsClickListener.onDownloadClicked(position);
+                        }
+                    });
+                }
+            } else {
+                holder.buyBtn.setText(context.getResources().getString(R.string.buy));
+                holder.buyBtn.setVisibility(View.VISIBLE);
+                holder.buyBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onIssueItemsClickListener.onBuyClicked(position);
+                    }
+                });
+            }
+        }
 
         return row;
     }
@@ -97,5 +134,6 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         TextView dateTxt;
         ImageView image;
         LinearLayout headerLyt, mainLyt;
+        Button buyBtn;
     }
 }

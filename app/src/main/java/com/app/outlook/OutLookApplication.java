@@ -7,6 +7,8 @@ import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
+import com.squareup.picasso.LruCache;
+import com.squareup.picasso.Picasso;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -47,6 +49,11 @@ public class OutLookApplication extends Application {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        LruCache picassoCache = new LruCache(this);
+        builder.memoryCache(picassoCache);
+        Picasso.setSingletonInstance(builder.build());
     }
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {

@@ -23,16 +23,28 @@ public class FeedParams {
     public static final String USEREMAIL = "userEmail";
 
     public static final String AUTHKEY = "authKey";
-    public static final String USERID = "userId";
+//    public static final String USERID = "userId";
 
 
     public static final String ACCESS_TOKEN = "access_token";
     public static final String EMAIL = "email";
     public static final String PASSWORD1 = "password1";
     public static final String HEADERS_AUTHENTICATION = "Authorization";
-    public static final String PRODUCT_ID = "product_id";
     public static final String QUANTITY = "quantity";
     public static final String PINCODE = "pincode";
     public static final String PROFILE_PIC = "profile_pic";
     public static final String USERNAME = "username";
+    public static final String PLATFORM = "platform";
+    public static final String PACKAGE_NAME = "packageName";
+    public static final String PRODUCT_ID = "productId";
+    public static final String PURCHASE_TOKEN = "purchaseToken";
+    public static final String ISSUE_ID = "issueId";
+    public static final String MAGAZINE_ID = "magazineId";
+    public static final String MAG_ID = "mag_id";
+    public static final String YEAR = "year";
+    public static final String MONTH = "month";
+    public static final String PROFILE_NAME = "profile_name";
+    public static final String TOKEN = "token";
+    public static final String USER_ID = "user_id";
+    public static final String PROFILE_EMAIL = "profile_email";
 }

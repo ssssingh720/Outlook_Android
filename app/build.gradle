@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'outlook'
+            keyPassword 'outlook'
+            storeFile file('/Users/srajendrakumar/Desktop/raj/outlookapp.jks')
+            storePassword 'outlook'
+        }
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
@@ -10,7 +18,7 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/notice.txt'
     }
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "com.app.outlook"
@@ -18,11 +26,16 @@ android {
         targetSdkVersion 22
         versionCode 5
         versionName "1.4"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     productFlavors {
@@ -41,6 +54,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.mcxiaoke.volley:library:1.0.17'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
@@ -53,5 +67,4 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
     compile 'net.steamcrafted:load-toast:1.0.9'
     compile 'com.facebook.android:facebook-android-sdk:4.1.0'
-
 }

@@ -458,29 +458,29 @@ public class LogInActivity extends AppBaseActivity implements
 
     /*saving Login data & move to next screen*/
     private void saveLogInToken(UserProfileVo profile) {
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID, profile.getUserId());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.USER_ID, profile.getUserId());
         if (profile.getEmail()!=null) {
-            SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
+            SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profile.getEmail());
         }
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-        Log.i(TAG, profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.PROFILE_EMAIL) + "name" + profile.getName());
+        Log.i(TAG, profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL) + "name" + profile.getName());
         String token=SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.GCM_TOKEN);
         Log.d(TAG + "gcmToken", token);
         finish();
     }
 
     private void saveSocialLogInData(UserProfileVo profileVo) {
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profileVo.getEmail());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME, profileVo.getName());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profileVo.getEmail());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_NAME, profileVo.getName());
     }
     private void saveTokenAfterSocialLogIn(UserProfileVo profile){
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID, profile.getUserId());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.USER_ID, profile.getUserId());
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-        Log.i(TAG+"Social", profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.PROFILE_EMAIL) + "name" + profile.getName());
+        Log.i(TAG + "Social", profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL) + "name" + profile.getName());
 
         finish();
     }
