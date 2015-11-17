@@ -97,6 +97,17 @@ public class Util {
 
     }
 
+    public static boolean checkFiledownLoaded(String root,String magazineID,String issueID){
+
+        String mPath =  root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
+        File file = new File(mPath);
+        if (file.exists()) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     public static String unixTimetoDate(String unix_time) {
         long unix_seconds = Long.parseLong(unix_time, 10);
         SimpleDateFormat dfDate = new SimpleDateFormat("ddMMMyy-HHmm");
@@ -988,4 +999,5 @@ public class Util {
 
         }
     }
+
 }

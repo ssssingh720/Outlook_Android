@@ -24,9 +24,7 @@
             android:layout_height="50dp"
             android:layout_alignTop="@+id/imageView"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imageView5"
             android:layout_toRightOf="@+id/imageView"
-            android:layout_toStartOf="@+id/imageView5"
             android:gravity="center|left"
             android:orientation="vertical"
             android:paddingLeft="10dp">

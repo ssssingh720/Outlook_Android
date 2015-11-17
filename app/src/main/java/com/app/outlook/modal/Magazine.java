@@ -13,6 +13,8 @@ public class Magazine implements Serializable {
     private int id;
     private String issueDate;
     private String postId;
+    private boolean isPurchased;
+    private String sku;
 
     public String getName() {
         return name;
@@ -61,5 +63,21 @@ public class Magazine implements Serializable {
 
     public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public boolean isPurchased() {
+        return isPurchased;
+    }
+
+    public void setIsPurchased(boolean isPurchased) {
+        this.isPurchased = isPurchased;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 }

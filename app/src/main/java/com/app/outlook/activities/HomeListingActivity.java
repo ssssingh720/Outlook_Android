@@ -20,6 +20,7 @@ import com.app.outlook.fragments.HomeListFragment;
 import com.app.outlook.fragments.HomeGridFragment;
 import com.app.outlook.manager.SessionManager;
 import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.modal.OutlookConstants;
@@ -216,8 +217,8 @@ public class HomeListingActivity extends AppBaseActivity {
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL+APIMethods.MAGAZINE_TYPE_LIST+"?"+
-                        OutlookConstants.USERID+"="+ SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.USERID)
-                        + "&"+ OutlookConstants.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.TOKEN));
+                        FeedParams.USER_ID+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
+                        + "&"+ FeedParams.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
                         Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();

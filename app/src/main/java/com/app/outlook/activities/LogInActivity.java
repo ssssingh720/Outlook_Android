@@ -269,7 +269,7 @@ void signUp(){
         loadToast.show();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.EMAIL, email);
-        params.put(FeedParams.PASSWORD, password);
+        params.put(FeedParams.USERNAME, password);
         placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
 
     }
@@ -450,9 +450,9 @@ void signUp(){
 
     /*saving Login data & move to next screen*/
     private void saveLogInToken(UserProfileVo profile) {
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.TOKEN, profile.getToken());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.USERID,profile.getUserId());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profile.getEmail());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.TOKEN, profile.getToken());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.USER_ID,profile.getUserId());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profile.getEmail());
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
         Log.i(TAG, profile.getToken() + "email" + profile.getEmail() + "name" + profile.getName());
@@ -460,8 +460,8 @@ void signUp(){
     }
 
     private void saveSocialLogInData(UserProfileVo profileVo) {
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_EMAIL, profileVo.getEmail());
-        SharedPrefManager.getInstance().setSharedData(OutlookConstants.PROFILE_NAME, profileVo.getName());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profileVo.getEmail());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_NAME, profileVo.getName());
     }
     private void hidePopupDialog() {
         if (forgotPasswordPopUp.isShowing()) {

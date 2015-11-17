@@ -15,6 +15,7 @@ import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 import com.app.outlook.listener.ServerCallback;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.BaseVO;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.ResponseError;
@@ -108,9 +109,11 @@ public class RequestManager<T> {
     public void placeRequest(String methodName, Class<T> clazz, ServerCallback<T> listener, HashMap<String, String> feedParams, boolean isPOST) {
 
         String feedurl = baseFeedURL.concat(methodName);
+        String urlParam = "?";
 
         if (!isPOST && feedParams != null) {
             feedurl = createGetWithParams(feedurl, feedParams);
+            urlParam = "&";
         }
         // Check if the feedParams has Authkey if so then get it again from
         // the SharedPreferences
@@ -118,6 +121,17 @@ public class RequestManager<T> {
             feedParams.put(FeedParams.AUTHKEY,
                     SessionManager.getSessionId(mCtx));
         }
+
+
+        try {
+            if(SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID) != null) {
+                feedurl = feedurl + urlParam + FeedParams.USER_ID + "=" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
+                        + "&" + FeedParams.TOKEN + "=" + URLEncoder.encode(SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN), "UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
 
         Log.d("Requestmanager", "SearchURL::" + feedurl);
         GsonRequest<T> jsObjRequest = new GsonRequest<T>(isPOST ? Method.POST : Method.GET,

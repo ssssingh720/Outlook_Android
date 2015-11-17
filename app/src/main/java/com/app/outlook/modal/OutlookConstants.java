@@ -7,11 +7,9 @@ import android.os.Environment;
  */
 public class OutlookConstants {
 
+    public static final String PLATFORM = "android";
     public static final String IS_LOGGEDIN = "is_loggedIn";
-    public static final String PROFILE_NAME = "profile_name";
-    public static final String TOKEN = "token";
-    public static final String USERID = "user_id";
-    public static final String PROFILE_EMAIL = "profile_email";
+    public static final int MAKE_GPAYMENT = 1001;
     public static int type_outlook = 0;
     public static int type_traveller = 1;
     public static String theme = "theme";

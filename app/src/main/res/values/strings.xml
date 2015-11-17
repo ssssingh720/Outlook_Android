@@ -30,6 +30,7 @@
     <string name="negative_button_text">Cancel</string>
     <string name="subscribe">SUBSCRIBE</string>
     <string name="buy">BUY</string>
+    <string name="download">DOWNLOAD</string>
     <string name="notifications">Notifications</string>
     <string name="my_downloads">My Downloads</string>
     <string name="restore_subcription">Restore Subcription</string>
@@ -46,4 +47,8 @@
     <string name="no_internet">Please check your internet connectivity.</string>
     <string name="empty_email_password">Please enter a valid email and password.</string>
     <string name="email_to_get_password">Please enter the registered email to recover the password.</string>
+    <string name="subscribe_to_outlook">Subscribe to Outlook</string>
+    <string name="subscribe_to_get_full_access">Subscribe to get full access to Outlook magazines</string>
+    <string name="yes">YES</string>
+    <string name="cancel">CANCEL</string>
 </resources>
