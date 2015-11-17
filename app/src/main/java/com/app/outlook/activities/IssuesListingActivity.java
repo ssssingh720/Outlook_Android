@@ -1,8 +1,7 @@
 package com.app.outlook.activities;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -10,12 +9,10 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -35,20 +32,16 @@ import com.app.outlook.adapters.OutlookGridViewAdapter;
 import com.app.outlook.listener.OnIssueItemsClickListener;
 import com.app.outlook.manager.SessionManager;
 import com.app.outlook.manager.SharedPrefManager;
-import com.app.outlook.modal.DetailsObject;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Issue;
-import com.app.outlook.modal.IssuesVo;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.Month;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.PurchaseResponseVo;
-import com.app.outlook.modal.WeeklyIssueVo;
 import com.app.outlook.modal.YearListVo;
 import com.app.outlook.views.MonthYearPicker;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
@@ -56,21 +49,15 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationA
 import net.steamcrafted.loadtoast.LoadToast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -107,6 +94,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private YearListVo yearListVo;
     @Bind(R.id.toolbar_title)
     ImageView toolbar_title;
+    private ArrayList<String> subscriptionIDList;
+    private ArrayList<SkuDetails> skuList;
+    private ArrayList<Purchase> purchaseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,23 +106,23 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         ButterKnife.bind(this);
 
         magazineType = getIntent().getStringExtra(IntentConstants.TYPE);
+        subscriptionIDList = getIntent().getStringArrayListExtra(IntentConstants.SUBSCRIPTION_IDS);
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
         mHelper.startSetup(new
                                    IabHelper.OnIabSetupFinishedListener() {
-                                       public void onIabSetupFinished(IabResult result)
-                                       {
+                                       public void onIabSetupFinished(IabResult result) {
                                            if (!result.isSuccess()) {
                                                Log.d(TAG, "In-app Billing setup failed: " +
                                                        result);
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
-                                               queryList();
                                            }
                                        }
                                    });
         setLogo();
         initView();
+
     }
 
     private void setLogo() {
@@ -142,10 +132,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     }
 
     private void queryList(){
-        List additionalSkuList = new ArrayList();
-        additionalSkuList.add(ITEM_SKU);
-//                                               additionalSkuList.add(SKU_BANANA);
-        mHelper.queryInventoryAsync(true, additionalSkuList,
+        mHelper.queryInventoryAsync(true, subscriptionIDList,
                 this);
     }
 
@@ -204,6 +191,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             }
         }, null);
         myp.show();
+    }
+
+    @OnClick(R.id.btnSubscribe)
+    public void onSubscribeCLicked(){
+        queryList();
     }
 
     private void fetchIssueList() {
@@ -369,7 +361,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         selectedPosition = position;
 //            Toast.makeText(IssuesListingActivity.this,"onBuyClicked",Toast.LENGTH_SHORT).show();
         Magazine magazine = adapter.getItem(position);
-        buyClick(magazine.getSku(), magazine.getPostId());
+        buyManagedProductClick(magazine.getSku(), magazine.getPostId());
     }
 
     @Override
@@ -515,9 +507,14 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
     }
 
-    public void buyClick(String sku,String issueId) {
+    public void buyManagedProductClick(String sku,String issueId) {
         mHelper.launchPurchaseFlow(this, ITEM_SKU, OutlookConstants.MAKE_GPAYMENT,
                 this, issueId);
+    }
+
+    public void buySubscriptionClick(String sku,String magazineId) {
+        mHelper.launchSubscriptionPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
+                this, magazineId);
     }
 
     @Override
@@ -538,13 +535,69 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @Override
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-//        if(inv!=null) {
-//            String applePrice =
-//                    inv.getSkuDetails(ITEM_SKU).getPrice();
-//        } else {
-//            showToast("Not able to retreive data. Please try again.");
-//            this.finish();
-//        }
+        if(inv!=null) {
+            skuList = new ArrayList<SkuDetails>();
+            purchaseList = new ArrayList<Purchase>();
+            for (int i = 0; i < subscriptionIDList.size(); i++) {
+                if (subscriptionIDList.get(i) != null) {
+                    SkuDetails sku = inv.getSkuDetails(subscriptionIDList.get(i));
+                    skuList.add(sku);
+                    Purchase purchase = inv.getPurchase(subscriptionIDList.get(i));
+                    if (purchase != null)
+                        purchaseList.add(purchase);
+                }
+            }
+            if (purchaseList != null && purchaseList.size() > 0) {
+                mHelper.consumeAsync(purchaseList, this);
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    promptUserToBuySubscription();
+                }
+            });
+        } else {
+            showToast("Not able to retreive data. Please try again.");
+            this.finish();
+        }
+
+    }
+
+    private void promptUserToBuySubscription() {
+
+        final Dialog subscriptionDialog = new Dialog(IssuesListingActivity.this);
+        subscriptionDialog.setContentView(R.layout.dialog_subcription);
+
+        Button btn1 = (Button) subscriptionDialog.findViewById(R.id.btn_annual);
+        btn1.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscriptionDialog.dismiss();
+                buySubscriptionClick(skuList.get(0).getSku(),magazineType);
+            }
+        });
+        Button btn2 = (Button) subscriptionDialog.findViewById(R.id.btn_half_year);
+        btn2.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscriptionDialog.dismiss();
+                buySubscriptionClick(skuList.get(1).getSku(), magazineType);
+            }
+        });
+        Button btn3 = (Button) subscriptionDialog.findViewById(R.id.btn_quater);
+        btn3.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscriptionDialog.dismiss();
+                buySubscriptionClick(skuList.get(2).getSku(), magazineType);
+            }
+        });
+
+        subscriptionDialog.show();
     }
 
     @Override
