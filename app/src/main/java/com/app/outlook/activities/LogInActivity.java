@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.VolleyError;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
@@ -70,13 +69,6 @@ public class LogInActivity extends AppBaseActivity implements
     public static final String TAG = "LogInActivity";
     //Google Declarations
     private static final int RC_SIGN_IN = 9001;
-    /* Keys for persisting instance variables in savedInstanceState */
-    private static final String KEY_IS_RESOLVING = "is_resolving";
-    private static final String KEY_SHOULD_RESOLVE = "should_resolve";
-    /* LogIn types */
-    private static final int LOGIN_FACEBOOK = 1;
-    private static final int LOGIN_GOOGLE = 2;
-    private static final int LOGIN_EMAIL = 3;
     public ProfileTracker mProfileTracker;
     @Bind(R.id.facebook_button)
     RelativeLayout mFacebookLogInBtn;
@@ -190,7 +182,6 @@ public class LogInActivity extends AppBaseActivity implements
         } else {
             showToast(getResources().getString(R.string.no_internet));
         }
-
     }
 
     @OnClick(R.id.google_button)
