@@ -367,14 +367,14 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     @Override
     public void onBuyClicked(int position) {
         selectedPosition = position;
-            Toast.makeText(IssuesListingActivity.this,"onBuyClicked",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(IssuesListingActivity.this,"onBuyClicked",Toast.LENGTH_SHORT).show();
         Magazine magazine = adapter.getItem(position);
         buyClick(magazine.getSku(), magazine.getPostId());
     }
 
     @Override
     public void onDownloadClicked(int position) {
-        Toast.makeText(IssuesListingActivity.this,"onDownloadClicked",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(IssuesListingActivity.this,"onDownloadClicked",Toast.LENGTH_SHORT).show();
 
         Magazine magazine = adapter.getItem(position);
         String postID = magazine.getPostId();
@@ -388,7 +388,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @Override
     public void onCoverImageClicked(int position) {
-        Toast.makeText(IssuesListingActivity.this,"onCoverImageClicked",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(IssuesListingActivity.this,"onCoverImageClicked",Toast.LENGTH_SHORT).show();
 
         Magazine magazine = adapter.getItem(position);
         String postID = magazine.getPostId();

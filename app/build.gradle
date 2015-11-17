@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'outlook'
             keyPassword 'outlook'
-            storeFile file('/Users/srajendrakumar/Desktop/raj/outlookapp.jks')
+            storeFile file('./../outlookapp.jks')
             storePassword 'outlook'
         }
     }
