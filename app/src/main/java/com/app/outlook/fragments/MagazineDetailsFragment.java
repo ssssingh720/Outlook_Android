@@ -252,13 +252,18 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
         if (data.getImage() != null && !data.getImage().isEmpty()) {
             if(position == 0) {
+                coverImg.setVisibility(View.VISIBLE);
+                userImg.setVisibility(View.GONE);
                 Picasso.with(getActivity()).load(data.getImage())
                         .fit().centerCrop().into(coverImg);
             }else{
+                coverImg.setVisibility(View.GONE);
+                userImg.setVisibility(View.VISIBLE);
                 Picasso.with(getActivity()).load(data.getImage())
                         .fit().centerCrop().into(userImg);
             }
         } else {
+            coverImg.setVisibility(View.GONE);
             userImg.setVisibility(View.GONE);
         }
         if (data.getPaid()) {
