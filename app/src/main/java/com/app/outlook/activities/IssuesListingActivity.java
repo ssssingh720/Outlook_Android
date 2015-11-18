@@ -527,7 +527,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     }
 
     public void buySubscriptionClick(String sku,String magazineId) {
-        mHelper.launchSubscriptionPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
+        mHelper.launchPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
                 this, magazineId);
     }
 
