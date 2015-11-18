@@ -64,6 +64,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     CardView articleOptionView;
     private ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
     private String categoryType;
+    private boolean isPurchased;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         categoryType = getArguments().getString(IntentConstants.CATEGORY_TYPE);
         currentPageCount = getArguments().getInt(IntentConstants.ITEM_POSITION, 0);
         subCategoryPosition = getArguments().getInt(IntentConstants.SUB_CATEGORY_POSITION, 0);
+        isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         ButterKnife.bind(this, mView);
         loadContents();
         initView();
@@ -120,7 +122,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 }
                 List<Card> cards = selectedCategory.getCards();
                 for (int i=0;i<cards.size();i++){
-                    if(cards.get(i).getPaid()) {
+                    if(isPurchased || cards.get(i).getPaid()) {
                         mContents.add(cards.get(i).getContent());
                         CategoryOptionsVo obj = new CategoryOptionsVo();
                         obj.setTitle(cards.get(i).getTitle());

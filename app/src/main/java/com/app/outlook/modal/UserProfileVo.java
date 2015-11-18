@@ -14,7 +14,11 @@ public class UserProfileVo extends BaseVO {
     @Expose
     private String token;
 
+    @SerializedName("user_name")
+    @Expose
     private String name;
+    @SerializedName("user_email")
+    @Expose
     private String email;
 
     public String getName() {

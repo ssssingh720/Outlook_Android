@@ -84,6 +84,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private MagazineDetailsVo detailsObject;
     private String issueID;
     private DownloadFileFromURL task;
+    private boolean isPurchased;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
             magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
             issueID = getArguments().getString(IntentConstants.ISSUE_ID);
+            isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         } else {
             showToast("Sorry!! Unable to load magazine");
             getActivity().finish();
@@ -162,8 +164,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 List<Card> cards = mCategories.get(i).getCards();
                 for (int j = 0; j < cards.size(); j++) {
                     View cardView = loadCardsView(j,cards.get(j));
-                    cardView.setTag(i + "," + j+",Type1");
-                    if(cards.get(j).getPaid())
+                    cardView.setTag(i + "," + j + ",Type1");
+                    if(isPurchased || cards.get(j).getPaid())
                         cardView.setOnClickListener(this);
                     sectionBreifListLyt.addView(cardView);
                 }
@@ -261,7 +263,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         } else {
             userImg.setVisibility(View.GONE);
         }
-        if (data.getPaid()) {
+        if (isPurchased || data.getPaid()) {
             blockImg.setVisibility(View.GONE);
             overlay.setVisibility(View.GONE);
         }else{
@@ -292,7 +294,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 bundle.putString(IntentConstants.SUB_CATEGORY_POSITION, tags[1]);
                 bundle.putSerializable(IntentConstants.CATEGORY, mCategories.get(Integer.parseInt(tags[0])).
                         getCategories().get(Integer.parseInt(tags[1])));
-                fragment.setArguments(bundle);
+            bundle.putBoolean(IntentConstants.IS_PURCHASED, isPurchased);
+            fragment.setArguments(bundle);
             ((MagazineDetailsActivity) getActivity()).changeFragment(fragment,true);
         }
 

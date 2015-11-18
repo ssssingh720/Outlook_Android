@@ -22,4 +22,5 @@ public class IntentConstants {
     public static String CATEGORY = "category";
     public static String CARD_POSITION = "card_position";
     public static String SUBSCRIPTION_IDS = "card_position";
+    public static String IS_PURCHASED = "is_purchased";
 }

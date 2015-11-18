@@ -24,6 +24,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     @Bind(R.id.toolbar_title)
     TextView titleTxt;
     private SectionDetailsHolderFragment sectionDetailsHolderFragment;
+    private boolean isPurchased;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         bundle.putString(IntentConstants.MAGAZINE_ID, getIntent().getStringExtra(IntentConstants.MAGAZINE_ID));
         bundle.putInt(IntentConstants.SUB_CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.SUB_CATEGORY_POSITION, 0));
         bundle.putString(IntentConstants.CATEGORY_TYPE, getIntent().getStringExtra(IntentConstants.CATEGORY_TYPE));
+        bundle.putBoolean(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
         sectionDetailsHolderFragment.setArguments(bundle);
 
         FragmentManager manager = getSupportFragmentManager();

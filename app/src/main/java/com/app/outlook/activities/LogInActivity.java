@@ -69,6 +69,8 @@ public class LogInActivity extends AppBaseActivity implements
     public static final String TAG = "LogInActivity";
     //Google Declarations
     private static final int RC_SIGN_IN = 9001;
+    private final int SIGNUP_REQUEST = 105;
+
     public ProfileTracker mProfileTracker;
     @Bind(R.id.facebook_button)
     RelativeLayout mFacebookLogInBtn;
@@ -220,7 +222,7 @@ public class LogInActivity extends AppBaseActivity implements
 
     @OnClick(R.id.signup_text)
     void signUp() {
-        startActivity(new Intent(LogInActivity.this, SignUpActivity.class));
+        startActivityForResult(new Intent(LogInActivity.this, SignUpActivity.class),SIGNUP_REQUEST);
     }
 
     private void displayForgotPasswordPopUp() {
@@ -260,11 +262,11 @@ public class LogInActivity extends AppBaseActivity implements
     }
 
     /*login api call after social login*/
-    private void afterSocialLogIn(String email, String password) {
+    private void afterSocialLogIn(String uName, String email) {
         loadToast.show();
         HashMap<String, String> params = new HashMap<String, String>();
+        params.put(FeedParams.USERNAME, uName);
         params.put(FeedParams.EMAIL, email);
-        params.put(FeedParams.USERNAME, password);
         placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
     }
     /*login api call [Email]*/
@@ -274,7 +276,6 @@ public class LogInActivity extends AppBaseActivity implements
         params.put(FeedParams.USERNAME, email);
         params.put(FeedParams.PASSWORD, password);
         placeRequest(APIMethods.LOGIN, UserProfileVo.class, params, true);
-
     }
 
     /*initializing the g+ & fb SDK*/
@@ -314,7 +315,15 @@ public class LogInActivity extends AppBaseActivity implements
             // If the error resolution was not successful we should not resolve further errors.
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        } else {
+
+        }
+        if (requestCode == SIGNUP_REQUEST) {
+            if (resultCode == 103) {
+                startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
+                finish();
+            }
+        }
+        else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -332,7 +341,7 @@ public class LogInActivity extends AppBaseActivity implements
             profile.setName(personName);
             profile.setEmail(email);
             saveSocialLogInData(profile);
-            afterSocialLogIn(profile.getEmail(), profile.getEmail());
+            afterSocialLogIn(personName, email);
         } else {
             showToast("Unable to Login through g+");
         }
@@ -409,7 +418,7 @@ public class LogInActivity extends AppBaseActivity implements
                         profile.setName(json.getString("name"));
                         profile.setEmail(json.getString("email"));
                         saveSocialLogInData(profile);
-                        afterSocialLogIn(profile.getEmail(), profile.getEmail());
+                        afterSocialLogIn(profile.getName(), profile.getEmail());
                     }
                 } catch (JSONException e) {
                     //cancelAllLogins();
@@ -480,8 +489,7 @@ public class LogInActivity extends AppBaseActivity implements
         SharedPrefManager.getInstance().setSharedData(FeedParams.USER_ID, profile.getUserId());
         SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
         startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));
-        Log.i(TAG + "Social", profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL) + "name" + profile.getName());
-
+        Log.i(TAG + "Social", profile.getToken() + "email" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL) + "name" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_NAME));
         finish();
     }
 
