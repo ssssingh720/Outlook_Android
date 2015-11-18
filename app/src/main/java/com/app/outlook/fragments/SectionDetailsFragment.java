@@ -9,10 +9,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.modal.IntentConstants;
+
+import java.lang.reflect.Method;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +33,9 @@ public class SectionDetailsFragment extends BaseFragment {
     ScrollView scrollView;
     @Bind(R.id.webview)
     WebView webview;
+    @Bind(R.id.fontSeekBar)
+    SeekBar fontSeekBar;
+    private int fontSize;
 
 
     @Override
@@ -54,9 +60,8 @@ public class SectionDetailsFragment extends BaseFragment {
         } else {
             webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-//        webview.loadData(content, mimeType, encoding);
-        webview.loadDataWithBaseURL(null,content, mimeType, encoding,null);
 
+        webview.loadDataWithBaseURL(null,content, mimeType, encoding,null);
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -64,9 +69,55 @@ public class SectionDetailsFragment extends BaseFragment {
             }
         });
 
+        fontSize = webview.getSettings().getTextZoom();
+        fontSeekBar.setProgress(50);
+        fontSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int zoom = (fontSize * progress) / 50;
+                webview.getSettings().setTextZoom(zoom);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         return mView;
     }
 
+    private void toggleNightMode(boolean nightMode,String content){
+        String rawHTML = "";
+
+        if(nightMode) {
+            rawHTML = "<HTML>" +
+                    "<head>" + "<style  type=\"text/css\">" +
+                    "body,h1{color: #ffffff;" +
+                    "background-color: #000000;}" +
+                    "</style></head>" +
+                    "<body><h1>" + content + "</h1></body>" +
+                    "</HTML>";
+        }else {
+            rawHTML = "<HTML>"+
+                "<head>"+"<style  type=\"text/css\">"+
+                "body,h1{color: #000000;"+
+                "background-color: #ffffff;}"+
+                "</style></head>"+
+                "<body><h1>"+content+"</h1></body>"+
+                "</HTML>";
+        }
+        webview.loadData(rawHTML, "text/html; charset=UTF-8",null);
+    }
+
+    private void changeFontSize(){
+
+    }
     @OnClick(R.id.goUp)
     public void goUp() {
         scrollView.smoothScrollTo(0, 0);
