@@ -239,6 +239,7 @@
 
                 <EditText
                     android:id="@+id/enter_email"
+                    style="@style/EditTextView_Default"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -246,15 +247,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:backgroundTint="@color/black"
                     android:hint="@string/email_hint"
                     android:singleLine="true"
-                    android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:textSize="13sp"/>
 
                 <EditText
                     android:id="@+id/enter_password"
+                    style="@style/EditTextView_Default"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/enter_email"
@@ -262,7 +262,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignStart="@+id/enter_email"
                     android:layout_below="@+id/enter_email"
-                    android:backgroundTint="@color/black"
                     android:hint="Enter Password"
                     android:inputType="textPassword"
                     android:textColor="@color/black"
