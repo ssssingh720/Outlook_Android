@@ -66,5 +66,10 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@drawable/edit_text_bottom_line</item>
     </style>
-
+    <style name="ToggleButton_default" parent="android:Widget.Button.Toggle">
+        <item name="android:background">@drawable/toggle_btn_bg</item>
+        <item name="android:textOn"></item>
+        <item name="android:textOff"></item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    </style>
 </resources>
