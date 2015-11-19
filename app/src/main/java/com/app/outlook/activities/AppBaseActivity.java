@@ -73,7 +73,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
      * @param params
      */
     public void placeRequest(String methodName, Class clazz, HashMap<String, String> params) {
-        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, false);
+        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, false,null);
     }
 
     /**
@@ -83,7 +83,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
      * @param clazz
      */
     public void placeRequest(String methodName, Class clazz) {
-        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, null, false);
+        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, null, false,null);
     }
 
 
@@ -95,11 +95,11 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
      * @param params
      * @param isPOST
      */
-    public void placeRequest(String methodName, Class clazz, HashMap<String, String> params, boolean isPOST) {
+    public void placeRequest(String methodName, Class clazz, HashMap<String, String> params, boolean isPOST,String action) {
         //  if (!methodName.equals(APIMethods.CHECK_USERNAME))
 
         // showProgressDialog();
-        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, isPOST);
+        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, isPOST,action);
     }
 
     @Override

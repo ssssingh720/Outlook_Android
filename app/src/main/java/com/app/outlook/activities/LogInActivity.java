@@ -258,7 +258,7 @@ public class LogInActivity extends AppBaseActivity implements
         loadToast.show();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.EMAIL, email);
-        placeRequest(APIMethods.RESET_PASSWORD, BaseVO.class, params, true);
+        placeRequest(APIMethods.RESET_PASSWORD, BaseVO.class, params, true,null);
     }
 
     /*login api call after social login*/
@@ -267,7 +267,7 @@ public class LogInActivity extends AppBaseActivity implements
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.USERNAME, uName);
         params.put(FeedParams.EMAIL, email);
-        placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
+        placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true,null);
     }
     /*login api call [Email]*/
     private void doEmailLogIn(String email, String password) {
@@ -275,7 +275,7 @@ public class LogInActivity extends AppBaseActivity implements
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(FeedParams.USERNAME, email);
         params.put(FeedParams.PASSWORD, password);
-        placeRequest(APIMethods.LOGIN, UserProfileVo.class, params, true);
+        placeRequest(APIMethods.LOGIN, UserProfileVo.class, params, true,null);
     }
 
     /*initializing the g+ & fb SDK*/

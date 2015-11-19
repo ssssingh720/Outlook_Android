@@ -23,7 +23,7 @@ public class FeedParams {
     public static final String USEREMAIL = "userEmail";
 
     public static final String AUTHKEY = "authKey";
-//    public static final String USERID = "userId";
+    public static final String USERID = "userId";
 
 
     public static final String ACCESS_TOKEN = "access_token";
@@ -39,6 +39,7 @@ public class FeedParams {
     public static final String PRODUCT_ID = "productId";
     public static final String PURCHASE_TOKEN = "purchaseToken";
     public static final String ISSUE_ID = "issueId";
+    public static final String ISSUE_PUBLISH_DATE = "issuePublishedDate";
     public static final String MAGAZINE_ID = "magazineId";
     public static final String MAG_ID = "mag_id";
     public static final String YEAR = "issue_year";
@@ -47,4 +48,6 @@ public class FeedParams {
     public static final String TOKEN = "token";
     public static final String USER_ID = "user_id";
     public static final String PROFILE_EMAIL = "profile_email";
+    public static final String DURATION = "duration";
+    public static final String ACTION = "action";
 }

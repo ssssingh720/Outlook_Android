@@ -15,6 +15,7 @@ public class Magazine implements Serializable {
     private String postId;
     private boolean isPurchased;
     private String sku;
+    private String issue_published_date;
 
     public String getName() {
         return name;
@@ -79,5 +80,13 @@ public class Magazine implements Serializable {
 
     public void setSku(String sku) {
         this.sku = sku;
+    }
+
+    public String getIssue_published_date() {
+        return issue_published_date;
+    }
+
+    public void setIssue_published_date(String issue_published_date) {
+        this.issue_published_date = issue_published_date;
     }
 }

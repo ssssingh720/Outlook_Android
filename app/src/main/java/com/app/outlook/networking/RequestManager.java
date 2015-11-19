@@ -106,7 +106,7 @@ public class RequestManager<T> {
     /*
      * Method to create the request from the passed parameters and place a Volley request
      */
-    public void placeRequest(String methodName, Class<T> clazz, ServerCallback<T> listener, HashMap<String, String> feedParams, boolean isPOST) {
+    public void placeRequest(String methodName, Class<T> clazz, ServerCallback<T> listener, HashMap<String, String> feedParams, boolean isPOST,String action) {
 
         String feedurl = baseFeedURL.concat(methodName);
         String urlParam = "?";
@@ -129,6 +129,10 @@ public class RequestManager<T> {
                 feedurl = feedurl + urlParam + FeedParams.USER_ID + "=" + SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
                         + "&" + FeedParams.TOKEN + "=" + URLEncoder.encode(SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN), "UTF-8");
             }
+
+            if(action != null)
+                feedurl = feedurl + "&action="+action;
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

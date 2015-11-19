@@ -20,6 +20,9 @@ public class Issue {
     @SerializedName("sku")
     @Expose
     private String sku;
+    @SerializedName("issue_published_date")
+    @Expose
+    private String issue_published_date;
 
     /**
      * @return The issueId
@@ -77,4 +80,11 @@ public class Issue {
         this.sku = sku;
     }
 
+    public String getIssue_published_date() {
+        return issue_published_date;
+    }
+
+    public void setIssue_published_date(String issue_published_date) {
+        this.issue_published_date = issue_published_date;
+    }
 }

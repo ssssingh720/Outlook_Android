@@ -111,7 +111,7 @@ public class SignUpActivity extends AppBaseActivity {
             params.put(FeedParams.EMAIL, email);
             params.put(FeedParams.PASSWORD, password);
             params.put(FeedParams.USERNAME, userName);
-            placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true);
+            placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true,null);
         } else {
             showToast(getResources().getString(R.string.no_internet));
         }
