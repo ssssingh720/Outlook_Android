@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.ToggleButton;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
@@ -35,7 +37,12 @@ public class SectionDetailsFragment extends BaseFragment {
     WebView webview;
     @Bind(R.id.fontSeekBar)
     SeekBar fontSeekBar;
+    @Bind(R.id.fontSizeBtn)
+    ImageView fontSizeBtn;
+    @Bind(R.id.nightModeBtn)
+    ToggleButton nightModeBtn;
     private int fontSize;
+    private String htmlContent;
 
 
     @Override
@@ -47,11 +54,13 @@ public class SectionDetailsFragment extends BaseFragment {
         String content = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
         final String mimeType = "text/html";
         final String encoding = "utf-8";
+        htmlContent=content;
         webview.getSettings().setDefaultTextEncodingName(encoding);
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.getSettings().setSupportZoom(false);
         webview.getSettings().setUseWideViewPort(false);
+        webview.getSettings().setJavaScriptEnabled(true);
         webview.setFocusableInTouchMode(false);
         webview.setFocusable(false);
         webview.getSettings().setLoadsImagesAutomatically(true);
@@ -121,6 +130,19 @@ public class SectionDetailsFragment extends BaseFragment {
     @OnClick(R.id.goUp)
     public void goUp() {
         scrollView.smoothScrollTo(0, 0);
+    }
+    @OnClick(R.id.fontSizeBtn)
+    public void manageFontSeekBar(){
+        if (fontSeekBar.getVisibility()==View.VISIBLE){
+            fontSeekBar.setVisibility(View.GONE);
+        }
+        else{
+            fontSeekBar.setVisibility(View.VISIBLE);
+        }
+    }
+    @OnClick(R.id.nightModeBtn)
+    public void manageNightMode(){
+        toggleNightMode(nightModeBtn.isChecked(),htmlContent);
     }
 }
 
