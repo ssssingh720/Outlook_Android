@@ -61,6 +61,7 @@ public class SectionDetailsFragment extends BaseFragment {
         webview.getSettings().setSupportZoom(false);
         webview.getSettings().setUseWideViewPort(false);
         webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
         webview.setFocusableInTouchMode(false);
         webview.setFocusable(false);
         webview.getSettings().setLoadsImagesAutomatically(true);
@@ -112,16 +113,14 @@ public class SectionDetailsFragment extends BaseFragment {
                     "</style></head>" +
                     "<body><h1>" + content + "</h1></body>" +
                     "</HTML>";
+            webview.loadData(rawHTML, "text/html; charset=UTF-8",null);
         }else {
-            rawHTML = "<HTML>"+
-                "<head>"+"<style  type=\"text/css\">"+
-                "body,h1{color: #000000;"+
-                "background-color: #ffffff;}"+
-                "</style></head>"+
-                "<body><h1>"+content+"</h1></body>"+
-                "</HTML>";
+            webview.loadData(content, "text/html; charset=UTF-8",null);
         }
-        webview.loadData(rawHTML, "text/html; charset=UTF-8",null);
+        // webview.requestFocus();
+
+        //webview.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
+
     }
 
     private void changeFontSize(){

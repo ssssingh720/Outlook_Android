@@ -44,11 +44,11 @@
             android:layout_toRightOf="@+id/fontSizeBtn"
             android:id="@+id/nightModeBtn"
             android:padding="10dp"
-            android:checked="false"
             style="@style/ToggleButton_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:background="@drawable/toggle_btn_bg"
+            android:text="@null"/>
     </RelativeLayout>
     <SeekBar
         android:id="@+id/fontSeekBar"

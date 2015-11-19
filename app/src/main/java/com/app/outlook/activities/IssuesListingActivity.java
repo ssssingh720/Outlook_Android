@@ -85,7 +85,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "outlook.test.managedproduct_two";
+    static final String ITEM_SKU = "outlook.annual";
     private int selectedPosition = -1;
     private Purchase purchaseInfo;
     private DownloadFileFromURL task;
@@ -130,7 +130,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             toolbar_title.setImageResource(R.drawable.logo_outlook);
         }
     }
-
+/*
+* sku sent to play store*/
     private void queryList(){
         mHelper.queryInventoryAsync(true, subscriptionIDList,
                 this);
@@ -356,7 +357,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
 
-        if(result.isSuccess() && info != null) {
+        if(info != null) {
             purchaseInfo = info;
             String json = info.getOriginalJson();
             Log.v(TAG, json);
@@ -440,7 +441,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             int count;
             try {
                 URL url = new URL(APIMethods.BASE_URL + APIMethods.ISSUE_LIST +
-                "?mag_id="+params[0]+"&year="+params[1]+
+                "?mag_id="+params[0]+"&issue_year="+params[1]+
                         "&"+ FeedParams.USER_ID+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
                         + "&"+ FeedParams.TOKEN+"="+SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN)
                 );
@@ -550,6 +551,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         Log.i(TAG, "onConsumeMultiFinished");
     }
 
+    /**
+     * details of the sku- (desc,etc issues)*/
     @Override
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
         if(inv!=null) {

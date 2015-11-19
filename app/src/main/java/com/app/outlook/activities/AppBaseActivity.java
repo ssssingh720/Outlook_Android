@@ -23,6 +23,7 @@ import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.networking.RequestManager;
 import com.app.outlook.services.RegistrationIntentService;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 import java.util.HashMap;
 
@@ -126,6 +127,19 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+
     }
 
     /**

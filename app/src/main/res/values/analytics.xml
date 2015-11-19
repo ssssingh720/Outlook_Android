@@ -12,9 +12,9 @@
         <!-- Enable debug -->
         <bool name="ga_debug">true</bool>
     <!-- The screen names that will appear in your reporting -->
-    <string name="com.app.outlook.activities.HomeListingActivity"> HOME LISTING SCREEN</string>
-    <string name="com.app.outlook.activities.IssuesListingActivity">ISSUES LISTING SCREEN</string>
-    <string name="com.app.outlook.activities.MagazineDetailsActivity">MAGAZINE SCREEN</string>
-    <string name="com.app.outlook.activities.SettingsActivity">SETTINGS SCREEN</string>
+    <string  name="com.app.outlook.activities.HomeListingActivity"> HOME LISTING SCREEN</string >
+    <string  name="com.app.outlook.activities.IssuesListingActivity">ISSUES LISTING SCREEN</string >
+    <string  name="com.app.outlook.activities.MagazineDetailsActivity">MAGAZINE SCREEN</string >
+    <string  name="com.app.outlook.activities.SettingsActivity">SETTINGS SCREEN</string >
 
     </resources>

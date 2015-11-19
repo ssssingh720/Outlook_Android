@@ -41,7 +41,7 @@ public class FeedParams {
     public static final String ISSUE_ID = "issueId";
     public static final String MAGAZINE_ID = "magazineId";
     public static final String MAG_ID = "mag_id";
-    public static final String YEAR = "year";
+    public static final String YEAR = "issue_year";
     public static final String MONTH = "month";
     public static final String PROFILE_NAME = "profile_name";
     public static final String TOKEN = "token";
