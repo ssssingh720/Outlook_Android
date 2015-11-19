@@ -56,7 +56,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            currentPosition = position;
+//            currentPosition = position;
             if (positionOffset >= 0f && positionOffset <= 1f) {
                 cur = adapter.getRootView(position);
                 cur.setScaleBoth(HomeListingActivity.BIG_SCALE
@@ -129,23 +129,22 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
                 prefManager.init(getActivity());
                 if (currentPosition == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+                } else if (currentPosition == 1) {
+                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
+                }
 
-                    ArrayList<String> subscriptionIDList = new ArrayList<>();
+        ArrayList<String> subscriptionIDList = new ArrayList<>();
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
-                    subscriptionIDList.add("outlook.test.subscription");
-                    subscriptionIDList.add("outlook.test.subscription");
-                    subscriptionIDList.add("outlook.test.subscription");
+        subscriptionIDList.add("outlook.test.subscription");
+        subscriptionIDList.add("outlook.test.subscription");
+        subscriptionIDList.add("outlook.test.subscription");
 
-                    Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
-                    intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());
-                    intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
-                    startActivity(intent);
-
-                } else if (currentPosition == 1) {
-//                    prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
-                }
+        Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
+        intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());
+        intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
+        startActivity(intent);
 
     }
 

@@ -277,6 +277,18 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             e.printStackTrace();
         }
     }
+    private void getDefaultList(int year, int month){
+        loadToast.show();
+        try{
+            HashMap<String,String> params = new HashMap<>();
+            params.put(FeedParams.MAG_ID, magazineType + "");
+            params.put(FeedParams.YEAR,year+"");
+
+        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     private void validatePurchase(String productID,String purchaseToken,String issueId){
         loadToast.show();
@@ -340,13 +352,16 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
     }
 
+    // on payment complition
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
-        if(info != null) {
+
+        if(result.isSuccess() && info != null) {
             purchaseInfo = info;
             String json = info.getOriginalJson();
             Log.v(TAG, json);
 
+            // only for subscription
             mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
 
             validatePurchase(purchaseInfo.getSku(),purchaseInfo.getToken(),purchaseInfo.getDeveloperPayload());
@@ -374,6 +389,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            intent.putExtra(IntentConstants.IS_PURCHASED, true);
             startActivity(intent);
         }
     }
@@ -388,6 +404,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            intent.putExtra(IntentConstants.IS_PURCHASED, magazine.isPurchased());
             startActivity(intent);
         }
     }

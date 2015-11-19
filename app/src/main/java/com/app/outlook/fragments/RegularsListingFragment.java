@@ -72,6 +72,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
     private LoadToast loadToast;
     private MagazineDetailsVo detailsObject;
     private String issueID;
+    private boolean isPurchased;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
             issueID = getArguments().getString(IntentConstants.ISSUE_ID);
             mSelectedCategory = Integer.parseInt(getArguments().getString(IntentConstants.CATEGORY_POSITION));
             mSelectedSubCategory = Integer.parseInt(getArguments().getString(IntentConstants.SUB_CATEGORY_POSITION));
+            isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         } else {
             showToast("Sorry!! Unable to load magazine");
             getActivity().finish();
@@ -129,9 +131,9 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
                 List<Card> cards = mCategories.get(i).getCards();
                 for (int j = 0; j < cards.size(); j++) {
                     View cardView = loadCardsView(j,cards.get(j));
-                    cardView.setTag(i + "," + j+",Type1");
+                    cardView.setTag(i + "," + j + ",Type1");
 
-                    if(cards.get(j).getPaid())
+                    if(isPurchased || cards.get(j).getPaid())
                         cardView.setOnClickListener(this);
 
                     sectionBreifListLyt.addView(cardView);
@@ -190,7 +192,7 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
         } else {
             userImg.setVisibility(View.GONE);
         }
-        if (data.getPaid()) {
+        if (isPurchased || data.getPaid()) {
             blockImg.setVisibility(View.GONE);
             overlay.setVisibility(View.GONE);
         }else{

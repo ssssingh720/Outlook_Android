@@ -56,6 +56,7 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
         bundle.putString(IntentConstants.ISSUE_ID, issueID);
+        bundle.putBoolean(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
         magazineDetailsFragment.setArguments(bundle);
         changeFragment(magazineDetailsFragment, false);
     }
@@ -92,6 +93,8 @@ public class MagazineDetailsActivity extends AppBaseActivity {
         intent.putExtra(IntentConstants.CATEGORY_POSITION, categoryPosition);
         intent.putExtra(IntentConstants.CARD_POSITION, cardPosition);
         intent.putExtra(IntentConstants.ISSUE_ID, getIntent().getStringExtra(IntentConstants.ISSUE_ID));
+        intent.putExtra(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
+
         startActivity(intent);
     }
 
