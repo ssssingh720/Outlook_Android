@@ -97,6 +97,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private ArrayList<String> subscriptionIDList;
     private ArrayList<SkuDetails> skuList;
     private ArrayList<Purchase> purchaseList;
+    private boolean isSubcriptionClicked;
+    private String selectedSubcription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +256,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 magazine.setPostId(issueArray.get(j).getIssueId() + "");
                 magazine.setIsPurchased(issueArray.get(j).getPurchase());
                 magazine.setSku(issueArray.get(j).getSku());
+                magazine.setIssue_published_date(issueArray.get(j).getIssue_published_date());
                 months.add(magazine);
             }
             if(issueArray.size() % 2 == 1){
@@ -272,7 +275,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             params.put(FeedParams.YEAR,year+"");
             params.put(FeedParams.MONTH,month+"");
 
-        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false);
+        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false,null);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -284,7 +287,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             params.put(FeedParams.MAG_ID, magazineType + "");
             params.put(FeedParams.YEAR,year+"");
 
-        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false);
+        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false,null);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -301,7 +304,23 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         params.put(FeedParams.ISSUE_ID,issueId);
         params.put(FeedParams.MAGAZINE_ID, magazineType + "");
 
-        placeRequest(APIMethods.VALIDATE_PURCHASE, PurchaseResponseVo.class, params, true);
+        placeRequest(APIMethods.VALIDATE_PURCHASE, PurchaseResponseVo.class, params, true, null);
+    }
+
+    private void validateSubscription(String productID,String purchaseToken,String issueDate,String duration){
+        loadToast.show();
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put(FeedParams.PLATFORM, OutlookConstants.PLATFORM);
+        params.put(FeedParams.USERID, SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
+        params.put(FeedParams.PACKAGE_NAME,getApplicationContext().getPackageName());
+        params.put(FeedParams.PRODUCT_ID, productID);
+        params.put(FeedParams.PURCHASE_TOKEN,purchaseToken);
+        params.put(FeedParams.ISSUE_PUBLISH_DATE,issueDate);
+        params.put(FeedParams.MAGAZINE_ID, magazineType + "");
+        params.put(FeedParams.DURATION, duration);
+
+        placeRequest(APIMethods.VALIDATE_SUBSCRIPTION, PurchaseResponseVo.class, params, true, "subscription");
     }
 
     @Override
@@ -361,10 +380,14 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             String json = info.getOriginalJson();
             Log.v(TAG, json);
 
-            // only for subscription
-            mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
-
-            validatePurchase(purchaseInfo.getSku(),purchaseInfo.getToken(),purchaseInfo.getDeveloperPayload());
+            if(isSubcriptionClicked) {
+                isSubcriptionClicked = false;
+                mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
+                validateSubscription(purchaseInfo.getSku(), purchaseInfo.getToken(), purchaseInfo.getDeveloperPayload(),
+                        selectedSubcription);
+            }else {
+                validatePurchase(purchaseInfo.getSku(), purchaseInfo.getToken(), purchaseInfo.getDeveloperPayload());
+            }
         } else {
 //            hideProgressDialog();
 //            finish();
@@ -531,7 +554,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     public void buySubscriptionClick(String sku,String magazineId) {
         mHelper.launchPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
-                this, magazineId);
+                this, adapter.getItem(adapter.getCount()-1).getIssue_published_date());
     }
 
     @Override
@@ -592,6 +615,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             @Override
             public void onClick(View v) {
                 subscriptionDialog.dismiss();
+                isSubcriptionClicked = true;
+                selectedSubcription = OutlookConstants.TWELVE;
                 buySubscriptionClick(skuList.get(0).getSku(),magazineType);
             }
         });
@@ -601,6 +626,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             @Override
             public void onClick(View v) {
                 subscriptionDialog.dismiss();
+                isSubcriptionClicked = true;
+                selectedSubcription = OutlookConstants.SIX;
                 buySubscriptionClick(skuList.get(1).getSku(), magazineType);
             }
         });
@@ -610,6 +637,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             @Override
             public void onClick(View v) {
                 subscriptionDialog.dismiss();
+                isSubcriptionClicked = true;
+                selectedSubcription = OutlookConstants.THREE;
                 buySubscriptionClick(skuList.get(2).getSku(), magazineType);
             }
         });

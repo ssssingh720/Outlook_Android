@@ -45,15 +45,15 @@ public class BaseFragment extends Fragment implements ServerCallback {
     */
     // Server Calls
     public void placeRequest(String methodName, Class clazz, HashMap<String, String> params) {
-        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, false);
+        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, false,null);
     }
 
     public void placeRequest(String methodName, Class clazz) {
-        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, null, false);
+        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, null, false,null);
     }
 
     public void placeRequest(String methodName, Class clazz, HashMap<String, String> params, boolean isPOST) {
-        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, isPOST);
+        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, isPOST,null);
     }
 
     public void placeRequest(String methodName, Class clazz, JSONObject jsonObject) {

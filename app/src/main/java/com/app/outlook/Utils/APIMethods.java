@@ -14,4 +14,5 @@ public class APIMethods {
     public static final String RESET_PASSWORD = "reset-password/";
     public static final String LOGIN = "api-login/";
     public static final String VALIDATE_PURCHASE = "validate-purchase/";
+    public static final String VALIDATE_SUBSCRIPTION = "api-subscription/";
 }
