@@ -64,25 +64,22 @@ public class HomeGridFragment extends BaseFragment {
                 prefManager.init(getActivity());
                 if (position == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
-
-                    ArrayList<String> subscriptionIDList = new ArrayList<>();
-//                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
-//                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
-//                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
-                    subscriptionIDList.add("outlook.test.subscription");
-                    subscriptionIDList.add("outlook.test.subscription");
-                    subscriptionIDList.add("outlook.test.subscription");
-
-                    Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
-                    intent.putExtra(IntentConstants.TYPE, magazineList.get(position).getId());
-                    intent.putExtra(IntentConstants.SUBSCRIPTION_IDS, subscriptionIDList);
-                    startActivity(intent);
-
                 } else if (position == 1) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
                 }
 
+                ArrayList<String> subscriptionIDList = new ArrayList<>();
+//                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
+//                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
+//                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
+                subscriptionIDList.add("outlook.test.subscription");
+                subscriptionIDList.add("outlook.test.subscription");
+                subscriptionIDList.add("outlook.test.subscription");
 
+                Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
+                intent.putExtra(IntentConstants.TYPE, magazineList.get(position).getId());
+                intent.putExtra(IntentConstants.SUBSCRIPTION_IDS, subscriptionIDList);
+                startActivity(intent);
             }
         });
     }

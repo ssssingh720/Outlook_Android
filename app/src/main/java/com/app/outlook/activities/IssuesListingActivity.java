@@ -352,13 +352,16 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }
     }
 
+    // on payment complition
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
-        if(info != null) {
+
+        if(result.isSuccess() && info != null) {
             purchaseInfo = info;
             String json = info.getOriginalJson();
             Log.v(TAG, json);
 
+            // only for subscription
             mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
 
             validatePurchase(purchaseInfo.getSku(),purchaseInfo.getToken(),purchaseInfo.getDeveloperPayload());
