@@ -15,6 +15,8 @@ import android.widget.ToggleButton;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
+import com.app.outlook.activities.ArticleDetailsActivity;
+import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.modal.IntentConstants;
 
 import java.lang.reflect.Method;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 22/09/15.
  */
-public class SectionDetailsFragment extends BaseFragment {
+public class SectionDetailsFragment extends BaseFragment implements OnArticleModeChangeListener{
 
 
     @Bind(R.id.containerLyt)
@@ -37,10 +39,10 @@ public class SectionDetailsFragment extends BaseFragment {
     WebView webview;
     @Bind(R.id.fontSeekBar)
     SeekBar fontSeekBar;
-    @Bind(R.id.fontSizeBtn)
+   /* @Bind(R.id.fontSizeBtn)
     ImageView fontSizeBtn;
     @Bind(R.id.nightModeBtn)
-    ToggleButton nightModeBtn;
+    ToggleButton nightModeBtn;*/
     private int fontSize;
     private String htmlContent;
 
@@ -51,10 +53,10 @@ public class SectionDetailsFragment extends BaseFragment {
         mView = inflater.inflate(R.layout.fragment_section_details, null);
         ButterKnife.bind(this, mView);
         int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
-        String content = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
+        htmlContent = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
         final String mimeType = "text/html";
         final String encoding = "utf-8";
-        htmlContent=content;
+
         webview.getSettings().setDefaultTextEncodingName(encoding);
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setUseWideViewPort(true);
@@ -71,7 +73,7 @@ public class SectionDetailsFragment extends BaseFragment {
             webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
-        webview.loadDataWithBaseURL(null,content, mimeType, encoding,null);
+        webview.loadDataWithBaseURL(null,htmlContent, mimeType, encoding,null);
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -102,20 +104,24 @@ public class SectionDetailsFragment extends BaseFragment {
         return mView;
     }
 
-    private void toggleNightMode(boolean nightMode,String content){
-        String rawHTML = "";
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
+    public void toggleNightMode(boolean nightMode){
+        String rawHTML = "";
         if(nightMode) {
             rawHTML = "<HTML>" +
                     "<head>" + "<style  type=\"text/css\">" +
                     "body,h1{color: #ffffff;" +
                     "background-color: #000000;}" +
                     "</style></head>" +
-                    "<body><h1>" + content + "</h1></body>" +
+                    "<body><h1>" + htmlContent + "</h1></body>" +
                     "</HTML>";
             webview.loadData(rawHTML, "text/html; charset=UTF-8",null);
         }else {
-            webview.loadData(content, "text/html; charset=UTF-8",null);
+            webview.loadData(htmlContent, "text/html; charset=UTF-8",null);
         }
         // webview.requestFocus();
 
@@ -130,7 +136,6 @@ public class SectionDetailsFragment extends BaseFragment {
     public void goUp() {
         scrollView.smoothScrollTo(0, 0);
     }
-    @OnClick(R.id.fontSizeBtn)
     public void manageFontSeekBar(){
         if (fontSeekBar.getVisibility()==View.VISIBLE){
             fontSeekBar.setVisibility(View.GONE);
@@ -139,9 +144,18 @@ public class SectionDetailsFragment extends BaseFragment {
             fontSeekBar.setVisibility(View.VISIBLE);
         }
     }
-    @OnClick(R.id.nightModeBtn)
     public void manageNightMode(){
-        toggleNightMode(nightModeBtn.isChecked(),htmlContent);
+        //toggleNightMode(nightModeBtn.isChecked(),htmlContent);
+    }
+
+   @Override
+    public void onNightMode(boolean mode) {
+        toggleNightMode(mode);
+    }
+
+    @Override
+    public void onResizeText() {
+    manageFontSeekBar();
     }
 }
 

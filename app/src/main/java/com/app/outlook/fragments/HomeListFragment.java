@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,9 @@ import com.app.outlook.R;
 import com.app.outlook.activities.HomeListingActivity;
 import com.app.outlook.activities.IssuesListingActivity;
 import com.app.outlook.listener.OnPageClickedListener;
+import com.app.outlook.listener.OnThemeChangeListener;
 import com.app.outlook.manager.SharedPrefManager;
+import com.app.outlook.modal.Image;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineTypeVo;
@@ -52,6 +55,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
     private CarouselLinearLayout next = null;
     private int currentPosition = 0;
     private ArrayList<MagazineTypeVo> magazineList;
+    private OnThemeChangeListener onThemeChangeListener;
     ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
@@ -73,8 +77,15 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
         @Override
         public void onPageSelected(int position) {
             currentPosition = position;
+            Log.i("Home list page selected",position+"");
             magazineName.setText(magazineList.get(position).getName().toUpperCase());
             magazineDescp.setText(magazineList.get(position).getDescription());
+            onThemeChangeListener.onMagazineTheme(position);
+           /* if (position==1){
+                ImageView title=(ImageView)getActivity().findViewById(R.id.toolbar_title);
+                int imageresource = getActivity().getResources().getIdentifier("@drawable/icon_outlook", "drawable", getActivity().getPackageName());
+                title.setImageResource(imageresource);
+            }*/
         }
 
         @Override
@@ -127,20 +138,42 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
     public void onPageClicked() {
         SharedPrefManager prefManager = SharedPrefManager.getInstance();
                 prefManager.init(getActivity());
-                if (currentPosition == 0) {
+        switch (currentPosition){
+            case 0:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+                break;
+            case 1:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
+                break;
+            case 2:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeOrange);
+                break;
+            case 3:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeGreen);
+                break;
+            case 4:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeYellow);
+                break;
+            case 5:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemePurple);
+                break;
+            default:
+                prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+                break;
+        }
+                /*if (currentPosition == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                 } else if (currentPosition == 1) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
-                }
+                }*/
+
 
         ArrayList<String> subscriptionIDList = new ArrayList<>();
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
-        subscriptionIDList.add("outlook.test.subscription");
-        subscriptionIDList.add("outlook.test.subscription");
-        subscriptionIDList.add("outlook.test.subscription");
-
+        subscriptionIDList.add("outlook.two");
+        subscriptionIDList.add("outlook.five");
         Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
         intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());
         intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
@@ -190,5 +223,13 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
         public String getFragmentTag(int position) {
             return "android:switcher:" + mViewPager.getId() + ":" + position;
         }
+    }
+
+    public OnThemeChangeListener getOnThemeChangeListener() {
+        return onThemeChangeListener;
+    }
+
+    public void setOnThemeChangeListener(OnThemeChangeListener onThemeChangeListener) {
+        this.onThemeChangeListener = onThemeChangeListener;
     }
 }

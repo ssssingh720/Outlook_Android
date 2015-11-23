@@ -17,8 +17,7 @@ public class AnalyticsTracker {
 
     public AnalyticsTracker(Activity act) {
         activity = act;
-        mTracker = ((OutLookApplication) activity.getApplication())
-                .getTracker(TrackerName.APP_TRACKER);
+        //mTracker = ((OutLookApplication) activity.getApplication()).getTracker(TrackerName.APP_TRACKER);
     }
 
     public void sendEvent(int categoryId, int actionEventId) {

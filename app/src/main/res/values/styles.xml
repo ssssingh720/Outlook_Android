@@ -24,6 +24,50 @@
         <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
         </item>
     </style>
+    <style name="AppThemeGreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_green</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/app_green</item>
+        <item name="colorAccent">@color/app_green</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
+    </style>
+    <style name="AppThemeYellow" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_yellow</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/app_yellow</item>
+        <item name="colorAccent">@color/app_yellow</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
+    </style>
+    <style name="AppThemeOrange" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_orange</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/app_orange</item>
+        <item name="colorAccent">@color/app_orange</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
+    </style>
+    <style name="AppThemePurple" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_purple</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/app_purple</item>
+        <item name="colorAccent">@color/app_purple</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:activatedBackgroundIndicator" tools:ignore="NewApi">@style/activated
+        </item>
+    </style>
 
 
     <style name="activated" parent="AppTheme">

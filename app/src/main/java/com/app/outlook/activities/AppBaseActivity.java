@@ -39,13 +39,13 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
     protected PageManager pageManager = new PageManager(this,
             MAX_PAGE_BUFFER);
     private Toast mToast;
-    private AnalyticsTracker mAnalyticsTracker=null;
+    //private AnalyticsTracker mAnalyticsTracker=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPrefManager prefManager = SharedPrefManager.getInstance();
         prefManager.init(this);
-        mAnalyticsTracker= new AnalyticsTracker(this);
+        //mAnalyticsTracker= new AnalyticsTracker(this);
         int theme = prefManager.getSharedDataInt(OutlookConstants.theme);
         if (theme != 0)
             setTheme(theme);

@@ -19,6 +19,36 @@ public class OutLookApplication extends Application {
     private Tracker mTracker;
     private static final String PROPERTY_ID = "UA-70066871-1";
     public static int mGeneralTracker = 0;
+    /**
+     * The Analytics singleton. The field is set in onCreate method override when the application
+     * class is initially created.
+     */
+    private static GoogleAnalytics analytics;
+
+    /**
+     * The default app tracker. The field is from onCreate callback when the application is
+     * initially created.
+     */
+    private static Tracker tracker;
+
+    /**
+     * Access to the global Analytics singleton. If this method returns null you forgot to either
+     * set android:name="&lt;this.class.name&gt;" attribute on your application element in
+     * AndroidManifest.xml or you are not setting this.analytics field in onCreate method override.
+     */
+    public static GoogleAnalytics analytics() {
+        return analytics;
+    }
+
+    /**
+     * The default app tracker. If this method returns null you forgot to either set
+     * android:name="&lt;this.class.name&gt;" attribute on your application element in
+     * AndroidManifest.xml or you are not setting this.tracker field in onCreate method override.
+     */
+    public static Tracker tracker() {
+        return tracker;
+    }
+
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
@@ -54,8 +84,21 @@ public class OutLookApplication extends Application {
         LruCache picassoCache = new LruCache(this);
         builder.memoryCache(picassoCache);
         Picasso.setSingletonInstance(builder.build());
+        analytics = GoogleAnalytics.getInstance(this);
+
+        tracker = analytics.newTracker(PROPERTY_ID);
+
+        // Provide unhandled exceptions reports. Do that first after creating the tracker
+        tracker.enableExceptionReporting(true);
+
+        // Enable Remarketing, Demographics & Interests reports
+        // https://developers.google.com/analytics/devguides/collection/android/display-features
+        tracker.enableAdvertisingIdCollection(true);
+
+        // Enable automatic activity tracking for your app
+        tracker.enableAutoActivityTracking(true);
     }
-    public synchronized Tracker getTracker(TrackerName trackerId) {
+   /* public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
@@ -65,5 +108,5 @@ public class OutLookApplication extends Application {
             mTrackers.put(trackerId, t);
         }
         return mTrackers.get(trackerId);
-    }
+    }*/
 }

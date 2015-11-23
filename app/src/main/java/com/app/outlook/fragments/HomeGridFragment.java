@@ -62,19 +62,42 @@ public class HomeGridFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SharedPrefManager prefManager = SharedPrefManager.getInstance();
                 prefManager.init(getActivity());
-                if (position == 0) {
+                switch (position){
+                    case 0:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+                        break;
+                    case 1:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
+                        break;
+                    case 2:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeOrange);
+                        break;
+                    case 3:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeGreen);
+                        break;
+                    case 4:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeYellow);
+                        break;
+                    case 5:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemePurple);
+                        break;
+                    default:
+                        prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+                        break;
+                }
+               /* if (position == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                 } else if (position == 1) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppThemeBlue);
-                }
+                }*/
 
                 ArrayList<String> subscriptionIDList = new ArrayList<>();
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
-                subscriptionIDList.add("outlook.test.subscription");
-                subscriptionIDList.add("outlook.test.subscription");
-                subscriptionIDList.add("outlook.test.subscription");
+                subscriptionIDList.add("outlook.two");
+                subscriptionIDList.add("outlook.two");
+                subscriptionIDList.add("outlook.two");
 
                 Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
                 intent.putExtra(IntentConstants.TYPE, magazineList.get(position).getId());

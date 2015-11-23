@@ -7,9 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.app.outlook.R;
 import com.app.outlook.fragments.SectionDetailsHolderFragment;
+import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.modal.IntentConstants;
 
 import butterknife.Bind;
@@ -25,6 +27,11 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     TextView titleTxt;
     private SectionDetailsHolderFragment sectionDetailsHolderFragment;
     private boolean isPurchased;
+    @Bind(R.id.nightMode)
+    ToggleButton nightModeImg;
+    @Bind(R.id.textSizeImg)
+    ImageView textSizeImg;
+    OnArticleModeChangeListener articleModeChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,4 +72,27 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     public void onSelectionClick() {
         sectionDetailsHolderFragment.onSelectionClick();
     }
+
+    public OnArticleModeChangeListener getArticleModeChangeListener() {
+        return articleModeChangeListener;
+    }
+
+    public void setArticleModeChangeListener(OnArticleModeChangeListener articleModeChangeListener) {
+        this.articleModeChangeListener = articleModeChangeListener;
+    }
+
+    @OnClick(R.id.nightMode)
+    public void onToggleNightMode(){
+        if (nightModeImg.isChecked()){
+            sectionDetailsHolderFragment.onNightMode(true);
+        }
+        else{
+            sectionDetailsHolderFragment.onNightMode(false);
+        }
+    }
+    @OnClick(R.id.textSizeImg)
+    public void onTextSizeChange(){
+        sectionDetailsHolderFragment.onResizeText();
+    }
+
 }

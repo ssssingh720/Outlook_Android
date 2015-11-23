@@ -12,12 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.fragments.HomeListFragment;
 import com.app.outlook.fragments.HomeGridFragment;
+import com.app.outlook.listener.OnThemeChangeListener;
 import com.app.outlook.manager.SessionManager;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.FeedParams;
@@ -45,7 +47,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HomeListingActivity extends AppBaseActivity {
+public class HomeListingActivity extends AppBaseActivity implements OnThemeChangeListener{
 
     private static final String TAG = "HomeListingActivity";
     private ArrayList<MagazineTypeVo> magazineList;
@@ -64,6 +66,8 @@ public class HomeListingActivity extends AppBaseActivity {
     ImageButton carouselView;
     @Bind(R.id.gridView)
     ImageButton gridView;
+    @Bind(R.id.toolbar_title)
+    ImageView titleImg;
     private DownloadFileFromURL task;
     private String root;
 
@@ -123,7 +127,6 @@ public class HomeListingActivity extends AppBaseActivity {
         prefManager.init(this);
         prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
         setTheme(R.style.AppTheme);
-
         if(task != null && task.isCancelled() ){
             if(magazineList == null || magazineList.isEmpty()){
                 fetchMagazineList();
@@ -151,7 +154,7 @@ public class HomeListingActivity extends AppBaseActivity {
 
             magazineListFragment = new HomeListFragment();
             magazineListFragment.setArguments(bundle);
-
+magazineListFragment.setOnThemeChangeListener(this);
             changeFragment(magazineListFragment);
         }
     }
@@ -287,4 +290,30 @@ public class HomeListingActivity extends AppBaseActivity {
         }
     }
 
+    @Override
+    public void onMagazineTheme(int position) {
+       switch (position){
+           case 0:
+               titleImg.setImageResource(R.drawable.icon_outlook_group);
+               break;
+           case 1:
+               titleImg.setImageResource(R.drawable.icon_outlook);
+               break;
+           case 2:
+               titleImg.setImageResource(R.drawable.logo_outlook);
+               break;
+           case 3:
+               titleImg.setImageResource(R.drawable.icon_outlook);
+               break;
+           case 4:
+               titleImg.setImageResource(R.drawable.logo_outlook);
+               break;
+           case 5:
+               titleImg.setImageResource(R.drawable.icon_outlook);
+               break;
+           default:
+               titleImg.setImageResource(R.drawable.icon_outlook_group);
+               break;
+       }
+    }
 }

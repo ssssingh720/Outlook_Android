@@ -26,6 +26,7 @@ import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
+import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.CategoryOptionsVo;
@@ -65,6 +66,15 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     private ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
     private String categoryType;
     private boolean isPurchased;
+    private OnArticleModeChangeListener articleModeChangeListener;
+
+    public OnArticleModeChangeListener getArticleModeChangeListener() {
+        return articleModeChangeListener;
+    }
+
+    public void setArticleModeChangeListener(OnArticleModeChangeListener articleModeChangeListener) {
+        this.articleModeChangeListener = articleModeChangeListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -195,6 +205,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     private class PageAdapter extends FragmentStatePagerAdapter {
 
         ArrayList<String> mContents;
+        SectionDetailsFragment fragment;
 
         public PageAdapter(FragmentManager fragmentManager, ArrayList<String> contents) {
             super(fragmentManager);
@@ -206,7 +217,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
             final Bundle bundle = new Bundle();
             bundle.putInt(IntentConstants.POSITION, position);
             bundle.putString(IntentConstants.WEB_CONTENT, mContents.get(position));
-            final SectionDetailsFragment fragment = new SectionDetailsFragment();
+            fragment = new SectionDetailsFragment();
             fragment.setArguments(bundle);
             return fragment;
         }
@@ -214,6 +225,13 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         @Override
         public int getCount() {
             return mContents.size();
+        }
+        public void pagerNightMode(boolean mode){
+            fragment.toggleNightMode(mode);
+        }
+        public void pagerTextResize(){
+            fragment.manageFontSeekBar();
+
         }
     }
 
@@ -255,5 +273,15 @@ public class SectionDetailsHolderFragment extends BaseFragment {
             TextView title;
             TextView subTitle;
         }
+    }
+
+    public void onNightMode(boolean mode) {
+        showToast("Night Mode");
+        ((SectionDetailsFragment)mAdapter.getItem(currentCardPosition)).toggleNightMode(mode);
+    }
+
+    public void onResizeText() {
+        showToast("Text Mode");
+        mAdapter.pagerTextResize();
     }
 }

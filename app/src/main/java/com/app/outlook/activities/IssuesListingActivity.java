@@ -85,7 +85,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "outlook.annual";
+    static final String ITEM_SKU = "outlook.five";
     private int selectedPosition = -1;
     private Purchase purchaseInfo;
     private DownloadFileFromURL task;
@@ -383,17 +383,22 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
             if(isSubcriptionClicked) {
                 isSubcriptionClicked = false;
-                mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
+//                mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
                 validateSubscription(purchaseInfo.getSku(), purchaseInfo.getToken(), purchaseInfo.getDeveloperPayload(),
                         selectedSubcription);
             }else {
                 validatePurchase(purchaseInfo.getSku(), purchaseInfo.getToken(), purchaseInfo.getDeveloperPayload());
             }
+            /*
+            *  has to be in only for subscription part*/
+            mHelper.consumeAsync(purchaseInfo, IssuesListingActivity.this);
+
         } else {
 //            hideProgressDialog();
 //            finish();
         }
     }
+
 
     @Override
     public void onBuyClicked(int position) {

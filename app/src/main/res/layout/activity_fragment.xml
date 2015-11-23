@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary">
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">>
         <LinearLayout
             android:id="@+id/back"
             android:layout_width="wrap_content"
@@ -38,7 +40,18 @@
                 android:src="@drawable/logo_outlook" />
 
         </LinearLayout>
-
+            <ImageView
+                android:id="@+id/shareImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:src="@drawable/icon_share"
+                android:visibility="visible" />
+    </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
