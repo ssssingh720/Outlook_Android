@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ScrollView
+    android:layout_height="match_parent"
+    android:id="@+id/parentArticleLyt">
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/bottomReltvLyt">
 
     <RelativeLayout
         android:id="@+id/containerLyt"
@@ -18,44 +20,69 @@
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             />
 
         <include
+            android:id="@+id/bottomGoUp"
             layout="@layout/bottom_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:layout_below="@+id/webview" />
 </RelativeLayout>
-</ScrollView>
-    <!--<RelativeLayout
-        android:id="@+id/bottomReltvLyt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:background="@color/black">
-        <ImageView
-            android:id="@+id/fontSizeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="@drawable/icon_calendar"/>
-        <ToggleButton
-            android:layout_toRightOf="@+id/fontSizeBtn"
-            android:id="@+id/nightModeBtn"
-            android:padding="10dp"
-            style="@style/ToggleButton_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/toggle_btn_bg"
-            android:text="@null"/>
-    </RelativeLayout>-->
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
     <SeekBar
         android:id="@+id/fontSeekBar"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/bottomReltvLyt"
         android:visibility="gone"
+        android:background="@color/grey"
         />
+    <LinearLayout
+        android:id="@+id/bottomReltvLyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:background="@color/grey">
+        <ImageView
+            android:id="@+id/fontSizeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:src="@drawable/text_resize"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="match_parent"
+            android:background="@color/cool_grey"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:layout_gravity="center_vertical|center_horizontal"
+            >
+            <ToggleButton
+                android:layout_toRightOf="@+id/fontSizeBtn"
+                android:id="@+id/nightModeBtn"
+                style="@style/ToggleButton_default"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/toggle_btn_bg"
+                android:layout_centerVertical="true"
+                android:text="@null"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

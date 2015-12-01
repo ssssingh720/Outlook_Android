@@ -20,6 +20,9 @@ public class UserProfileVo extends BaseVO {
     @SerializedName("user_email")
     @Expose
     private String email;
+    @SerializedName("admin")
+    @Expose
+    private boolean admin;
 
     public String getName() {
         return name;
@@ -51,5 +54,13 @@ public class UserProfileVo extends BaseVO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

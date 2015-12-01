@@ -45,6 +45,7 @@
     <string name="facebook_app_id">1067468666675015</string>
     <string name="play_services_error_fmt">Google Play Services Error: %i</string>
     <string name="no_internet">Please check your internet connectivity.</string>
+    <string name="logout_msg">Logging out will delete all stored content (including saved back issues). All deleted content can be re-downloaded. Do you wish to continue?</string>
     <string name="empty_email_password">Please enter a valid email and password.</string>
     <string name="email_to_get_password">Please enter the registered email to recover the password.</string>
 <string name="gcm_send_message">Token retrieved and sent to server! You can now use gcmsender to

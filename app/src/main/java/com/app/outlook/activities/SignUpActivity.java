@@ -10,6 +10,7 @@ import android.view.Display;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.VolleyError;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
@@ -111,7 +112,8 @@ public class SignUpActivity extends AppBaseActivity {
             params.put(FeedParams.EMAIL, email);
             params.put(FeedParams.PASSWORD, password);
             params.put(FeedParams.USERNAME, userName);
-            placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true,null);
+            placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true, null);
+            mButtonSignUp.setEnabled(false);
         } else {
             showToast(getResources().getString(R.string.no_internet));
         }
@@ -130,6 +132,15 @@ public class SignUpActivity extends AppBaseActivity {
             UserProfileVo userInfo = (UserProfileVo) response;
             //userInfo.setEmail(mEmailEditField.getText().toString().trim());
             saveToken(userInfo);
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod) {
+        super.onErrorResponse(error, apiMethod);
+        if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
+            mButtonSignUp.setEnabled(true);
+            showToast("Could not register.Please try later.");
         }
     }
 

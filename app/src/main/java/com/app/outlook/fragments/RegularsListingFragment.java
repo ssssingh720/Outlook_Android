@@ -26,11 +26,13 @@ import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
 import com.app.outlook.manager.SessionManager;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.MagazineDetailsVo;
 import com.app.outlook.modal.MagazineTypeVo;
+import com.app.outlook.modal.OutlookConstants;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.squareup.picasso.Picasso;
@@ -226,6 +228,9 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
         intent.putExtra(IntentConstants.ISSUE_ID, issueID);
         intent.putExtra(IntentConstants.MAGAZINE_ID, magazineID);
         intent.putExtra(IntentConstants.CATEGORY_TYPE, "Type2");
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && getArguments().getString(IntentConstants.ADMIN_MAGAZINE)!=null){
+            intent.putExtra(IntentConstants.ADMIN_MAGAZINE, getArguments().getString(IntentConstants.ADMIN_MAGAZINE));
+        }
         startActivity(intent);
     }
 

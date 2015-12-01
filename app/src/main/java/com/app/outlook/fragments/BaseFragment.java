@@ -44,8 +44,8 @@ public class BaseFragment extends Fragment implements ServerCallback {
     * @param params Hashmap which contains the params to be passed to the backend
     */
     // Server Calls
-    public void placeRequest(String methodName, Class clazz, HashMap<String, String> params) {
-        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, false,null);
+    public void placeRequest(String methodName, Class clazz, HashMap<String, String> params,boolean isPOST,String action) {
+        RequestManager.getInstance(mView.getContext()).placeRequest(methodName, clazz, this, params, isPOST,action);
     }
 
     public void placeRequest(String methodName, Class clazz) {

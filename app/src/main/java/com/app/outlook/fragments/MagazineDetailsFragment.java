@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
@@ -41,6 +43,8 @@ import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Item;
 import com.app.outlook.modal.MagazineDetailsVo;
 import com.app.outlook.modal.OutlookConstants;
+import com.app.outlook.modal.YearListVo;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
@@ -57,6 +61,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -73,18 +78,21 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     LinearLayout sectionBreifListLyt;
     @Bind(R.id.bottom_holder)
     RelativeLayout mBottomHolder;
+    @Bind(R.id.emptyViewMagazine)
+    TextView emptyViewMagazine;
 
     TypedArray categoryIds;
     TypedArray cardIds;
     List<Category> mCategories = new ArrayList<>();
     int mSelectedCategory = 0;
-    private String magazineID;
+    private String magazineID,magazineTitle;
     private String root;
     private LoadToast loadToast;
     private MagazineDetailsVo detailsObject;
     private String issueID;
     private DownloadFileFromURL task;
     private boolean isPurchased;
+    private String adminMagazine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +102,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         initView();
         if (getArguments() != null && getArguments().getString(IntentConstants.MAGAZINE_ID) != null) {
             magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID, "");
+            magazineTitle=getArguments().getString(IntentConstants.MAGAZINE_NAME, "");
             issueID = getArguments().getString(IntentConstants.ISSUE_ID);
             isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         } else {
@@ -103,8 +112,31 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         }
         root = getActivity().getCacheDir().getAbsolutePath();
         //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
-        fetchMagazineDetails();
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            if (Util.isNetworkOnline(getActivity())){
+            fetchMagazineDetailsAdminMode();}
+            else {
+                showToast(getResources().getString(R.string.no_internet));
+            }
+        }
+        else {
+            fetchMagazineDetails();
+        }
         return mView;
+    }
+
+    private void fetchMagazineDetailsAdminMode() {
+        loadToast.show();
+        try{
+            HashMap<String,String> params = new HashMap<>();
+            params.put(FeedParams.MAG_ID, magazineID + "");
+            params.put("issue_id", issueID + "");
+            params.put(FeedParams.USER_ID,SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
+            params.put(FeedParams.TOKEN,SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
+            placeRequest(APIMethods.MAGAZINE_DETAILS, MagazineDetailsVo.class, params, false, null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -145,6 +177,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 task = new DownloadFileFromURL();
                 task.execute(magazineID,issueID);
             }
+            else if (!file.exists() && !Util.isNetworkOnline(getActivity())){
+                emptyViewMagazine.setVisibility(View.VISIBLE);
+            }
+            OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle+magazineID, issueID)
+                    .setLabel("Downloads")
+                    .build());
         } catch (Exception e) {
             e.printStackTrace();
             loadToast.error();
@@ -186,7 +224,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private View loadRegularView(int position,List<Category> data){
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View cardView = inflater.inflate(R.layout.template_nine, null);
-        cardView = loadRegularGridItem(position,cardView, data);
+        cardView = loadRegularGridItem(position, cardView, data);
         return cardView;
     }
 
@@ -294,12 +332,16 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             RegularsListingFragment fragment = new RegularsListingFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
+            bundle.putString(IntentConstants.MAGAZINE_NAME, magazineID);
                 bundle.putString(IntentConstants.ISSUE_ID, issueID);
                 bundle.putString(IntentConstants.CATEGORY_POSITION, tags[0]);
                 bundle.putString(IntentConstants.SUB_CATEGORY_POSITION, tags[1]);
                 bundle.putSerializable(IntentConstants.CATEGORY, mCategories.get(Integer.parseInt(tags[0])).
                         getCategories().get(Integer.parseInt(tags[1])));
             bundle.putBoolean(IntentConstants.IS_PURCHASED, isPurchased);
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine!=null){
+                bundle.putString(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
+            }
             fragment.setArguments(bundle);
             ((MagazineDetailsActivity) getActivity()).changeFragment(fragment,true);
         }
@@ -313,6 +355,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         intent.putExtra(IntentConstants.CARD_POSITION, cardPosition);
         intent.putExtra(IntentConstants.ISSUE_ID, issueID);
         intent.putExtra(IntentConstants.MAGAZINE_ID, magazineID);
+        intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineTitle);
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine!=null){
+            intent.putExtra(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
+        }
         startActivity(intent);
     }
 
@@ -350,6 +396,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 +"&issue_id="+ params[1]+
                         "&"+ FeedParams.USER_ID+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID)
                         + "&"+ FeedParams.TOKEN+"="+ SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
+
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
@@ -426,4 +473,32 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if(task != null)
             task.cancel(true);
     }
+
+    @Override
+    public void onAPIResponse(Object response, String apiMethod) {
+        super.onAPIResponse(response, apiMethod);
+        loadToast.success();
+        if(apiMethod.equals(APIMethods.MAGAZINE_DETAILS)) {
+            MagazineDetailsVo detailsObject=(MagazineDetailsVo)response;
+            mCategories = detailsObject.getCategories();
+            if (mCategories.size()>0) {
+                emptyViewMagazine.setVisibility(View.GONE);
+                loadCards();
+                adminMagazine = new Gson().toJson(detailsObject);
+            }
+            else{
+                emptyViewMagazine.setVisibility(View.VISIBLE);
+            }
+        }
+
+        }
+
+    @Override
+    public void onErrorResponse(VolleyError error, String apiMethod) {
+        super.onErrorResponse(error, apiMethod);
+        loadToast.error();
+        if(apiMethod.equals(APIMethods.MAGAZINE_DETAILS)) {
+            emptyViewMagazine.setVisibility(View.VISIBLE);
+        }
+        }
 }

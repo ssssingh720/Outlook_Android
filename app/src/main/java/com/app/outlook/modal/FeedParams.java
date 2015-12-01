@@ -50,4 +50,6 @@ public class FeedParams {
     public static final String PROFILE_EMAIL = "profile_email";
     public static final String DURATION = "duration";
     public static final String ACTION = "action";
+    public static final String DEVICE_ID = "device_id";
+    public static final String DEVICE_TYPE = "device_type";
 }

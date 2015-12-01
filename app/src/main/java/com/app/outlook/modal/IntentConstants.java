@@ -10,11 +10,15 @@ public class IntentConstants {
     public final static String ITEM_POSITION = "item_position";
     public final static String CONTENTS = "contents";
     public final static String WEB_CONTENT = "web_content";
+    public final static String WEB_CONTENT_TITLE = "web_content_title";
+    public final static String NOTIFICATION_MESSAGE = "notify_message";
     public static String MAGAZINE_LIST = "magazineList";
     public static String MAGAZINE = "magazine";
+    public static String ADMIN_MAGAZINE = "admin_magazine";
     public static String MAGAZINE_ID = "magazine_id";
     public static String ISSUE_ID = "issue_id";
     public static String TYPE = "type";
+    public static String MAGAZINE_NAME = "magazine_name";
     public static String POSITION = "position";
     public static String CATEGORY_POSITION = "category_position";
     public static String SUB_CATEGORY_POSITION = "sub_category_position";
@@ -23,4 +27,5 @@ public class IntentConstants {
     public static String CARD_POSITION = "card_position";
     public static String SUBSCRIPTION_IDS = "card_position";
     public static String IS_PURCHASED = "is_purchased";
+
 }

@@ -16,10 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.android.volley.VolleyError;
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.IabHelper;
@@ -41,6 +43,7 @@ import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.PurchaseResponseVo;
 import com.app.outlook.modal.YearListVo;
 import com.app.outlook.views.MonthYearPicker;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
@@ -79,7 +82,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private OutlookGridViewAdapter adapter;
     @Bind(R.id.gridView)
     GridView gridView;
-    private String magazineType;
+    private String magazineType,magazineTitle;
     private LoadToast loadToast;
     private String issueYear = "2015";
     private String root;
@@ -94,11 +97,17 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private YearListVo yearListVo;
     @Bind(R.id.toolbar_title)
     ImageView toolbar_title;
+    @Bind(R.id.btnSubscribe)
+    Button btnSubscribe;
+    @Bind(R.id.calendarImg)
+    ImageView calendarImg;
     private ArrayList<String> subscriptionIDList;
     private ArrayList<SkuDetails> skuList;
     private ArrayList<Purchase> purchaseList;
     private boolean isSubcriptionClicked;
     private String selectedSubcription;
+    @Bind(R.id.emptyView)
+    TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +117,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         ButterKnife.bind(this);
 
         magazineType = getIntent().getStringExtra(IntentConstants.TYPE);
+        magazineTitle = getIntent().getStringExtra(IntentConstants.MAGAZINE_NAME);
+
         subscriptionIDList = getIntent().getStringArrayListExtra(IntentConstants.SUBSCRIPTION_IDS);
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
@@ -140,6 +151,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     }
 
     private void initView() {
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            btnSubscribe.setVisibility(View.GONE);
+        }
         root =  getCacheDir().getAbsolutePath();
                 //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
 
@@ -159,8 +173,20 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
                 .setProgressColor(getResources().getColor(R.color.app_red));
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            fetchIssueListAdminMode();
+        }
+        else{
+        fetchIssueList();}
+    }
 
-        fetchIssueList();
+    private void fetchIssueListAdminMode() {
+        if (Util.isNetworkOnline(this)) {
+            getDefaultList();
+        }
+        else{
+            showToast(getResources().getString(R.string.no_internet));
+        }
     }
 
     @Override
@@ -168,7 +194,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         super.onResume();
 
         if(task != null && task.isCancelled() && yearListVo == null ){
-                fetchIssueList();
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+                fetchIssueListAdminMode();
+            }
+            else{
+                fetchIssueList();}
         }
 
         if(adapter != null){
@@ -198,7 +228,12 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
     @OnClick(R.id.btnSubscribe)
     public void onSubscribeCLicked(){
-        queryList();
+        if (Util.isNetworkOnline(this)) {
+            queryList();
+        }
+        else{
+            showToast(getResources().getString(R.string.no_internet));
+        }
     }
 
     private void fetchIssueList() {
@@ -214,6 +249,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 task = new DownloadFileFromURL(issueYear);
                 task.execute(magazineType+"",issueYear);
             }
+            else{
+                emptyView.setVisibility(View.VISIBLE);
+                    btnSubscribe.setVisibility(View.GONE);
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showToast("Error Parsing content");
@@ -228,7 +268,11 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         reader.setLenient(true);
 
         yearListVo = new Gson().fromJson(reader, YearListVo.class);
+         setGridAdapter(yearListVo);
+    }
 
+    private void setGridAdapter(YearListVo yearListVo) {
+        if (yearListVo!=null){
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -239,6 +283,24 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
         animationAlphaAdapter.setAbsListView(gridView);
         gridView.setAdapter(animationAlphaAdapter);
+            calendarImg.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            btnSubscribe.setVisibility(View.VISIBLE);
+        }
+        else{
+            emptyView.setVisibility(View.VISIBLE);
+                btnSubscribe.setVisibility(View.GONE);
+
+        }
+        if (adapter.getCount()==0){
+            emptyView.setVisibility(View.VISIBLE);
+                btnSubscribe.setVisibility(View.GONE);
+
+        }
+        else{
+            emptyView.setVisibility(View.GONE);
+            btnSubscribe.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -275,20 +337,22 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             params.put(FeedParams.MAG_ID, magazineType + "");
             params.put(FeedParams.YEAR,year+"");
             params.put(FeedParams.MONTH,month+"");
+            params.put(FeedParams.TOKEN,SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
 
         placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false,null);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    private void getDefaultList(int year, int month){
+    private void getDefaultList(){
         loadToast.show();
         try{
             HashMap<String,String> params = new HashMap<>();
             params.put(FeedParams.MAG_ID, magazineType + "");
-            params.put(FeedParams.YEAR,year+"");
-
-        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false,null);
+            params.put(FeedParams.YEAR,issueYear+"");
+            params.put(FeedParams.TOKEN,SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
+            params.put(FeedParams.USER_ID,SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
+            placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false, null);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -301,8 +365,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         params.put(FeedParams.PLATFORM, OutlookConstants.PLATFORM);
         params.put(FeedParams.PACKAGE_NAME,getApplicationContext().getPackageName());
         params.put(FeedParams.PRODUCT_ID, productID);
-        params.put(FeedParams.PURCHASE_TOKEN,purchaseToken);
-        params.put(FeedParams.ISSUE_ID,issueId);
+        params.put(FeedParams.PURCHASE_TOKEN, purchaseToken);
+        params.put(FeedParams.ISSUE_ID, issueId);
         params.put(FeedParams.MAGAZINE_ID, magazineType + "");
 
         placeRequest(APIMethods.VALIDATE_PURCHASE, PurchaseResponseVo.class, params, true, null);
@@ -316,8 +380,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         params.put(FeedParams.USERID, SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
         params.put(FeedParams.PACKAGE_NAME,getApplicationContext().getPackageName());
         params.put(FeedParams.PRODUCT_ID, productID);
-        params.put(FeedParams.PURCHASE_TOKEN,purchaseToken);
-        params.put(FeedParams.ISSUE_PUBLISH_DATE,issueDate);
+        params.put(FeedParams.PURCHASE_TOKEN, purchaseToken);
+        params.put(FeedParams.ISSUE_PUBLISH_DATE, issueDate);
         params.put(FeedParams.MAGAZINE_ID, magazineType + "");
         params.put(FeedParams.DURATION, duration);
 
@@ -331,17 +395,43 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
 
         if(apiMethod.equals(APIMethods.ISSUE_LIST)) {
             YearListVo yearListVo = (YearListVo) response;
+if (yearListVo!=null) {
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    int width = size.x;
+    if (gridView.getVisibility() == View.GONE) {
+        gridView.setVisibility(View.VISIBLE);
+    }
+    adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,
+            getMonthList(yearListVo.getMonths(), yearListVo.getYear()), width, magazineType, this);
+    SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
+    AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
+    animationAlphaAdapter.setAbsListView(gridView);
+    gridView.setAdapter(animationAlphaAdapter);
+    calendarImg.setVisibility(View.VISIBLE);
+    emptyView.setVisibility(View.GONE);
+    if (!SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)) {
+        btnSubscribe.setVisibility(View.VISIBLE);
+    }
+}
+            else{
+    emptyView.setVisibility(View.VISIBLE);
+        btnSubscribe.setVisibility(View.GONE);
 
-            Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
-            adapter = new OutlookGridViewAdapter(this, R.layout.grid_item_two_layout,
-                    getMonthList(yearListVo.getMonths(), yearListVo.getYear()), width,magazineType,this);
-            SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);
-            AlphaInAnimationAdapter animationAlphaAdapter = new AlphaInAnimationAdapter(animationAdapter);
-            animationAlphaAdapter.setAbsListView(gridView);
-            gridView.setAdapter(animationAlphaAdapter);
+}
+            if (adapter.getCount()==0){
+                emptyView.setVisibility(View.VISIBLE);
+                    btnSubscribe.setVisibility(View.GONE);
+
+            }
+            else{
+                emptyView.setVisibility(View.GONE);
+                if (!SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)) {
+
+                    btnSubscribe.setVisibility(View.VISIBLE);
+                }
+            }
         }else if(apiMethod.equals(APIMethods.VALIDATE_PURCHASE)){
 
             PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
@@ -359,6 +449,17 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
             }
 
+        }
+        else if (apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)) {
+
+            PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
+
+            if(purchaseResponseVo.getResponse().getPurchaseState() == 0){
+                task = new DownloadFileFromURL(issueYear);
+                task.execute(magazineType+"",issueYear);
+            }else {
+                Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -417,24 +518,47 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         if (postID != null) {
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+            intent.putExtra(IntentConstants.MAGAZINE_NAME,magazineTitle);
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
             intent.putExtra(IntentConstants.IS_PURCHASED, true);
             startActivity(intent);
+            OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle,postID)
+                    .setLabel("Data")
+                    .build());
         }
     }
 
     @Override
     public void onCoverImageClicked(int position) {
 //        Toast.makeText(IssuesListingActivity.this,"onCoverImageClicked",Toast.LENGTH_SHORT).show();
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            if (Util.isNetworkOnline(this)){
+                goToMagazineDetailsFromCoverImg(position);
+            }
+            else{
+                showToast(getString(R.string.no_internet));
+            }
+        }
+else{
+            goToMagazineDetailsFromCoverImg(position);
+        }
 
+
+    }
+
+    private void goToMagazineDetailsFromCoverImg(int position) {
         Magazine magazine = adapter.getItem(position);
         String postID = magazine.getPostId();
         if (postID != null) {
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
+            intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineTitle);
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
             intent.putExtra(IntentConstants.IS_PURCHASED, magazine.isPurchased());
             startActivity(intent);
+            OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle, postID)
+                    .setLabel("Data")
+                    .build());
         }
     }
 
@@ -476,34 +600,35 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 Log.d(TAG, "Download Json URL::" + url);
                 URLConnection connection = url.openConnection();
                 connection.connect();
-                // getting file length
-                int lenghtOfFile = connection.getContentLength();
+                    // getting file length
+                    int lenghtOfFile = connection.getContentLength();
 
-                // input stream to read file - with 8k buffer
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                    // input stream to read file - with 8k buffer
+                    InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
-                // Output stream to write file
-                OutputStream output = new FileOutputStream(mPath);
+                    // Output stream to write file
+                    OutputStream output = new FileOutputStream(mPath);
 //                Log.d("GalleryFragment", "DOWNLOAD Output Path::" + output.toString());
 
-                byte data[] = new byte[1024];
+                    byte data[] = new byte[1024];
 
-                long total = 0;
+                    long total = 0;
 
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    while ((count = input.read(data)) != -1) {
+                        total += count;
+                        publishProgress("" + (int) ((total * 100) / lenghtOfFile));
 
-                    // writing data to file
-                    output.write(data, 0, count);
-                }
+                        // writing data to file
+                        output.write(data, 0, count);
+                    }
 
-                // flushing output
-                output.flush();
+                    // flushing output
+                    output.flush();
 
-                // closing streams
-                output.close();
-                input.close();
+                    // closing streams
+                    output.close();
+                    input.close();
+
 
             } catch (Exception e) {
                 SessionManager.setDownloadFailed(IssuesListingActivity.this, true);

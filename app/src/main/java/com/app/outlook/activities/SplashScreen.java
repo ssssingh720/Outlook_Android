@@ -10,6 +10,7 @@ import com.app.outlook.modal.OutlookConstants;
 import com.daimajia.easing.BaseEasingMethod;
 import com.daimajia.easing.Glider;
 import com.daimajia.easing.Skill;
+import com.inmobi.sdk.InMobiSdk;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -33,7 +34,8 @@ public class SplashScreen extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
-
+        //InMobiSdk.setLogLevel(InMobiSdk.LogLevel.DEBUG);
+        //InMobiSdk.init(this, "13f1d04fc3c345dfad00744e45d5dd06");
         init();
     }
 

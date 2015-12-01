@@ -30,7 +30,7 @@
             android:paddingLeft="10dp">
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/username_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name"
@@ -39,7 +39,7 @@
                 android:textSize="@dimen/text_medium" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/email_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="sample@gmail.com"
@@ -73,7 +73,8 @@
                 android:background="?attr/selectableItemBackground"
                 android:descendantFocusability="blocksDescendants"
                 android:paddingLeft="35dp"
-                android:paddingRight="35dp">
+                android:paddingRight="35dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView4"
@@ -99,7 +100,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/cool_grey" />
+                android:background="@color/cool_grey"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -107,7 +109,8 @@
                 android:descendantFocusability="blocksDescendants"
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingLeft="35dp"
-                android:paddingRight="35dp">
+                android:paddingRight="35dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView5"
@@ -133,9 +136,11 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/cool_grey" />
+                android:background="@color/cool_grey"
+                android:visibility="gone"/>
 
             <RelativeLayout
+android:id="@+id/notification_settings"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:foreground="?android:selectableItemBackground"
@@ -154,7 +159,7 @@
                     android:textSize="@dimen/text_big" />
 
                 <Switch
-                    android:id="@+id/switch1"
+                    android:id="@+id/switch_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -168,9 +173,11 @@
                 android:background="@color/cool_grey" />
 
             <RelativeLayout
+                android:id="@+id/settings_about"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:foreground="?android:selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="35dp"
                 android:paddingRight="35dp">
 
@@ -201,9 +208,11 @@
                 android:background="@color/cool_grey" />
 
             <RelativeLayout
+                android:id="@+id/settings_terms_condition"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:foreground="?android:selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="35dp"
                 android:paddingRight="35dp">
 
@@ -234,9 +243,11 @@
                 android:background="@color/cool_grey" />
 
             <RelativeLayout
+                android:id="@+id/settings_privacy_policy"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:foreground="?android:selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="35dp"
                 android:paddingRight="35dp">
 
@@ -267,9 +278,11 @@
                 android:background="@color/cool_grey" />
 
             <RelativeLayout
+                android:id="@+id/settings_logout"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:foreground="?android:selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="35dp"
                 android:paddingRight="35dp">
 

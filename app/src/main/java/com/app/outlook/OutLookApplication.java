@@ -1,6 +1,7 @@
 package com.app.outlook;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
@@ -75,6 +76,7 @@ public class OutLookApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setFontAttrId(R.attr.fontPath)
                         .build()

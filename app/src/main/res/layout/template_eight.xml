@@ -12,7 +12,7 @@
         android:paddingLeft="@dimen/card_margin"
         android:paddingRight="@dimen/card_margin"
         android:paddingTop="20dp"
-        android:text="category"
+        android:text=""
         android:textColor="@color/grey"
         android:textSize="@dimen/text_big" />
 

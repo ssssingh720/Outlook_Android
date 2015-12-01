@@ -41,7 +41,7 @@ public class MagazineDetailsActivity extends AppBaseActivity {
     MagazineDetailsFragment magazineDetailsFragment;
     ArrayList<String> mContent = new ArrayList<>();
     private String TAG = "MagazineDetailsActivity";
-    String magazineID;
+    String magazineID,magazineTitle;
     @Bind(R.id.toolbar_title)
     ImageView toolbar_title;
     @Bind(R.id.shareImg)
@@ -61,11 +61,13 @@ public class MagazineDetailsActivity extends AppBaseActivity {
 
         magazineDetailsFragment = new MagazineDetailsFragment();
         magazineID = getIntent().getStringExtra(IntentConstants.MAGAZINE_ID);
+        magazineTitle=getIntent().getStringExtra(IntentConstants.MAGAZINE_NAME);
         setLogo();
 
         String issueID = getIntent().getStringExtra(IntentConstants.ISSUE_ID);
         Bundle bundle = new Bundle();
         bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
+        bundle.putString(IntentConstants.MAGAZINE_NAME, magazineTitle);
         bundle.putString(IntentConstants.ISSUE_ID, issueID);
         bundle.putBoolean(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
         magazineDetailsFragment.setArguments(bundle);

@@ -18,6 +18,8 @@ package com.app.outlook.services;
         import android.app.PendingIntent;
         import android.content.Context;
         import android.content.Intent;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
         import android.media.RingtoneManager;
         import android.net.Uri;
         import android.os.Bundle;
@@ -26,9 +28,17 @@ package com.app.outlook.services;
 
         import com.app.outlook.R;
         import com.app.outlook.activities.HomeListingActivity;
+        import com.app.outlook.manager.SharedPrefManager;
+        import com.app.outlook.modal.IntentConstants;
+        import com.app.outlook.modal.NotificationVo;
+        import com.app.outlook.modal.OutlookConstants;
+        import com.app.outlook.receivers.NotificationReceiver;
         import com.google.android.gms.gcm.GcmListenerService;
+        import com.google.gson.Gson;
 
 public class MyGcmListenerService extends GcmListenerService {
+    private int NotificationCount = 0;
+
 
     private static final String TAG = "MyGcmListenerService";
 
@@ -64,7 +74,9 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_LOGGEDIN)) {
+            sendNotification(message);
+        }
         // [END_EXCLUDE]
     }
     // [END receive_message]
@@ -75,23 +87,30 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String message) {
-        Intent intent = new Intent(this, HomeListingActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        final NotificationVo notification = new Gson().fromJson(message, NotificationVo.class);
 
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra(IntentConstants.NOTIFICATION_MESSAGE, message);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, ++NotificationCount /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Bitmap bitmapLarge = BitmapFactory.decodeResource(getResources(),
+                R.drawable.app_icon);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.app_icon)
-                .setContentTitle("Outlook Message")
-                .setContentText(message)
+                .setContentTitle("OutLook New Issue")
+                .setContentText(notification.getMagazine_title())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setLargeIcon(bitmapLarge)
+                .setPriority(1)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(++NotificationCount /* ID of notification */, notificationBuilder.build());
     }
 }

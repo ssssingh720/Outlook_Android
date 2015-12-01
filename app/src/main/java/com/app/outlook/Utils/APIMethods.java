@@ -15,4 +15,8 @@ public class APIMethods {
     public static final String LOGIN = "api-login/";
     public static final String VALIDATE_PURCHASE = "validate-purchase/";
     public static final String VALIDATE_SUBSCRIPTION = "api-subscription/";
+    public static final String REGISTER_NOTIFICATION = "register-push-notification/";
+    public static final String UN_REGISTER_NOTIFICATION = "unregister-push-notification/";
+
+
 }

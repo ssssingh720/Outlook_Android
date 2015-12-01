@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.listener.OnIssueItemsClickListener;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Magazine;
+import com.app.outlook.modal.OutlookConstants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -58,6 +60,11 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.headerLyt = (LinearLayout) row.findViewById(R.id.headerLyt);
             holder.mainLyt = (LinearLayout) row.findViewById(R.id.mainLyt);
             holder.buyBtn = (Button) row.findViewById(R.id.buyBtn);
+            holder.draftText=(TextView) row.findViewById(R.id.draftText);
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+                holder.buyBtn.setVisibility(View.GONE);
+                holder.draftText.setVisibility(View.VISIBLE);
+            }
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -74,8 +81,13 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             return row;
         } else {
             holder.mainLyt.setVisibility(View.VISIBLE);
-            Picasso.with(context).load(magazine.getImage())
-                    .placeholder(R.color.cool_grey).fit().centerCrop().into(holder.image);
+            if (magazine.getImage()!=null && !magazine.getImage().isEmpty()) {
+                Picasso.with(context).load(magazine.getImage())
+                        .placeholder(R.color.cool_grey).fit().centerCrop().into(holder.image);
+            }
+            else{
+                holder.image.setImageResource(R.color.cool_grey);
+            }
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,6 +132,11 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
                     }
                 });
             }
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+                holder.buyBtn.setVisibility(View.GONE);
+                holder.draftText.setVisibility(View.VISIBLE);
+            }
+
         }
 
         return row;
@@ -131,7 +148,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
     }
 
     static class ViewHolder {
-        TextView dateTxt;
+        TextView dateTxt,draftText;
         ImageView image;
         LinearLayout headerLyt, mainLyt;
         Button buyBtn;

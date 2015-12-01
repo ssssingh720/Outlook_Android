@@ -23,7 +23,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_outlook_group" />
+            android:src="@drawable/outlook_english" />
 
         <ImageView
             android:id="@+id/imgSettings"

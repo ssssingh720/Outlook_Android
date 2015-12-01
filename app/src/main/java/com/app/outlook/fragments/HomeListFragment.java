@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.activities.HomeListingActivity;
 import com.app.outlook.activities.IssuesListingActivity;
@@ -30,6 +31,7 @@ import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.views.CarouselLinearLayout;
 import com.app.outlook.views.CirclePageIndicator;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -176,9 +178,12 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
         subscriptionIDList.add("outlook.five");
         Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
         intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());
+        intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineList.get(currentPosition).getName());
         intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
         startActivity(intent);
-
+        OutLookApplication.tracker().send(new HitBuilders.EventBuilder("Issues","")
+                .setLabel(magazineList.get(currentPosition).getName() + magazineList.get(currentPosition).getId())
+                .build());
     }
 
     public class ListPagerAdapter extends FragmentPagerAdapter {

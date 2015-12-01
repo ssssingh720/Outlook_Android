@@ -61,7 +61,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:layout_alignWithParentIfMissing="true"
-                        android:src="@drawable/icon_lock" />
+                        android:src="@drawable/icon_lock"
+                        android:visibility="visible"/>
 
                     <TextView
                         android:id="@+id/txtTitle"
@@ -98,8 +99,8 @@
                         android:layout_height="100dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
-                        android:layout_alignTop="@+id/txtTitle"
                         android:layout_alignWithParentIfMissing="true"
+                        android:layout_below="@+id/imgBlock"
                         android:layout_marginTop="5dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/dummy_11"

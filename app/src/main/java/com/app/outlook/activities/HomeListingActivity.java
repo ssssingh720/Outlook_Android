@@ -75,9 +75,12 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
+        SharedPrefManager prefManager = SharedPrefManager.getInstance();
+        prefManager.init(this);
+        prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_home_listing);
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -181,7 +184,7 @@ magazineListFragment.setOnThemeChangeListener(this);
     }
 
     private void changeFragment(Fragment fragment) {
-        if(!magazineList.isEmpty()) {
+        if(magazineList!=null && !magazineList.isEmpty()) {
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .replace(R.id.contentPanel, fragment)
@@ -294,22 +297,22 @@ magazineListFragment.setOnThemeChangeListener(this);
     public void onMagazineTheme(int position) {
        switch (position){
            case 0:
-               titleImg.setImageResource(R.drawable.icon_outlook_group);
+               titleImg.setImageResource(R.drawable.outlook_english);
                break;
            case 1:
-               titleImg.setImageResource(R.drawable.icon_outlook);
+               titleImg.setImageResource(R.drawable.icon_outlook_group);
                break;
            case 2:
-               titleImg.setImageResource(R.drawable.logo_outlook);
+               titleImg.setImageResource(R.drawable.outlook_business);
                break;
            case 3:
-               titleImg.setImageResource(R.drawable.icon_outlook);
+               titleImg.setImageResource(R.drawable.outlook_hindi);
                break;
            case 4:
-               titleImg.setImageResource(R.drawable.logo_outlook);
+               titleImg.setImageResource(R.drawable.outlook_traveller);
                break;
            case 5:
-               titleImg.setImageResource(R.drawable.icon_outlook);
+               titleImg.setImageResource(R.drawable.right_time);
                break;
            default:
                titleImg.setImageResource(R.drawable.icon_outlook_group);

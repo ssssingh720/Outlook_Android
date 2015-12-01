@@ -152,5 +152,11 @@ public class SharedPrefManager {
                 PREFS_NAME, 0);
         return shared.getInt(key, 0);
     }
-
+   public void clearPreference(){
+       SharedPreferences shared = context.getSharedPreferences(
+               PREFS_NAME, 0);
+       SharedPreferences.Editor editor = shared.edit();
+       editor.clear();
+       editor.commit();
+   }
 }

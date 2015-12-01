@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.activities.IssuesListingActivity;
 import com.app.outlook.adapters.HomeGridViewAdapter;
@@ -17,6 +18,7 @@ import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.MagazineTypeVo;
 import com.app.outlook.modal.OutlookConstants;
+import com.google.android.gms.analytics.HitBuilders;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
@@ -101,8 +103,12 @@ public class HomeGridFragment extends BaseFragment {
 
                 Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
                 intent.putExtra(IntentConstants.TYPE, magazineList.get(position).getId());
+                intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineList.get(position).getName());
                 intent.putExtra(IntentConstants.SUBSCRIPTION_IDS, subscriptionIDList);
                 startActivity(intent);
+                OutLookApplication.tracker().send(new HitBuilders.EventBuilder("Issues", "")
+                        .setLabel(magazineList.get(position).getName()+magazineList.get(position).getId())
+                        .build());
             }
         });
     }

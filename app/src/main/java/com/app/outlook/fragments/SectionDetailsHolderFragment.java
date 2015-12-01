@@ -27,12 +27,15 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
 import com.app.outlook.listener.OnArticleModeChangeListener;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Card;
 import com.app.outlook.modal.Category;
 import com.app.outlook.modal.CategoryOptionsVo;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineDetailsVo;
+import com.app.outlook.modal.OutlookConstants;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -48,7 +51,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 22/09/15.
  */
-public class SectionDetailsHolderFragment extends BaseFragment {
+public class SectionDetailsHolderFragment extends BaseFragment implements SectionDetailsFragment.OnScrollChangeListener{
 
     private int mSelectedItem;
     @Bind(R.id.container)
@@ -58,7 +61,8 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     private int currentCardPosition = 0;
     private int currentPageCount = 0;
     ArrayList<String> mContents = new ArrayList<>();
-    private String issueID,magazineID;
+    ArrayList<String> mTitles= new ArrayList<>();
+    private String issueID,magazineID,magazineTitle;
     @Bind(R.id.cardsList)
     ListView cardsList;
     @Bind(R.id.articleOptionView)
@@ -84,14 +88,26 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         currentCardPosition = getArguments().getInt(IntentConstants.CARD_POSITION, 0);
         issueID = getArguments().getString(IntentConstants.ISSUE_ID);
         magazineID = getArguments().getString(IntentConstants.MAGAZINE_ID);
+        magazineTitle=getArguments().getString(IntentConstants.MAGAZINE_NAME);
         categoryType = getArguments().getString(IntentConstants.CATEGORY_TYPE);
         currentPageCount = getArguments().getInt(IntentConstants.ITEM_POSITION, 0);
         subCategoryPosition = getArguments().getInt(IntentConstants.SUB_CATEGORY_POSITION, 0);
         isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         ButterKnife.bind(this, mView);
-        loadContents();
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            String adminMagazine = getArguments().getString(IntentConstants.ADMIN_MAGAZINE);
+        loadAdminContents(adminMagazine);
+        }
+        else {
+            loadContents();
+        }
         initView();
         return mView;
+    }
+
+    private void loadAdminContents(String magazine) {
+        MagazineDetailsVo detailsObject = new Gson().fromJson(magazine, MagazineDetailsVo.class);
+        getMagazineCards(detailsObject);
     }
 
     public void onSelectionClick() {
@@ -120,48 +136,8 @@ public class SectionDetailsHolderFragment extends BaseFragment {
                 JsonReader reader = new JsonReader(new StringReader(response));
                 reader.setLenient(true);
                 MagazineDetailsVo detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
-                List<Category> mCategories = detailsObject.getCategories();
-                Category selectedCategory = mCategories.get(categoryPosition);
-                if(categoryType != null && categoryType.equals("Type2")){
-                    selectedCategory = selectedCategory.getCategories().get(subCategoryPosition);
-                }
-                if(selectedCategory.getCategoryName() != null) {
-                    ((ArticleDetailsActivity)getActivity()).setTitle(selectedCategory.getCategoryName());
-                }else{
-                    ((ArticleDetailsActivity)getActivity()).setTitle("Category Title");
-                }
-                List<Card> cards = selectedCategory.getCards();
-                for (int i=0;i<cards.size();i++){
-                    if(isPurchased || cards.get(i).getPaid()) {
-                        mContents.add(cards.get(i).getContent());
-                        CategoryOptionsVo obj = new CategoryOptionsVo();
-                        obj.setTitle(cards.get(i).getTitle());
-                        obj.setSubTitle(cards.get(i).getSubsection());
-                        categoryOptions.add(obj);
-                    }
-                }
+                getMagazineCards(detailsObject);
 
-                CategoryOptionAdapter adapter = new CategoryOptionAdapter(getActivity(),R.layout.category_selection_row);
-                cardsList.setAdapter(adapter);
-                if(adapter.getCount() > 4){
-                    View item = adapter.getView(0, null, cardsList);
-                    item.measure(0, 0);
-//                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (5.5 * item.getMeasuredHeight()));
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) cardsList.getLayoutParams();
-                    params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-                    params.height = (int) (5.5 * item.getMeasuredHeight());
-
-                    cardsList.setLayoutParams(params);
-                }
-
-                cardsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        currentCardPosition = position;
-                        mPager.setCurrentItem(currentCardPosition);
-                        articleOptionView.setVisibility(View.GONE);
-                    }
-                });
 
             } else {
                 // error
@@ -172,8 +148,55 @@ public class SectionDetailsHolderFragment extends BaseFragment {
         }
     }
 
+    private void getMagazineCards(MagazineDetailsVo detailsObject) {
+        List<Category> mCategories = detailsObject.getCategories();
+        Category selectedCategory = mCategories.get(categoryPosition);
+        if(categoryType != null && categoryType.equals("Type2")){
+            selectedCategory = selectedCategory.getCategories().get(subCategoryPosition);
+        }
+        if(selectedCategory.getCategoryName() != null) {
+            ((ArticleDetailsActivity)getActivity()).setTitle(selectedCategory.getCategoryName());
+        }else{
+            ((ArticleDetailsActivity)getActivity()).setTitle("Category Title");
+        }
+        List<Card> cards = selectedCategory.getCards();
+        for (int i=0;i<cards.size();i++){
+            if(isPurchased || cards.get(i).getPaid()) {
+                mContents.add(cards.get(i).getContent());
+                mTitles.add(cards.get(i).getTitle());
+                CategoryOptionsVo obj = new CategoryOptionsVo();
+                obj.setTitle(cards.get(i).getTitle());
+                obj.setSubTitle(cards.get(i).getSubsection());
+                categoryOptions.add(obj);
+            }
+        }
+
+        CategoryOptionAdapter adapter = new CategoryOptionAdapter(getActivity(),R.layout.category_selection_row);
+        cardsList.setAdapter(adapter);
+        if(adapter.getCount() > 4){
+            View item = adapter.getView(0, null, cardsList);
+            item.measure(0, 0);
+//                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (5.5 * item.getMeasuredHeight()));
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) cardsList.getLayoutParams();
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            params.height = (int) (5.5 * item.getMeasuredHeight());
+
+            cardsList.setLayoutParams(params);
+        }
+
+        cardsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentCardPosition = position;
+                mPager.setCurrentItem(currentCardPosition);
+                articleOptionView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
     private void initView() {
-        mAdapter = new PageAdapter(getChildFragmentManager(), mContents);
+        mAdapter = new PageAdapter(getChildFragmentManager(), mContents,mTitles);
         mPager.setAdapter(mAdapter);
         mPager.setPageTransformer(true, new DepthPageTransformer());
         mPager.setCurrentItem(currentCardPosition);
@@ -205,11 +228,13 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     private class PageAdapter extends FragmentStatePagerAdapter {
 
         ArrayList<String> mContents;
+        ArrayList<String> mTitles;
         SectionDetailsFragment fragment;
 
-        public PageAdapter(FragmentManager fragmentManager, ArrayList<String> contents) {
+        public PageAdapter(FragmentManager fragmentManager, ArrayList<String> contents,ArrayList<String> titles) {
             super(fragmentManager);
             mContents = contents;
+            mTitles=titles;
         }
 
         @Override
@@ -217,6 +242,9 @@ public class SectionDetailsHolderFragment extends BaseFragment {
             final Bundle bundle = new Bundle();
             bundle.putInt(IntentConstants.POSITION, position);
             bundle.putString(IntentConstants.WEB_CONTENT, mContents.get(position));
+            bundle.putString(IntentConstants.WEB_CONTENT_TITLE, mTitles.get(position));
+            bundle.putString(IntentConstants.MAGAZINE_NAME,magazineTitle);
+            bundle.putString(IntentConstants.ISSUE_ID,issueID);
             fragment = new SectionDetailsFragment();
             fragment.setArguments(bundle);
             return fragment;
@@ -230,7 +258,7 @@ public class SectionDetailsHolderFragment extends BaseFragment {
             fragment.toggleNightMode(mode);
         }
         public void pagerTextResize(){
-            fragment.manageFontSeekBar();
+            //fragment.manageFontSeekBar();
 
         }
     }
@@ -283,5 +311,11 @@ public class SectionDetailsHolderFragment extends BaseFragment {
     public void onResizeText() {
         showToast("Text Mode");
         mAdapter.pagerTextResize();
+    }
+
+    @Override
+    public void onScrollChange(ScrollState scrollState) {
+        ((ArticleDetailsActivity)getActivity()).hideShowToolBar(scrollState);
+
     }
 }

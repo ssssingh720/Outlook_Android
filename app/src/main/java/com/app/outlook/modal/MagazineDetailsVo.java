@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by srajendrakumar on 03/11/15.
  */
-public class MagazineDetailsVo {
+public class MagazineDetailsVo extends BaseVO {
 
     @SerializedName("name")
     @Expose

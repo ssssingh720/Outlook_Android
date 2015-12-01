@@ -1,25 +1,44 @@
 package com.app.outlook.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.ToggleButton;
 
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
 import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.modal.IntentConstants;
-
-import java.lang.reflect.Method;
+import com.daimajia.easing.BaseEasingMethod;
+import com.daimajia.easing.Glider;
+import com.daimajia.easing.Skill;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.google.android.gms.analytics.HitBuilders;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,23 +47,30 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 22/09/15.
  */
-public class SectionDetailsFragment extends BaseFragment implements OnArticleModeChangeListener{
+public class SectionDetailsFragment extends BaseFragment implements ObservableScrollViewCallbacks {
 
 
     @Bind(R.id.containerLyt)
     RelativeLayout containerLyt;
     @Bind(R.id.scrollView)
-    ScrollView scrollView;
+    ObservableScrollView scrollView;
     @Bind(R.id.webview)
     WebView webview;
     @Bind(R.id.fontSeekBar)
     SeekBar fontSeekBar;
-   /* @Bind(R.id.fontSizeBtn)
+    @Bind(R.id.fontSizeBtn)
     ImageView fontSizeBtn;
     @Bind(R.id.nightModeBtn)
-    ToggleButton nightModeBtn;*/
+    ToggleButton nightModeBtn;
+    @Bind(R.id.bottomReltvLyt)
+    LinearLayout bottomLayout;
+    @Bind(R.id.parentArticleLyt)
+    RelativeLayout parentArticleLyt;
+    @Bind(R.id.bottomGoUp)
+    View bottomGoUp;
     private int fontSize;
     private String htmlContent;
+    OnScrollChangeListener mOnScrollChangeListener;
 
 
     @Override
@@ -54,6 +80,9 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
         ButterKnife.bind(this, mView);
         int position = getArguments().getInt(IntentConstants.CARD_HOLDER_POSITION, 0);
         htmlContent = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" + getArguments().getString(IntentConstants.WEB_CONTENT, "");
+        String title=getArguments().getString(IntentConstants.WEB_CONTENT_TITLE, "");
+        String magazineTitle=getArguments().getString(IntentConstants.MAGAZINE_NAME, "");
+        String issueID=getArguments().getString(IntentConstants.ISSUE_ID, "");
         final String mimeType = "text/html";
         final String encoding = "utf-8";
 
@@ -73,7 +102,7 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
             webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
-        webview.loadDataWithBaseURL(null,htmlContent, mimeType, encoding,null);
+        webview.loadDataWithBaseURL(null, htmlContent, mimeType, encoding, null);
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -100,7 +129,11 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
 
             }
         });
-
+        scrollView.setScrollViewCallbacks(this);
+        OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle, issueID + "")
+                .setLabel(title)
+                .build());
+        bottomGoUp.setVisibility(View.VISIBLE);
         return mView;
     }
 
@@ -109,19 +142,28 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
         super.onStart();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        onAttachFragment(getParentFragment());
+
+    }
+
     public void toggleNightMode(boolean nightMode){
         String rawHTML = "";
         if(nightMode) {
             rawHTML = "<HTML>" +
                     "<head>" + "<style  type=\"text/css\">" +
-                    "body,h1{color: #ffffff;" +
+                    "*{color: #ffffff !important;" +
                     "background-color: #000000;}" +
                     "</style></head>" +
-                    "<body><h1>" + htmlContent + "</h1></body>" +
+                    "<body>" + htmlContent + "</body>" +
                     "</HTML>";
             webview.loadData(rawHTML, "text/html; charset=UTF-8",null);
+            parentArticleLyt.setBackgroundColor(getActivity().getResources().getColor(R.color.black));
         }else {
             webview.loadData(htmlContent, "text/html; charset=UTF-8",null);
+            parentArticleLyt.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
         }
         // webview.requestFocus();
 
@@ -136,6 +178,11 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
     public void goUp() {
         scrollView.smoothScrollTo(0, 0);
     }
+    @OnClick(R.id.nightModeBtn)
+    public void manageNightMode(){
+        toggleNightMode(nightModeBtn.isChecked());
+    }
+    @OnClick(R.id.fontSizeBtn)
     public void manageFontSeekBar(){
         if (fontSeekBar.getVisibility()==View.VISIBLE){
             fontSeekBar.setVisibility(View.GONE);
@@ -144,18 +191,72 @@ public class SectionDetailsFragment extends BaseFragment implements OnArticleMod
             fontSeekBar.setVisibility(View.VISIBLE);
         }
     }
-    public void manageNightMode(){
-        //toggleNightMode(nightModeBtn.isChecked(),htmlContent);
+    /*@OnClick(R.id.fontSizeBtn)
+    public void manageFontSeekBar(){
+        if (fontSeekBar.getVisibility()==View.VISIBLE){
+            fontSeekBar.setVisibility(View.GONE);
+        }
+        else{
+            fontSeekBar.setVisibility(View.VISIBLE);
+        }
     }
+    @OnClick(R.id.nightMode)
+    public void manageNightMode(){
+        toggleNightMode(nightModeBtn.isChecked());
+    }
+*/
 
-   @Override
-    public void onNightMode(boolean mode) {
-        toggleNightMode(mode);
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+
     }
 
     @Override
-    public void onResizeText() {
-    manageFontSeekBar();
+    public void onDownMotionEvent() {
+
     }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+        if (mOnScrollChangeListener != null)
+        {
+            mOnScrollChangeListener.onScrollChange(scrollState);
+        }
+        if (scrollState == ScrollState.UP) {
+            if (bottomLayout.getVisibility()==View.VISIBLE || fontSeekBar.getVisibility()==View.VISIBLE) {
+                bottomLayout.setVisibility(View.GONE);
+                bottomLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+
+                fontSeekBar.setVisibility(View.GONE);
+            }
+        } else if (scrollState == ScrollState.DOWN) {
+            if (bottomLayout.getVisibility()==View.GONE ) {
+                bottomLayout.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
+                bottomLayout.setVisibility(View.VISIBLE);
+
+            }
+        }
+
+    }
+
+    public interface OnScrollChangeListener
+    {
+        public void onScrollChange(ScrollState scrollState);
+    }
+    public void onAttachFragment(Fragment fragment)
+    {
+        try
+        {
+            mOnScrollChangeListener = (OnScrollChangeListener)fragment;
+
+        }
+        catch (ClassCastException e)
+        {
+            throw new ClassCastException(
+                    fragment.toString() + " must implement OnScrollChangeListener");
+        }
+    }
+
+
 }
 

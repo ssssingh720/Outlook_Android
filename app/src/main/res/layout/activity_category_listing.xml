@@ -57,34 +57,47 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:src="@drawable/icon_calendar"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
-    <Button
-        android:id="@+id/btnSubscribe"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_margin="15dp"
-        android:background="@drawable/selector_subcribe_button"
-        android:text="@string/subscribe"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:visibility="visible" />
-
-    <GridView
-        android:id="@+id/gridView"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnSubscribe"
-        android:layout_gravity="center_horizontal"
-        android:clipToPadding="true"
-        android:horizontalSpacing="15dp"
-        android:numColumns="2"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:scrollbars="none"
-        android:visibility="gone"></GridView>
+        android:layout_below="@+id/toolbar">
+
+        <Button
+            android:id="@+id/btnSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/selector_subcribe_button"
+            android:text="@string/subscribe"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:clipToPadding="true"
+            android:horizontalSpacing="15dp"
+            android:numColumns="2"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scrollbars="none"
+            android:visibility="gone"></GridView>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Issues found. \nPlease tray again later. "
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="gone"/>
 </RelativeLayout>
