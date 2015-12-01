@@ -449,6 +449,17 @@ if (yearListVo!=null) {
                 Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
             }
 
+        }else if(apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)){
+
+            PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
+
+            if(purchaseResponseVo.getResponse().getPurchaseState() == 0){
+                task = new DownloadFileFromURL(issueYear);
+                task.execute(magazineType+"",issueYear);
+            }else {
+                Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
+            }
+
         }
         else if (apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)) {
 
