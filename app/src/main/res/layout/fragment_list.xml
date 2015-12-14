@@ -31,8 +31,10 @@
             android:layout_marginTop="15dp"
             android:text="Large Text"
             android:textStyle="bold"
+            fontPath="fonts/Roboto-Bold.ttf"
             android:textColor="@color/magazine_name"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone"
             android:textSize="30sp" />
 
         <TextView
@@ -40,10 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:ellipsize="end"
             android:gravity="center"
-            android:maxLines="3"
+            android:maxLines="4"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut"

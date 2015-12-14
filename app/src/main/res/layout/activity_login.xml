@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    tools:ignore="MissingPrefix"
     tools:context=".LogInActivity">
 
     <android.support.v7.widget.Toolbar
@@ -22,7 +23,7 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/icon_outlook_group" />
+                android:src="@drawable/outlook_group" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -37,7 +38,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.55">
             <RelativeLayout
                 android:id="@+id/facebook_button"
                 android:layout_width="match_parent"
@@ -137,7 +138,9 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/signin_to_conitinue"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    fontPath="fonts/Roboto-Bold.ttf"
+
+                    android:textSize="18sp" />
             </RelativeLayout>
 
         </RelativeLayout>
@@ -145,7 +148,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.45">
 
             <TextView
                 android:id="@+id/textView8"
@@ -262,10 +265,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignStart="@+id/enter_email"
                     android:layout_below="@+id/enter_email"
-                    android:hint="Enter Password"
+                    android:hint="@string/password_hint"
                     android:inputType="textPassword"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
+                    android:layout_marginTop="20dp"
                     android:textSize="13sp" />
             </RelativeLayout>
 

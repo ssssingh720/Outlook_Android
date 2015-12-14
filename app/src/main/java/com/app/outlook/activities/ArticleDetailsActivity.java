@@ -2,12 +2,17 @@ package com.app.outlook.activities;
 
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -19,12 +24,15 @@ import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.fragments.SectionDetailsHolderFragment;
 import com.app.outlook.listener.OnArticleModeChangeListener;
+import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
+import com.app.outlook.modal.OutlookConstants;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.android.gms.analytics.HitBuilders;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiInterstitial;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -40,14 +48,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     TextView titleTxt;
     private SectionDetailsHolderFragment sectionDetailsHolderFragment;
     private boolean isPurchased;
-    @Bind(R.id.nightMode1)
-    ToggleButton nightModeImg;
-    @Bind(R.id.textSizeImg)
-    ImageView textSizeImg;
     OnArticleModeChangeListener articleModeChangeListener;
-    private static final long YOUR_PLACEMENT_ID = 1446840680498L;
-
-    private InMobiInterstitial mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,12 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_article_details);
         ButterKnife.bind(this);
-
-        //showAdd();
-
+        initToolBar();
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        android.support.v7.app.ActionBar ab= getSupportActionBar();
+*/
         sectionDetailsHolderFragment = new SectionDetailsHolderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(IntentConstants.CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.CATEGORY_POSITION, 0));
@@ -80,51 +84,16 @@ public class ArticleDetailsActivity extends AppBaseActivity {
 
         transaction.commit();
     }
+@OnClick(R.id.shareArticle)
+public void shareArticle(){
 
-    private void showAdd() {
-        mInterstitialAd = new InMobiInterstitial(ArticleDetailsActivity.this, YOUR_PLACEMENT_ID,
-                new InMobiInterstitial.InterstitialAdListener() {
-                    @Override
-                    public void onAdRewardActionCompleted(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
 
-                    }
+    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+    sharingIntent.setType("text/*");
+    sharingIntent.putExtra(Intent.EXTRA_TEXT, sectionDetailsHolderFragment.getShareData());
+    startActivity(Intent.createChooser(sharingIntent, "Share Article"));
+}
 
-                    @Override
-                    public void onAdDisplayed(InMobiInterstitial inMobiInterstitial) {
-
-                    }
-
-                    @Override
-                    public void onAdDismissed(InMobiInterstitial inMobiInterstitial) {
-
-                    }
-
-                    @Override
-                    public void onAdInteraction(InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
-
-                    }
-
-                    @Override
-                    public void onAdLoadSucceeded(InMobiInterstitial inMobiInterstitial) {
-                        if (inMobiInterstitial.isReady()) {
-                            inMobiInterstitial.show();
-                        }
-                    }
-
-                    @Override
-                    public void onAdLoadFailed(InMobiInterstitial inMobiInterstitial, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                        Log.w("INMOBI", "Unable to load interstitial ad (error message: " +
-                                inMobiAdRequestStatus.getMessage() + ")");
-                    }
-
-                    @Override
-                    public void onUserLeftApplication(InMobiInterstitial inMobiInterstitial) {
-
-                    }
-                });
-        mInterstitialAd.load();
-
-    }
     @Override
     public void onResume() {
         super.onResume();
@@ -152,19 +121,16 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         this.articleModeChangeListener = articleModeChangeListener;
     }
 
-    @OnClick(R.id.nightMode1)
-    public void onToggleNightMode(){
-        if (nightModeImg.isChecked()){
-            sectionDetailsHolderFragment.onNightMode(true);
+    public void initToolBar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        android.support.v7.app.ActionBar ab= getSupportActionBar();
+        if (!ab.isShowing()) {
+            ab.show();
+            toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         }
-        else{
-            sectionDetailsHolderFragment.onNightMode(false);
-        }
-    }
-    @OnClick(R.id.textSizeImg)
-    public void onTextSizeChange(){
-        sectionDetailsHolderFragment.onResizeText();
-    }
+}
 
     public void hideShowToolBar(ScrollState scrollState){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -191,6 +157,44 @@ public class ArticleDetailsActivity extends AppBaseActivity {
                 //toolbar.animate().translationY(toolbar.getTop()).setInterpolator(new AccelerateInterpolator()).start();
 
             }
+        }
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.article_menu, menu);
+        MenuItem nightMode = menu.findItem(R.id.menu_nightMode);
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(IntentConstants.IS_NIGHT_MODE)){
+            nightMode.setTitle("Day mode");
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_nightMode:
+                if (item.getTitle().equals("Night mode")) {
+                    SharedPrefManager.getInstance().setSharedData(IntentConstants.IS_NIGHT_MODE, true);
+                    sectionDetailsHolderFragment.onNightMode(true);
+                    item.setTitle("Day mode");
+                }
+                else if(item.getTitle().equals("Day mode")){
+                    SharedPrefManager.getInstance().setSharedData(IntentConstants.IS_NIGHT_MODE,false);
+                    sectionDetailsHolderFragment.onNightMode(false);
+                    item.setTitle("Night mode");
+                }
+
+                return true;
+            case R.id.menu_fontSize:
+                sectionDetailsHolderFragment.onResizeText();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
     }

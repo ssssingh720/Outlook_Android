@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
     android:id="@+id/mainLyt"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,6 +33,7 @@
             android:gravity="center|left"
             android:includeFontPadding="false"
             android:text="asdsds"
+            fontPath="fonts/Roboto-Medium.ttf"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_medium" />
 
@@ -46,34 +48,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foreground="?attr/selectableItemBackgroundBorderless">
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/drop_background_shadow"
+             android:padding="5dp"
+            >
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardElevation="5dp">
+            android:background="@color/white"
+            >
 
             <RelativeLayout
                 android:id="@+id/LytMagazine"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
+                <RelativeLayout
+                    android:id="@+id/imgLyt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/magazineImg"
-                    android:layout_width="220dp"
-                    android:layout_height="250dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="#2222"
                     android:scaleType="fitXY" />
+                </RelativeLayout>
                 <Button
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:id="@+id/buyBtn"
                     android:background="@drawable/rounded_corner_button_primary"
-                    android:layout_alignBottom="@+id/magazineImg"
+                    android:layout_alignBottom="@+id/imgLyt"
                     android:text="@string/buy"
                     android:textColor="@color/white"
                     android:layout_marginBottom="10dp"
+                    fontPath="fonts/Roboto-Bold.ttf"
                     android:layout_centerHorizontal="true" />
                 <TextView
                     android:id="@+id/draftText"
@@ -91,6 +106,8 @@
                     android:visibility="gone"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
     </FrameLayout>
 
 

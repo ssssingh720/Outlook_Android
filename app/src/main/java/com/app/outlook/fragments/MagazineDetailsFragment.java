@@ -1,10 +1,13 @@
 package com.app.outlook.fragments;
 
+import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,10 +15,13 @@ import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
@@ -30,6 +36,7 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
+import com.app.outlook.activities.LogInActivity;
 import com.app.outlook.activities.MagazineDetailsActivity;
 import com.app.outlook.adapters.RegularGridViewAdapter;
 import com.app.outlook.manager.SessionManager;
@@ -93,6 +100,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private DownloadFileFromURL task;
     private boolean isPurchased;
     private String adminMagazine;
+    Dialog subscribePopUp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -200,11 +208,16 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             sectionBreifListLyt.addView(title);
             if(mCategories.get(i).getCategoryType().equals("Type1") && !mCategories.get(i).getCards().isEmpty() ) {
                 List<Card> cards = mCategories.get(i).getCards();
+                int m=0;
                 for (int j = 0; j < cards.size(); j++) {
+
                     View cardView = loadCardsView(j,cards.get(j));
-                    cardView.setTag(i + "," + j + ",Type1");
-                    if(isPurchased || cards.get(j).getPaid())
-                        cardView.setOnClickListener(this);
+
+                    if(isPurchased || cards.get(j).getPaid()) {
+                        cardView.setTag(i + "," + m + ",Type1");
+                        m++;
+                    }
+                    cardView.setOnClickListener(this);
                     sectionBreifListLyt.addView(cardView);
                 }
             }else if(mCategories.get(i).getCategoryType().equals("Type2")){
@@ -325,27 +338,51 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     public void onClick(View v) {
 
         String tag = (String) v.getTag();
-        String[] tags = tag.split(",");
-        if(tags[2].equals("Type1")) {
-            openSectionDetails(Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
-        }else{
-            RegularsListingFragment fragment = new RegularsListingFragment();
+        if (tag!=null) {
+            String[] tags = tag.split(",");
+            if (tags[2].equals("Type1")) {
+                openSectionDetails(Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
+            } else {
+                RegularsListingFragment fragment = new RegularsListingFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
-            bundle.putString(IntentConstants.MAGAZINE_NAME, magazineID);
+                bundle.putString(IntentConstants.MAGAZINE_NAME, magazineID);
                 bundle.putString(IntentConstants.ISSUE_ID, issueID);
                 bundle.putString(IntentConstants.CATEGORY_POSITION, tags[0]);
                 bundle.putString(IntentConstants.SUB_CATEGORY_POSITION, tags[1]);
                 bundle.putSerializable(IntentConstants.CATEGORY, mCategories.get(Integer.parseInt(tags[0])).
                         getCategories().get(Integer.parseInt(tags[1])));
-            bundle.putBoolean(IntentConstants.IS_PURCHASED, isPurchased);
-            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine!=null){
-                bundle.putString(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
+                bundle.putBoolean(IntentConstants.IS_PURCHASED, isPurchased);
+                if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine != null) {
+                    bundle.putString(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
+                }
+                fragment.setArguments(bundle);
+                ((MagazineDetailsActivity) getActivity()).changeFragment(fragment, true);
             }
-            fragment.setArguments(bundle);
-            ((MagazineDetailsActivity) getActivity()).changeFragment(fragment,true);
+        }
+        else{
+            showPopUpSubscribe();
         }
 
+    }
+
+    private void showPopUpSubscribe() {
+        subscribePopUp = new Dialog(getActivity(), R.style.DialogSlideAnim);
+        subscribePopUp.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        subscribePopUp.setContentView(R.layout.popup_subscription_msg);
+        subscribePopUp.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        subscribePopUp.getWindow().setGravity(Gravity.CENTER);
+        subscribePopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button okBtn=(Button)subscribePopUp.findViewById(R.id.OkBtn);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hidePopupDialog();
+            }
+        });
+
+        subscribePopUp.show();
     }
 
     private void openSectionDetails(int categoryPosition, int cardPosition) {
@@ -501,4 +538,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             emptyViewMagazine.setVisibility(View.VISIBLE);
         }
         }
+    private void hidePopupDialog() {
+        if (subscribePopUp.isShowing()) {
+            subscribePopUp.dismiss();
+            subscribePopUp.cancel();
+        }
+    }
 }

@@ -40,7 +40,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 02/11/15.
  */
-public class SettingsActivity extends AppBaseActivity implements CompoundButton.OnCheckedChangeListener{
+public class SettingsActivity extends AppBaseActivity implements View.OnClickListener{
     @Bind(R.id.switch_notification)
     Switch switchNotification;
     @Bind(R.id.username_settings)
@@ -65,9 +65,9 @@ public class SettingsActivity extends AppBaseActivity implements CompoundButton.
         }
         userName.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_NAME));
         emailId.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL));
-        switchNotification.setOnCheckedChangeListener(this);
-
+        switchNotification.setOnClickListener(this);
     }
+
 
     @OnClick(R.id.imgClose)
     public void onCloseClick() {
@@ -141,18 +141,31 @@ public void onLogOutClick(){
     }
     private void registerNotification() {
         if (Util.isNetworkOnline(this)) {
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(FeedParams.USER_ID, SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
-            params.put(FeedParams.TOKEN, SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
-            params.put(FeedParams.DEVICE_ID, SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.GCM_TOKEN));
-            params.put(FeedParams.DEVICE_TYPE, "android");
-            placeRequest(APIMethods.REGISTER_NOTIFICATION, UserProfileVo.class, params, false, null);
+            String gcmToken= SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN);
+            if (gcmToken!=null && !gcmToken.isEmpty()) {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(FeedParams.USER_ID, SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
+                params.put(FeedParams.TOKEN, gcmToken);
+                params.put(FeedParams.DEVICE_ID, SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.GCM_TOKEN));
+                params.put(FeedParams.DEVICE_TYPE, "android");
+                placeRequest(APIMethods.REGISTER_NOTIFICATION, UserProfileVo.class, params, false, null);
+            }
+            else{
+                registerGCM();
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(FeedParams.USER_ID, SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
+                params.put(FeedParams.TOKEN, SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
+                params.put(FeedParams.DEVICE_ID, SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.GCM_TOKEN));
+                params.put(FeedParams.DEVICE_TYPE, "android");
+                placeRequest(APIMethods.REGISTER_NOTIFICATION, UserProfileVo.class, params, false, null);
+            }
         }
         else{
             showToast(getResources().getString(R.string.no_internet));
             switchNotification.setChecked(SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION));
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -160,23 +173,15 @@ public void onLogOutClick(){
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if(isChecked){
-            registerNotification();
-
-        }else{
-            unRegisterNotification();
-        }
-    }
-
-    @Override
     public void onAPIResponse(Object response, String apiMethod) {
         super.onAPIResponse(response, apiMethod);
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_NOTIFICATION, true);
+            //switchNotification.setChecked(true);
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.UN_REGISTER_NOTIFICATION)){
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_NOTIFICATION, false);
+            //switchNotification.setChecked(false);
         }
     }
 
@@ -196,4 +201,15 @@ public void onLogOutClick(){
             logoutPopUp.cancel();
         }
     }
+
+    @Override
+    public void onClick(View view) {
+       boolean isChecked= ((Switch) view).isChecked();
+        if(isChecked){
+            registerNotification();
+        }else{
+            unRegisterNotification();
+        }
+    }
+
 }

@@ -77,7 +77,9 @@ public class OutLookApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Roboto-Regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );

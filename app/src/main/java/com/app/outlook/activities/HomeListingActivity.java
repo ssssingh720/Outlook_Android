@@ -59,7 +59,7 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
     public final static int LOOPS = 1;
     public final static int FIRST_PAGE = 0;//PAGES * LOOPS / 2;
     public final static float BIG_SCALE = 1.0f;
-    public final static float SMALL_SCALE = 0.7f;
+    public final static float SMALL_SCALE = 0.75f;
     public final static float DIFF_SCALE = BIG_SCALE - SMALL_SCALE;
 
     @Bind(R.id.carouselView)
@@ -165,7 +165,7 @@ magazineListFragment.setOnThemeChangeListener(this);
     @OnClick(R.id.gridView)
     public void onGridviewClick() {
         changeFragment(magazineGridFragment);
-
+        titleImg.setImageResource(R.drawable.outlook_group);
         carouselView.setSelected(false);
         gridView.setSelected(true);
     }
@@ -177,7 +177,13 @@ magazineListFragment.setOnThemeChangeListener(this);
 
     @OnClick(R.id.carouselView)
     public void onCarouselViewClick() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(IntentConstants.MAGAZINE_LIST, magazineList);
+        magazineListFragment = new HomeListFragment();
+        magazineListFragment.setArguments(bundle);
+        magazineListFragment.setOnThemeChangeListener(this);
         changeFragment(magazineListFragment);
+        titleImg.setImageResource(R.drawable.outlook_english);
 
         carouselView.setSelected(true);
         gridView.setSelected(false);
@@ -300,7 +306,7 @@ magazineListFragment.setOnThemeChangeListener(this);
                titleImg.setImageResource(R.drawable.outlook_english);
                break;
            case 1:
-               titleImg.setImageResource(R.drawable.icon_outlook_group);
+               titleImg.setImageResource(R.drawable.outlook_money);
                break;
            case 2:
                titleImg.setImageResource(R.drawable.outlook_business);
@@ -312,10 +318,10 @@ magazineListFragment.setOnThemeChangeListener(this);
                titleImg.setImageResource(R.drawable.outlook_traveller);
                break;
            case 5:
-               titleImg.setImageResource(R.drawable.right_time);
+               titleImg.setImageResource(R.drawable.outlook_traveller_gateway);
                break;
            default:
-               titleImg.setImageResource(R.drawable.icon_outlook_group);
+               titleImg.setImageResource(R.drawable.outlook_group);
                break;
        }
     }

@@ -45,7 +45,8 @@
     <string name="facebook_app_id">1067468666675015</string>
     <string name="play_services_error_fmt">Google Play Services Error: %i</string>
     <string name="no_internet">Please check your internet connectivity.</string>
-    <string name="logout_msg">Logging out will delete all stored content (including saved back issues). All deleted content can be re-downloaded. Do you wish to continue?</string>
+    <string name="subscriber_content_msg">To enjoy all the articles in this issue, please do subscribe or buy single issue.</string>
+    <string name="logout_msg">Logging out will delete all stored content (including earlier saved issues).\n\nDo you wish to continue?</string>
     <string name="empty_email_password">Please enter a valid email and password.</string>
     <string name="email_to_get_password">Please enter the registered email to recover the password.</string>
 <string name="gcm_send_message">Token retrieved and sent to server! You can now use gcmsender to
@@ -55,7 +56,11 @@
         sending the fetched token to the server or subscribing to the PubSub topic. Please try
         running the sample again.</string>
     <string name="gcm_default_sender_id">105915870368</string>
-    <string name="email_hint">Enter Email / UserName</string>
+    <string name="email_hint">Enter Email</string>
+    <string name="password_hint">Enter Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="username_hint">Enter UserName </string>
+
  <string name="subscribe_to_outlook">Subscribe to Outlook</string>
     <string name="subscribe_to_get_full_access">Subscribe to get full access to Outlook magazines</string>
     <string name="yes">YES</string>

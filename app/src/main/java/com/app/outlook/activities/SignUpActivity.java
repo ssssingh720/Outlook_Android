@@ -17,6 +17,7 @@ import com.app.outlook.Utils.Util;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.OutlookConstants;
+import com.app.outlook.modal.ResponseError;
 import com.app.outlook.modal.UserProfileVo;
 
 import net.steamcrafted.loadtoast.LoadToast;
@@ -61,7 +62,7 @@ public class SignUpActivity extends AppBaseActivity {
         display.getSize(size);
         int width = size.x;
         loadToast = new LoadToast(this);
-        loadToast.setText("Loading...");
+        loadToast.setText("Registering...");
         int height = size.y;
         loadToast.setTranslationY(height / 2);
         loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
@@ -89,9 +90,12 @@ public class SignUpActivity extends AppBaseActivity {
             return;
         }
 
-        if (is_password_empty ) {
-            mSignUpPassword.setError("Enter Password");
+        if (is_password_empty) {
+            mSignUpPassword.setError("Enter Password.");
             return;
+        }
+        if (password.length()<6 || password.length()>12){
+            mSignUpPassword.setError("Password must be a minimum of 6 and maximum of 12 characters long.");
         }
         if (is_confirmPassword_empty) {
             mSignUpConfirmPassword.setError("Enter Confirm Password");
@@ -138,9 +142,20 @@ public class SignUpActivity extends AppBaseActivity {
     @Override
     public void onErrorResponse(VolleyError error, String apiMethod) {
         super.onErrorResponse(error, apiMethod);
+        loadToast.error();
+        ResponseError rError = null;
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
             mButtonSignUp.setEnabled(true);
-            showToast("Could not register.Please try later.");
+            if (error.getClass().equals(ResponseError.class)) {
+                rError = (ResponseError) error;
+            }
+            if (rError.getErrorMessage().equals("true")) {
+                showToast("Given Email is already registered with us.");
+            }
+            else{
+                showToast("Could not register.Please try later.");
+            }
+
         }
     }
 

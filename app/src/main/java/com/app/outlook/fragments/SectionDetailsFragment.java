@@ -2,6 +2,7 @@ package com.app.outlook.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.Picture;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,14 +58,6 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
     ObservableScrollView scrollView;
     @Bind(R.id.webview)
     WebView webview;
-    @Bind(R.id.fontSeekBar)
-    SeekBar fontSeekBar;
-    @Bind(R.id.fontSizeBtn)
-    ImageView fontSizeBtn;
-    @Bind(R.id.nightModeBtn)
-    ToggleButton nightModeBtn;
-    @Bind(R.id.bottomReltvLyt)
-    LinearLayout bottomLayout;
     @Bind(R.id.parentArticleLyt)
     RelativeLayout parentArticleLyt;
     @Bind(R.id.bottomGoUp)
@@ -83,6 +77,8 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
         String title=getArguments().getString(IntentConstants.WEB_CONTENT_TITLE, "");
         String magazineTitle=getArguments().getString(IntentConstants.MAGAZINE_NAME, "");
         String issueID=getArguments().getString(IntentConstants.ISSUE_ID, "");
+        boolean isNightMode=getArguments().getBoolean(IntentConstants.IS_NIGHT_MODE, false);
+        int textSize=getArguments().getInt(IntentConstants.WEB_TEXT,0);
         final String mimeType = "text/html";
         final String encoding = "utf-8";
 
@@ -106,10 +102,13 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (mOnScrollChangeListener != null) {
+                    mOnScrollChangeListener.onTouchView();
+                }
                 return true;
             }
         });
-
+/*
         fontSize = webview.getSettings().getTextZoom();
         fontSeekBar.setProgress(50);
         fontSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -130,10 +129,31 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
             }
         });
         scrollView.setScrollViewCallbacks(this);
+       webview.setPictureListener(new WebView.PictureListener() {
+           @Override
+           public void onNewPicture(WebView webView, Picture picture) {
+               int childHeight = containerLyt.getHeight();
+               boolean isScrollable = scrollView.getHeight() < childHeight + scrollView.getPaddingTop() + scrollView.getPaddingBottom();
+               if (isScrollable) {
+                   bottomGoUp.setVisibility(View.VISIBLE);
+                   webView.setPictureListener(null);
+               }
+
+           }
+       });*/
         OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle, issueID + "")
                 .setLabel(title)
                 .build());
-        bottomGoUp.setVisibility(View.VISIBLE);
+
+        parentArticleLyt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (mOnScrollChangeListener != null) {
+                    mOnScrollChangeListener.onTouchView();
+                }
+                return true;
+            }
+        });
         return mView;
     }
 
@@ -178,7 +198,7 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
     public void goUp() {
         scrollView.smoothScrollTo(0, 0);
     }
-    @OnClick(R.id.nightModeBtn)
+   /* @OnClick(R.id.nightModeBtn)
     public void manageNightMode(){
         toggleNightMode(nightModeBtn.isChecked());
     }
@@ -190,7 +210,7 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
         else{
             fontSeekBar.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
     /*@OnClick(R.id.fontSizeBtn)
     public void manageFontSeekBar(){
         if (fontSeekBar.getVisibility()==View.VISIBLE){
@@ -222,7 +242,7 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
         {
             mOnScrollChangeListener.onScrollChange(scrollState);
         }
-        if (scrollState == ScrollState.UP) {
+      /*  if (scrollState == ScrollState.UP) {
             if (bottomLayout.getVisibility()==View.VISIBLE || fontSeekBar.getVisibility()==View.VISIBLE) {
                 bottomLayout.setVisibility(View.GONE);
                 bottomLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
@@ -235,13 +255,14 @@ public class SectionDetailsFragment extends BaseFragment implements ObservableSc
                 bottomLayout.setVisibility(View.VISIBLE);
 
             }
-        }
+        }*/
 
     }
 
     public interface OnScrollChangeListener
     {
         public void onScrollChange(ScrollState scrollState);
+        public void onTouchView();
     }
     public void onAttachFragment(Fragment fragment)
     {

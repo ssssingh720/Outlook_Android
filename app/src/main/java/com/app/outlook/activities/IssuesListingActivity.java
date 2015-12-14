@@ -1,5 +1,7 @@
 package com.app.outlook.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -7,12 +9,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -101,6 +107,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     Button btnSubscribe;
     @Bind(R.id.calendarImg)
     ImageView calendarImg;
+    @Bind(R.id.reset_filter)
+    ImageView resetFilter;
     private ArrayList<String> subscriptionIDList;
     private ArrayList<SkuDetails> skuList;
     private ArrayList<Purchase> purchaseList;
@@ -108,6 +116,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String selectedSubcription;
     @Bind(R.id.emptyView)
     TextView emptyView;
+    Account[] accounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +129,9 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         magazineTitle = getIntent().getStringExtra(IntentConstants.MAGAZINE_NAME);
 
         subscriptionIDList = getIntent().getStringArrayListExtra(IntentConstants.SUBSCRIPTION_IDS);
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        accounts = accountManager.getAccounts();
+        Log.i("account",accounts.length+"");
         mHelper = new IabHelper(this, OutlookConstants.base64EncodedPublicKey);
 
         mHelper.startSetup(new
@@ -133,15 +145,39 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                                            }
                                        }
                                    });
-        setLogo();
+        setLogo(Integer.parseInt(magazineType));
         initView();
 
     }
 
-    private void setLogo() {
-        if(Integer.parseInt(magazineType) == 0){
-            toolbar_title.setImageResource(R.drawable.logo_outlook);
+    private void setLogo(int logoType) {
+        switch (logoType){
+            case 0:
+                toolbar_title.setImageResource(R.drawable.outlook_english);
+                break;
+            case 1:
+                toolbar_title.setImageResource(R.drawable.outlook_money);
+                break;
+            case 2:
+                toolbar_title.setImageResource(R.drawable.outlook_business);
+                break;
+            case 3:
+                toolbar_title.setImageResource(R.drawable.outlook_hindi);
+                break;
+            case 4:
+                toolbar_title.setImageResource(R.drawable.outlook_traveller);
+                break;
+            case 5:
+                toolbar_title.setImageResource(R.drawable.outlook_traveller_gateway);
+                break;
+            default:
+                toolbar_title.setImageResource(R.drawable.outlook_group);
+                break;
         }
+
+        /*if(Integer.parseInt(magazineType) == 0){
+            toolbar_title.setImageResource(R.drawable.logo_outlook);
+        }*/
     }
 /*
 * sku sent to play store*/
@@ -200,6 +236,10 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             else{
                 fetchIssueList();}
         }
+if (OutlookConstants.IS_BOUGHT){
+    OutlookConstants.IS_BOUGHT=false;
+    fetchIssueList();
+}
 
         if(adapter != null){
             adapter.notifyDataSetChanged();
@@ -225,11 +265,21 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         }, null);
         myp.show();
     }
+    @OnClick(R.id.reset_filter)
+    public void resetFilter(){
+        getDefaultList();
+
+    }
 
     @OnClick(R.id.btnSubscribe)
     public void onSubscribeCLicked(){
         if (Util.isNetworkOnline(this)) {
-            queryList();
+            if (accounts.length>0) {
+                queryList();
+            }
+            else{
+                showToast("Login to your Gmail account to proceed.");
+            }
         }
         else{
             showToast(getResources().getString(R.string.no_internet));
@@ -292,7 +342,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
                 btnSubscribe.setVisibility(View.GONE);
 
         }
-        if (adapter.getCount()==0){
+        if (adapter!=null && adapter.getCount()==0){
             emptyView.setVisibility(View.VISIBLE);
                 btnSubscribe.setVisibility(View.GONE);
 
@@ -339,7 +389,8 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             params.put(FeedParams.MONTH,month+"");
             params.put(FeedParams.TOKEN,SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
 
-        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false,null);
+        placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false, null);
+            resetFilter.setVisibility(View.VISIBLE);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -353,6 +404,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
             params.put(FeedParams.TOKEN,SharedPrefManager.getInstance().getSharedDataString(FeedParams.TOKEN));
             params.put(FeedParams.USER_ID,SharedPrefManager.getInstance().getSharedDataString(FeedParams.USER_ID));
             placeRequest(APIMethods.ISSUE_LIST, YearListVo.class, params, false, null);
+            resetFilter.setVisibility(View.GONE);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -449,7 +501,7 @@ if (yearListVo!=null) {
                 Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
             }
 
-        }else if(apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)){
+        }/*else if(apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)){
 
             PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
 
@@ -460,7 +512,7 @@ if (yearListVo!=null) {
                 Toast.makeText(IssuesListingActivity.this,"Purchase failed.Please retry.",Toast.LENGTH_SHORT).show();
             }
 
-        }
+        }*/
         else if (apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)) {
 
             PurchaseResponseVo purchaseResponseVo = (PurchaseResponseVo) response;
@@ -517,7 +569,12 @@ if (yearListVo!=null) {
         selectedPosition = position;
 //            Toast.makeText(IssuesListingActivity.this,"onBuyClicked",Toast.LENGTH_SHORT).show();
         Magazine magazine = adapter.getItem(position);
-        buyManagedProductClick(magazine.getSku(), magazine.getPostId());
+        if (accounts.length>0) {
+            buyManagedProductClick(magazine.getSku(), magazine.getPostId());
+        }
+        else{
+            showToast("Login to your Gmail account to proceed.");
+        }
     }
 
     @Override
@@ -526,12 +583,15 @@ if (yearListVo!=null) {
 
         Magazine magazine = adapter.getItem(position);
         String postID = magazine.getPostId();
+        String skuID =magazine.getSku();
         if (postID != null) {
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
             intent.putExtra(IntentConstants.MAGAZINE_NAME,magazineTitle);
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            intent.putExtra(IntentConstants.SKU_ID, skuID + "");
             intent.putExtra(IntentConstants.IS_PURCHASED, true);
+            intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
             startActivity(intent);
             OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle,postID)
                     .setLabel("Data")
@@ -560,12 +620,15 @@ else{
     private void goToMagazineDetailsFromCoverImg(int position) {
         Magazine magazine = adapter.getItem(position);
         String postID = magazine.getPostId();
+        String skuID =magazine.getSku();
         if (postID != null) {
             Intent intent = new Intent(getBaseContext(), MagazineDetailsActivity.class);
             intent.putExtra(IntentConstants.MAGAZINE_ID, magazineType + "");
             intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineTitle);
             intent.putExtra(IntentConstants.ISSUE_ID, postID + "");
+            intent.putExtra(IntentConstants.SKU_ID, skuID + "");
             intent.putExtra(IntentConstants.IS_PURCHASED, magazine.isPurchased());
+            intent.putExtra(IntentConstants.SUBSCRIPTION_IDS,subscriptionIDList);
             startActivity(intent);
             OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle, postID)
                     .setLabel("Data")
@@ -750,9 +813,12 @@ else{
 
     private void promptUserToBuySubscription() {
 
-        final Dialog subscriptionDialog = new Dialog(IssuesListingActivity.this);
+        final Dialog subscriptionDialog = new Dialog(this);
+        subscriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         subscriptionDialog.setContentView(R.layout.dialog_subcription);
-
+        subscriptionDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        subscriptionDialog.getWindow().setGravity(Gravity.CENTER);
+        subscriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btn1 = (Button) subscriptionDialog.findViewById(R.id.btn_annual);
         btn1.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
         btn1.setOnClickListener(new View.OnClickListener() {

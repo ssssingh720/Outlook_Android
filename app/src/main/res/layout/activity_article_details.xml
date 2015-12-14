@@ -28,24 +28,30 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:paddingRight="10dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/icon_back" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_toEndOf="@+id/toolbar_back"
+                android:layout_toRightOf="@+id/toolbar_back"
+                android:layout_toLeftOf="@+id/shareArticle"
+                >
 
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@+id/toolbar_back"
-                android:layout_toRightOf="@+id/toolbar_back"
                 android:gravity="center"
-                android:paddingLeft="10dp"
+                android:padding="10dp"
                 android:text="title"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="@dimen/text_extra_big" />
 
             <ImageView
@@ -54,28 +60,20 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/toolbar_title"
                 android:layout_toRightOf="@+id/toolbar_title"
+                android:layout_gravity="bottom"
                 android:paddingTop="15dp"
                 android:src="@drawable/icon_dropdown" />
-
+            </RelativeLayout>
             <ImageView
-                android:id="@+id/textSizeImg"
+                android:id="@+id/shareArticle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:padding="10dp"
-                android:src="@drawable/text_resize"
-                android:visibility="gone"
-                />
-            <ToggleButton
-                android:id="@+id/nightMode1"
-                style="@style/ToggleButton_default"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:checked="false"
-                android:layout_toLeftOf="@+id/textSizeImg"
-                android:layout_centerVertical="true"
-                android:visibility="gone"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/icon_share"
+                android:visibility="visible"
                 />
 
         </RelativeLayout>

@@ -60,11 +60,11 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
 //        overridePendingTransition(R.anim.slide_enter, R.anim.slide_exit);
 //    }
 
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
     /**
      * Place GET API requet with params
      *
@@ -73,7 +73,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
      * @param params
      */
     public void placeRequest(String methodName, Class clazz, HashMap<String, String> params) {
-        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, false,null);
+        RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, false, null);
     }
 
     /**
@@ -141,6 +141,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
 
     }
+
 
     /**
      * method to get GCM token*/

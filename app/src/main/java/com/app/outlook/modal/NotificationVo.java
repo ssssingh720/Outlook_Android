@@ -4,6 +4,7 @@ package com.app.outlook.modal;
  * Created by Madhumita on 25-11-2015.
  */
 public class NotificationVo {
+    private String msg;
     private String quarterly_sku;
 
     private String annual_sku;
@@ -64,9 +65,17 @@ public class NotificationVo {
         this.magazine_title = magazine_title;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [quarterly_sku = "+quarterly_sku+", annual_sku = "+annual_sku+", magazine_id = "+magazine_id+", half_yearly_sku = "+half_yearly_sku+", magazine_title = "+magazine_title+"]";
+        return "ClassPojo [msg="+msg+", quarterly_sku = "+quarterly_sku+", annual_sku = "+annual_sku+", magazine_id = "+magazine_id+", half_yearly_sku = "+half_yearly_sku+", magazine_title = "+magazine_title+"]";
     }
 }

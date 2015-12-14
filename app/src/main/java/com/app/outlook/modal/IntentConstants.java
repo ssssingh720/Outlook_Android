@@ -17,6 +17,7 @@ public class IntentConstants {
     public static String ADMIN_MAGAZINE = "admin_magazine";
     public static String MAGAZINE_ID = "magazine_id";
     public static String ISSUE_ID = "issue_id";
+    public static String SKU_ID = "sku_id";
     public static String TYPE = "type";
     public static String MAGAZINE_NAME = "magazine_name";
     public static String POSITION = "position";
@@ -27,5 +28,7 @@ public class IntentConstants {
     public static String CARD_POSITION = "card_position";
     public static String SUBSCRIPTION_IDS = "card_position";
     public static String IS_PURCHASED = "is_purchased";
+    public static String IS_NIGHT_MODE = "is_night_mode";
+    public static String WEB_TEXT = "web_text";
 
 }

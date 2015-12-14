@@ -2,17 +2,28 @@ package com.app.outlook.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Picture;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -20,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
@@ -35,9 +48,13 @@ import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineDetailsVo;
 import com.app.outlook.modal.OutlookConstants;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+
+import net.steamcrafted.loadtoast.LoadToast;
 
 import java.io.File;
 import java.io.StringReader;
@@ -51,7 +68,7 @@ import butterknife.OnClick;
 /**
  * Created by srajendrakumar on 22/09/15.
  */
-public class SectionDetailsHolderFragment extends BaseFragment implements SectionDetailsFragment.OnScrollChangeListener{
+public class SectionDetailsHolderFragment extends BaseFragment{
 
     private int mSelectedItem;
     @Bind(R.id.container)
@@ -67,9 +84,13 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
     ListView cardsList;
     @Bind(R.id.articleOptionView)
     CardView articleOptionView;
+    @Bind(R.id.fontSeekBar)
+    SeekBar fontSeekBar;
+    int seekProgress=0;
+    private LoadToast loadToast;
     private ArrayList<CategoryOptionsVo> categoryOptions = new ArrayList<CategoryOptionsVo>();
     private String categoryType;
-    private boolean isPurchased;
+    private boolean isPurchased,isNightMode,onSeekChange;
     private OnArticleModeChangeListener articleModeChangeListener;
 
     public OnArticleModeChangeListener getArticleModeChangeListener() {
@@ -121,6 +142,12 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
     @OnClick(R.id.container)
     public void onContainerClick(){
         onSelectionClick();
+    }
+    @OnClick(R.id.articleHolderLyt)
+    public void hidePopUp(){
+        if(articleOptionView.getVisibility() == View.VISIBLE){
+            articleOptionView.setVisibility(View.GONE);
+        }
     }
 
     private void loadContents() {
@@ -196,9 +223,42 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
 
 
     private void initView() {
-        mAdapter = new PageAdapter(getChildFragmentManager(), mContents,mTitles);
+        loadToast = new LoadToast(getActivity());
+        WindowManager wm = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        loadToast.setTranslationY(height / 2);
+        loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE)
+                .setProgressColor(getResources().getColor(R.color.app_red));
+        fontSeekBar.setProgress(50);
+        fontSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //onSeekChange=true;
+                seekProgress=progress;
+               // mAdapter.notifyDataSetChanged();
+                //loadToast.show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                onSeekChange=true;
+                mAdapter.notifyDataSetChanged();
+                loadToast.show();
+                seekBar.setVisibility(View.GONE);
+            }
+        });
+        mAdapter = new PageAdapter(getActivity(),mContents,mTitles);
         mPager.setAdapter(mAdapter);
-        mPager.setPageTransformer(true, new DepthPageTransformer());
+       // mPager.setPageTransformer(true, new DepthPageTransformer());
         mPager.setCurrentItem(currentCardPosition);
         cardsList.setSelection(currentCardPosition);
         cardsList.setItemChecked(currentCardPosition, true);
@@ -209,6 +269,7 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
                 currentCardPosition = position;
                 cardsList.setSelection(currentCardPosition);
                 cardsList.setItemChecked(currentCardPosition, true);
+                showToolBar();
 
             }
 
@@ -225,41 +286,140 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
     }
 
 
-    private class PageAdapter extends FragmentStatePagerAdapter {
+    private class PageAdapter extends PagerAdapter {
 
         ArrayList<String> mContents;
         ArrayList<String> mTitles;
-        SectionDetailsFragment fragment;
+        private LayoutInflater l_inflate;
 
-        public PageAdapter(FragmentManager fragmentManager, ArrayList<String> contents,ArrayList<String> titles) {
-            super(fragmentManager);
+
+        public PageAdapter(Activity activity,ArrayList<String> contents,ArrayList<String> titles) {
+           // super(fragmentManager);
             mContents = contents;
             mTitles=titles;
+            l_inflate = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            final Bundle bundle = new Bundle();
-            bundle.putInt(IntentConstants.POSITION, position);
-            bundle.putString(IntentConstants.WEB_CONTENT, mContents.get(position));
-            bundle.putString(IntentConstants.WEB_CONTENT_TITLE, mTitles.get(position));
-            bundle.putString(IntentConstants.MAGAZINE_NAME,magazineTitle);
-            bundle.putString(IntentConstants.ISSUE_ID,issueID);
-            fragment = new SectionDetailsFragment();
-            fragment.setArguments(bundle);
-            return fragment;
-        }
 
         @Override
         public int getCount() {
             return mContents.size();
         }
-        public void pagerNightMode(boolean mode){
-            fragment.toggleNightMode(mode);
-        }
-        public void pagerTextResize(){
-            //fragment.manageFontSeekBar();
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
 
+            View itemView = l_inflate.inflate(R.layout.fragment_section_details, container, false);
+            WebView webview = (WebView) itemView.findViewById(R.id.webview);
+           final View bottomGoUp=(View) itemView.findViewById(R.id.bottomGoUp);
+            final ObservableScrollView scrollView=(ObservableScrollView) itemView.findViewById(R.id.scrollView);
+           final RelativeLayout containerLyt=(RelativeLayout) itemView.findViewById(R.id.containerLyt);
+                    RelativeLayout parentArticleLyt=(RelativeLayout) itemView.findViewById(R.id.parentArticleLyt);
+
+            webview.setTag(position);
+            final String mimeType = "text/html";
+            final String encoding = "utf-8";
+            webview.getSettings().setDefaultTextEncodingName(encoding);
+            webview.getSettings().setLoadWithOverviewMode(true);
+            webview.getSettings().setUseWideViewPort(true);
+            webview.getSettings().setSupportZoom(false);
+            webview.getSettings().setUseWideViewPort(false);
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setDomStorageEnabled(true);
+            webview.setFocusableInTouchMode(false);
+            webview.setFocusable(false);
+            webview.getSettings().setLoadsImagesAutomatically(true);
+            webview.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    hidePopUp();
+                    return false;
+                }
+            });
+            //webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (Util.isNetworkOnline(getActivity())) {
+                webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+            } else {
+                webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            }
+           String htmlContent = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\\/>" +mContents.get(position);
+            if(SharedPrefManager.getInstance().getSharedDataBoolean(IntentConstants.IS_NIGHT_MODE)) {
+               String rawHTML = "<HTML>" +
+                        "<head>" + "<style  type=\"text/css\">" +
+                        "*{color: #ffffff !important;" +
+                        "background-color: #000000;}" +
+                        "</style></head>" +
+                        "<body>" + htmlContent + "</body>" +
+                        "</HTML>";
+                webview.loadData(rawHTML, "text/html; charset=UTF-8", null);
+                parentArticleLyt.setBackgroundColor(getActivity().getResources().getColor(R.color.black));
+            }else {
+                webview.loadDataWithBaseURL(null, htmlContent, mimeType, encoding, null);
+                //webview.loadData(htmlContent, "text/html; charset=UTF-8", null);
+                parentArticleLyt.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            }
+            int fontSize = webview.getSettings().getTextZoom();
+            if (onSeekChange) {
+                int zoom = (fontSize * seekProgress) / 50;
+                webview.getSettings().setTextZoom(zoom);
+            }
+            webview.setPictureListener(new WebView.PictureListener() {
+                @Override
+                public void onNewPicture(WebView webView, Picture picture) {
+                    loadToast.success();
+                    int childHeight = containerLyt.getHeight();
+                    boolean isScrollable = scrollView.getHeight() < childHeight + scrollView.getPaddingTop() + scrollView.getPaddingBottom();
+                    if (isScrollable) {
+                        bottomGoUp.setVisibility(View.VISIBLE);
+                        webView.setPictureListener(null);
+                    }
+
+                }
+            });
+            bottomGoUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scrollView.smoothScrollTo(0, 0);
+                    showToolBar();
+
+                }
+            });
+            scrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
+                @Override
+                public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+
+                }
+
+                @Override
+                public void onDownMotionEvent() {
+
+                }
+
+                @Override
+                public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+                    onScrollChange(scrollState);
+                }
+            });
+                    ((ViewPager) container).addView(itemView, 0);
+
+            //new HttpCallAsync2().execute(position);
+            return itemView;
+        }
+
+
+        @Override
+        public void destroyItem(View view, int arg1, Object arg2) {
+            ((ViewPager) view).removeView((View) arg2);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object arg1) {
+            return view == ((View) arg1);
+        }
+        @Override
+        public int getItemPosition(Object object) {
+            //don't return POSITION_NONE, avoid fragment recreation.
+            return POSITION_NONE;
         }
     }
 
@@ -304,18 +464,38 @@ public class SectionDetailsHolderFragment extends BaseFragment implements Sectio
     }
 
     public void onNightMode(boolean mode) {
-        showToast("Night Mode");
-        ((SectionDetailsFragment)mAdapter.getItem(currentCardPosition)).toggleNightMode(mode);
+        isNightMode=mode;
+        mAdapter.notifyDataSetChanged();
+        loadToast.show();
+        //mAdapter.toggleNightMode(currentCardPosition,mode);
+      // mAdapter.fragment.toggleNightMode(mode);
+        //mPager.getCurrentItem();
+     //   ((SectionDetailsFragment)mAdapter.getItem(currentCardPosition)).toggleNightMode(mode);
+      //  mAdapter.getItem(currentCardPosition).toggleNightMode(mode);
+
+
     }
 
     public void onResizeText() {
-        showToast("Text Mode");
-        mAdapter.pagerTextResize();
+        if(fontSeekBar.getVisibility() == View.VISIBLE){
+            fontSeekBar.setVisibility(View.GONE);
+        }else{
+            fontSeekBar.setVisibility(View.VISIBLE);
+        }
     }
 
-    @Override
+
     public void onScrollChange(ScrollState scrollState) {
         ((ArticleDetailsActivity)getActivity()).hideShowToolBar(scrollState);
-
+        if(fontSeekBar.getVisibility() == View.VISIBLE){
+            fontSeekBar.setVisibility(View.GONE);
+        }
     }
+public void showToolBar(){
+    ((ArticleDetailsActivity)getActivity()).initToolBar();
+}
+
+   public String getShareData(){
+       return  mTitles.get(mPager.getCurrentItem());
+   }
 }

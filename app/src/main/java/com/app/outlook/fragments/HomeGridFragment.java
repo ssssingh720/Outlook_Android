@@ -62,7 +62,7 @@ public class HomeGridFragment extends BaseFragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SharedPrefManager prefManager = SharedPrefManager.getInstance();
+               /* SharedPrefManager prefManager = SharedPrefManager.getInstance();
                 prefManager.init(getActivity());
                 switch (position){
                     case 0:
@@ -86,7 +86,7 @@ public class HomeGridFragment extends BaseFragment {
                     default:
                         prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                         break;
-                }
+                }*/
                /* if (position == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                 } else if (position == 1) {

@@ -126,6 +126,8 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
         // Set margin for pages as a negative number, so a part of next and
         // previous pages will be showed
         mViewPager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.view_pager_padding));
+        mViewPager.setHorizontalFadingEdgeEnabled(true);
+        mViewPager.setFadingEdgeLength(130);
 //        mViewPager.setPadding(40, 0, 40, 0);
 //        mViewPager.setClipToPadding(false);
 //        mViewPager.setClipChildren(false);
@@ -138,7 +140,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
 
     @Override
     public void onPageClicked() {
-        SharedPrefManager prefManager = SharedPrefManager.getInstance();
+       /* SharedPrefManager prefManager = SharedPrefManager.getInstance();
                 prefManager.init(getActivity());
         switch (currentPosition){
             case 0:
@@ -162,7 +164,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
             default:
                 prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                 break;
-        }
+        }*/
                 /*if (currentPosition == 0) {
                     prefManager.setSharedData(OutlookConstants.theme, R.style.AppTheme);
                 } else if (currentPosition == 1) {
@@ -175,6 +177,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
         subscriptionIDList.add("outlook.two");
+        subscriptionIDList.add("outlook.five");
         subscriptionIDList.add("outlook.five");
         Intent intent = new Intent(getActivity(),IssuesListingActivity.class);
         intent.putExtra(IntentConstants.TYPE,magazineList.get(currentPosition).getId());

@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/profile_more"
+        android:icon="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+        android:orderInCategory="100"
+        android:title="More"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_fontSize"
+                app:showAsAction="always"
+                android:title="Font size" />
+            <item
+                android:id="@+id/menu_nightMode"
+                app:showAsAction="always"
+                android:title="Night mode" />
+
+        </menu>
+    </item>
+</menu>

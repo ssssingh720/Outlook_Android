@@ -72,9 +72,10 @@ public class HomeListItemFragment extends BaseFragment {
         int width = size.x;
 
         CardView.LayoutParams lp = (CardView.LayoutParams) magazineImg.getLayoutParams();
-        lp.width = (width - Util.dipToPixels(getActivity(), 150));
+        lp.width = (width - Util.dipToPixels(getActivity(), 160));
         lp.height = (int) ((width - Util.dipToPixels(getActivity(), 150)) * 1.4);
         magazineImg.setLayoutParams(lp);
+        Log.i("imagewidth",lp.width+":"+ width +":"+ Util.dipToPixels(getActivity(), 160));
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
         if (!magazine.getCoverImage().isEmpty())

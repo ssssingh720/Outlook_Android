@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,6 +60,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.dateTxt = (TextView) row.findViewById(R.id.dateTxt);
             holder.headerLyt = (LinearLayout) row.findViewById(R.id.headerLyt);
             holder.mainLyt = (LinearLayout) row.findViewById(R.id.mainLyt);
+            holder.lytMagazine=(RelativeLayout)row.findViewById(R.id.LytMagazine);
             holder.buyBtn = (Button) row.findViewById(R.id.buyBtn);
             holder.draftText=(TextView) row.findViewById(R.id.draftText);
             if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
@@ -70,10 +72,10 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder = (ViewHolder) row.getTag();
         }
 
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.image.getLayoutParams();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) holder.lytMagazine.getLayoutParams();
         lp.width = ((width - Util.dipToPixels(context, 45)) / 2);
         lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
-        holder.image.setLayoutParams(lp);
+        holder.lytMagazine.setLayoutParams(lp);
 
         Magazine magazine = data.get(position);
         if (magazine.getPostId() == null) {
@@ -151,6 +153,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         TextView dateTxt,draftText;
         ImageView image;
         LinearLayout headerLyt, mainLyt;
+        RelativeLayout lytMagazine;
         Button buyBtn;
     }
 }
