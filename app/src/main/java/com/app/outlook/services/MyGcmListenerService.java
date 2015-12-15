@@ -20,6 +20,7 @@ package com.app.outlook.services;
         import android.content.Intent;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
+        import android.graphics.Color;
         import android.media.RingtoneManager;
         import android.net.Uri;
         import android.os.Bundle;
@@ -55,7 +56,8 @@ public class MyGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
-
+        SharedPrefManager prefManager = SharedPrefManager.getInstance();
+        prefManager.init(this);
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
@@ -94,17 +96,18 @@ public class MyGcmListenerService extends GcmListenerService {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, ++NotificationCount /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
         Bitmap bitmapLarge = BitmapFactory.decodeResource(getResources(),
-                R.drawable.app_icon);
+                R.drawable.outlook_notify);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.app_icon)
+                .setSmallIcon(R.drawable.outlook_notification_icon)
+                .setColor(Color.RED)
+                .setLights(0xFF0000FF, 500, 500)
                 .setContentTitle("OutLook")
                 .setContentText(notification.getMsg())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setLargeIcon(bitmapLarge)
                 .setPriority(1)
                 .setContentIntent(pendingIntent);
 

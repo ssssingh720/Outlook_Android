@@ -12,6 +12,7 @@ public class IntentConstants {
     public final static String WEB_CONTENT = "web_content";
     public final static String WEB_CONTENT_TITLE = "web_content_title";
     public final static String NOTIFICATION_MESSAGE = "notify_message";
+    public final static String WEB_IMAGE_LINK = "image_link";
     public static String MAGAZINE_LIST = "magazineList";
     public static String MAGAZINE = "magazine";
     public static String ADMIN_MAGAZINE = "admin_magazine";

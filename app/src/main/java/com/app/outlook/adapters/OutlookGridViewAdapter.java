@@ -73,7 +73,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         }
 
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) holder.lytMagazine.getLayoutParams();
-        lp.width = ((width - Util.dipToPixels(context, 45)) / 2);
+        lp.width = ((width - Util.dipToPixels(context, 65)) / 2);
         lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
         holder.lytMagazine.setLayoutParams(lp);
 
@@ -85,7 +85,7 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             holder.mainLyt.setVisibility(View.VISIBLE);
             if (magazine.getImage()!=null && !magazine.getImage().isEmpty()) {
                 Picasso.with(context).load(magazine.getImage())
-                        .placeholder(R.color.cool_grey).fit().centerCrop().into(holder.image);
+                        .placeholder(R.color.cool_grey).into(holder.image);
             }
             else{
                 holder.image.setImageResource(R.color.cool_grey);

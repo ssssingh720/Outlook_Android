@@ -57,10 +57,10 @@ public class HomeGridViewAdapter extends ArrayAdapter<MagazineTypeVo> {
         }
 
         CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width - Util.dipToPixels(context, 55)) / 2);
+        lp.width = ((width - Util.dipToPixels(context, 65)) / 2);
         lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
         holder.image.setLayoutParams(lp);
-        Log.i("width",width+":"+Util.dipToPixels(context, 55)+":"+lp.width);
+        Log.i("width",width+":"+Util.dipToPixels(context, 65)+":"+lp.width);
 
         MagazineTypeVo magazine = data.get(position);
         holder.imageTitle.setText(magazine.getName().toUpperCase());

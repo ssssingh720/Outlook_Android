@@ -215,7 +215,8 @@ public class RegularsListingFragment extends BaseFragment implements View.OnClic
         String tag = (String) v.getTag();
         String[] tags = tag.split(",");
         if(tags[2].equals("Type1")) {
-            openSectionDetails(mSelectedCategory,mSelectedSubCategory, Integer.parseInt(tags[1]));
+            Log.i("Type2:regular",Integer.parseInt(tags[0])+"::"+Integer.parseInt(tags[1])+":::"+mSelectedCategory+":::"+mSelectedSubCategory);
+            openSectionDetails(mSelectedCategory, mSelectedSubCategory, Integer.parseInt(tags[1]));
         }
 
     }

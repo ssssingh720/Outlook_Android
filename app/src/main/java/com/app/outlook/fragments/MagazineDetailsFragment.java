@@ -166,7 +166,6 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     }
 
     private void fetchMagazineDetails() {
-
         String filePath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
         try {
             Log.d(TAG, "Magazine Path::" + filePath);
@@ -181,9 +180,10 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                 loadToast.success();
 
                 loadCards();
-            } else if (Util.isNetworkOnline(getActivity())) {
+            }
+            else if (Util.isNetworkOnline(getActivity())) {
                 task = new DownloadFileFromURL();
-                task.execute(magazineID,issueID);
+                task.execute(magazineID, issueID);
             }
             else if (!file.exists() && !Util.isNetworkOnline(getActivity())){
                 emptyViewMagazine.setVisibility(View.VISIBLE);
@@ -341,9 +341,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         if (tag!=null) {
             String[] tags = tag.split(",");
             if (tags[2].equals("Type1")) {
+                Log.i("Type1",Integer.parseInt(tags[0])+"::"+Integer.parseInt(tags[1]));
                 openSectionDetails(Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
             } else {
-                RegularsListingFragment fragment = new RegularsListingFragment();
+                Log.i("Type2",Integer.parseInt(tags[0])+"::"+Integer.parseInt(tags[1]));
+                openRegularDetails(Integer.parseInt(tags[0]), Integer.parseInt(tags[1]));
+                /*RegularsListingFragment fragment = new RegularsListingFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(IntentConstants.MAGAZINE_ID, magazineID);
                 bundle.putString(IntentConstants.MAGAZINE_NAME, magazineID);
@@ -357,13 +360,27 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
                     bundle.putString(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
                 }
                 fragment.setArguments(bundle);
-                ((MagazineDetailsActivity) getActivity()).changeFragment(fragment, true);
+                ((MagazineDetailsActivity) getActivity()).changeFragment(fragment, true);*/
             }
         }
         else{
             showPopUpSubscribe();
         }
 
+    }
+
+    private void openRegularDetails(int categoryPosition, int subCategoryPosition) {
+        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+        intent.putExtra(IntentConstants.CATEGORY_POSITION, categoryPosition);
+        intent.putExtra(IntentConstants.SUB_CATEGORY_POSITION, subCategoryPosition);
+        intent.putExtra(IntentConstants.CARD_POSITION, 0);
+        intent.putExtra(IntentConstants.ISSUE_ID, issueID);
+        intent.putExtra(IntentConstants.MAGAZINE_ID, magazineID);
+        intent.putExtra(IntentConstants.CATEGORY_TYPE, "Type2");
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && getArguments().getString(IntentConstants.ADMIN_MAGAZINE)!=null){
+            intent.putExtra(IntentConstants.ADMIN_MAGAZINE, getArguments().getString(IntentConstants.ADMIN_MAGAZINE));
+        }
+        startActivity(intent);
     }
 
     private void showPopUpSubscribe() {

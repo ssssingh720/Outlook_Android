@@ -124,7 +124,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
-
+Util.clearNotification(this);
         magazineType = getIntent().getStringExtra(IntentConstants.TYPE);
         magazineTitle = getIntent().getStringExtra(IntentConstants.MAGAZINE_NAME);
 

@@ -2,6 +2,7 @@ package com.app.outlook.Utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -1017,6 +1018,29 @@ public class Util {
             return false;
         }
         return true;
+    }
+
+    public static void clearNotification(Activity context) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+    }
+    public static boolean deleteDirectory(File path) {
+        if( path.exists() ) {
+            File[] files = path.listFiles();
+            if (files == null) {
+                return true;
+            }
+            for(int i=0; i<files.length; i++) {
+                if(files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                }
+                else {
+                    files[i].delete();
+                }
+            }
+        }
+        return( path.delete() );
     }
 
 }

@@ -2,6 +2,7 @@ package com.app.outlook.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Picture;
 import android.graphics.Point;
@@ -24,6 +25,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -36,9 +38,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
+import com.app.outlook.activities.ImageViewActivity;
+import com.app.outlook.activities.MagazineDetailsActivity;
 import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.Card;
@@ -51,6 +56,7 @@ import com.app.outlook.modal.OutlookConstants;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -270,7 +276,6 @@ public class SectionDetailsHolderFragment extends BaseFragment{
                 cardsList.setSelection(currentCardPosition);
                 cardsList.setItemChecked(currentCardPosition, true);
                 showToolBar();
-
             }
 
             @Override
@@ -307,7 +312,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
             return mContents.size();
         }
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, final int position) {
 
             View itemView = l_inflate.inflate(R.layout.fragment_section_details, container, false);
             WebView webview = (WebView) itemView.findViewById(R.id.webview);
@@ -333,7 +338,23 @@ public class SectionDetailsHolderFragment extends BaseFragment{
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     hidePopUp();
+                   // WebView.HitTestResult hr = ((WebView) view).getHitTestResult();
+
+                   // Log.i("WEBCLICK", "getExtra = " + hr.getExtra() + "\t\t Type=" + hr.getType());
                     return false;
+                }
+            });
+            webview.setWebViewClient(new WebViewClient() {
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    Log.i("imgUrl",url);
+                    Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+                    intent.putExtra(IntentConstants.WEB_IMAGE_LINK, url + "");
+                    intent.putExtra(IntentConstants.WEB_CONTENT_TITLE, mTitles.get(position) + "");
+                    startActivity(intent);
+                   // view.loadUrl(url);
+                    return true;
                 }
             });
             //webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -403,6 +424,9 @@ public class SectionDetailsHolderFragment extends BaseFragment{
                     ((ViewPager) container).addView(itemView, 0);
 
             //new HttpCallAsync2().execute(position);
+            OutLookApplication.tracker().send(new HitBuilders.EventBuilder(magazineTitle, issueID + "")
+                    .setLabel(mTitles.get(position))
+                    .build());
             return itemView;
         }
 

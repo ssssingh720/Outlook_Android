@@ -31,6 +31,7 @@ import com.app.outlook.modal.UserProfileVo;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -103,8 +104,16 @@ public void onLogOutClick(){
             @Override
             public void onClick(View view) {
                 if (Util.isNetworkOnline(SettingsActivity.this)) {
+                    String root =getCacheDir().getAbsolutePath();
+                    String filePath = root + File.separator + "Outlook/";
                     unRegisterNotification();
                     SharedPrefManager.getInstance().clearPreference();
+                    Util.clearNotification(SettingsActivity.this);
+                    File file = new File(filePath);
+                    if (file.exists()) {
+                        Log.i("filelogoutpath",filePath);
+                        Util.deleteDirectory(file);
+                    }
                     NotificationManager notificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancelAll();
