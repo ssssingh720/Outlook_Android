@@ -1,0 +1,9 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="button_subscription_height">40dp</dimen>
+    <dimen name="button_buy_height">30dp</dimen>
+    <dimen name="button_buy_width">85dp</dimen>
+    <dimen name="shadow_padding">2dp</dimen>
+    <dimen name="button_height">37dp</dimen>
+
+</resources>

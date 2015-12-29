@@ -101,6 +101,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private boolean isPurchased;
     private String adminMagazine;
     Dialog subscribePopUp;
+    int downloadCount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,18 +173,20 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             File file = new File(filePath);
             if (file.exists()) {
                 String response = Util.readJsonFromSDCard(filePath);
-                System.out.println("Response::" + response);
+                System.out.println("Response::" +"from File:: " +response);
                 JsonReader reader = new JsonReader(new StringReader(response));
                 reader.setLenient(true);
                 detailsObject = new Gson().fromJson(reader, MagazineDetailsVo.class);
                 mCategories = detailsObject.getCategories();
                 loadToast.success();
-
                 loadCards();
             }
             else if (Util.isNetworkOnline(getActivity())) {
-                task = new DownloadFileFromURL();
-                task.execute(magazineID, issueID);
+                downloadCount++;
+                if (downloadCount<=1) {
+                    task = new DownloadFileFromURL();
+                    task.execute(magazineID, issueID);
+                }
             }
             else if (!file.exists() && !Util.isNetworkOnline(getActivity())){
                 emptyViewMagazine.setVisibility(View.VISIBLE);
@@ -195,12 +198,17 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             e.printStackTrace();
             loadToast.error();
             stopDownload(filePath);
-            showToast("Something went wrong. Try again later");
         }
     }
 
     private void loadCards() {
         //sectionBreifListLyt
+        if (mCategories.size()>0) {
+            emptyViewMagazine.setVisibility(View.GONE);
+        }
+        else{
+            emptyViewMagazine.setVisibility(View.VISIBLE);
+        }
         LayoutInflater inflater = getActivity().getLayoutInflater();
         for(int i=0;i<mCategories.size();i++) {
             View title = inflater.inflate(R.layout.template_eight, null);
@@ -493,6 +501,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             super.onPostExecute(s);
             try {
                 if (SessionManager.isDownloadFailed(getActivity())) {
+                    Log.i("download failed","onpostexecute");
                     stopDownload(mPath);
                 }
                 fetchMagazineDetails();
@@ -507,18 +516,27 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         imageFile.delete();
         SessionManager.setDownloadFailed(getActivity(), false);
         loadToast.error();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Do something after 1 second
-                        getActivity().finish();
-                    }
-                }, 1000);
-            }
-        });
+        if (downloadCount==1 && Util.isNetworkOnline(getActivity())){
+            task = new DownloadFileFromURL();
+            task.execute(magazineID, issueID);
+        }
+        else{
+            showToast("Couldn't download the Issue.Please try later after checking your internet connectivity.");
+getActivity().finish();
+            /*getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Do something after 1 second
+                            getActivity().finish();
+                        }
+                    }, 1000);
+                }
+            });*/
+        }
+
     }
 
     @Override

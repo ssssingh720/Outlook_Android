@@ -63,7 +63,7 @@
            android:layout_below="@+id/sign_up_text"
             android:gravity="center"
             android:layout_above="@+id/signup_button">
-    <EditText
+    <!--<EditText
         android:id="@+id/signup_user_name"
         style="@style/EditTextView_Default"
         android:layout_width="match_parent"
@@ -73,7 +73,7 @@
         android:textColor="@color/black"
         android:layout_marginTop="5dp"
         android:textColorHint="@color/black"
-        android:textSize="13sp" />
+        android:textSize="13sp" />-->
     <EditText
         android:id="@+id/signup_email"
         style="@style/EditTextView_Default"
@@ -114,7 +114,7 @@
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/button_height"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
 

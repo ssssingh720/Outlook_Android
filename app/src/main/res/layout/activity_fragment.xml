@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cool_grey"
@@ -78,8 +79,9 @@
             android:background="?attr/colorPrimary"
             android:layout_marginRight="1dp"
             android:text="SUBSCRIBE"
+            fontPath="fonts/Roboto-Bold.ttf"
+            android:textStyle="bold"
             android:textColor="@color/white"
-            android:textSize="18sp"
             />
         <Button
             android:id="@+id/buy_single_issue"
@@ -89,10 +91,9 @@
             android:layout_marginLeft="1dp"
             android:background="?attr/colorPrimary"
             android:text="BUY THIS ISSUE"
+            fontPath="fonts/Roboto-Bold.ttf"
+            android:textStyle="bold"
             android:textColor="@color/white"
-            android:textSize="18sp"
-
-
             />
     </LinearLayout>
 

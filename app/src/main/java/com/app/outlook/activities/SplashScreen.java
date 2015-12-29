@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.app.outlook.R;
+import com.app.outlook.Utils.Util;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.OutlookConstants;
 import com.daimajia.easing.BaseEasingMethod;
@@ -34,6 +35,7 @@ public class SplashScreen extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
+        Util.showHashKey(this);
         //InMobiSdk.setLogLevel(InMobiSdk.LogLevel.DEBUG);
         //InMobiSdk.init(this, "13f1d04fc3c345dfad00744e45d5dd06");
         init();

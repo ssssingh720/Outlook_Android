@@ -45,6 +45,9 @@ public class FeedParams {
     public static final String YEAR = "issue_year";
     public static final String MONTH = "month";
     public static final String PROFILE_NAME = "profile_name";
+    public static final String FB_ID = "fb_id";
+    public static final String GMAIL_ID = "g_id";
+    public static final String GMAIL_IMAGE = "g_image";
     public static final String TOKEN = "token";
     public static final String USER_ID = "user_id";
     public static final String PROFILE_EMAIL = "profile_email";

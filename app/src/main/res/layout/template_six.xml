@@ -121,7 +121,7 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginBottom="@dimen/card_margin_bottom"
         android:layout_marginLeft="@dimen/card_margin"
         android:layout_marginRight="@dimen/card_margin"
         android:background="@color/white_transparent"

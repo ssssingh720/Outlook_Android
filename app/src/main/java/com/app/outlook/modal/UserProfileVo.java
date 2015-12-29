@@ -10,6 +10,12 @@ public class UserProfileVo extends BaseVO {
     @SerializedName("user_id")
     @Expose
     private String userId;
+    @SerializedName("id")
+    @Expose
+    private String fbId;
+    @SerializedName("gid")
+    @Expose
+    private String gId;
     @SerializedName("token")
     @Expose
     private String token;
@@ -23,6 +29,9 @@ public class UserProfileVo extends BaseVO {
     @SerializedName("admin")
     @Expose
     private boolean admin;
+    @SerializedName("gmail_photo")
+    @Expose
+    private String gmailPhoto;
 
     public String getName() {
         return name;
@@ -62,5 +71,29 @@ public class UserProfileVo extends BaseVO {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getFbId() {
+        return fbId;
+    }
+
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
+    }
+
+    public String getgId() {
+        return gId;
+    }
+
+    public void setgId(String gId) {
+        this.gId = gId;
+    }
+
+    public String getGmailPhoto() {
+        return gmailPhoto;
+    }
+
+    public void setGmailPhoto(String gmailPhoto) {
+        this.gmailPhoto = gmailPhoto;
     }
 }

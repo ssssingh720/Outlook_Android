@@ -98,6 +98,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private int selectedPosition = -1;
     private Purchase purchaseInfo;
     private DownloadFileFromURL task;
+    int downloadCount;
     private int currentYear;
     private int currentMonth;
     private YearListVo yearListVo;
@@ -296,6 +297,7 @@ if (OutlookConstants.IS_BOUGHT){
                 loadGridView(filePath);
 
             } else if (Util.isNetworkOnline(IssuesListingActivity.this)) {
+                downloadCount++;
                 task = new DownloadFileFromURL(issueYear);
                 task.execute(magazineType+"",issueYear);
             }
@@ -316,9 +318,16 @@ if (OutlookConstants.IS_BOUGHT){
         System.out.println("Response::" + response);
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.setLenient(true);
+try {
+    yearListVo = new Gson().fromJson(reader, YearListVo.class);
+    setGridAdapter(yearListVo);
+}
+catch (Exception e){
+    emptyView.setVisibility(View.VISIBLE);
+    btnSubscribe.setVisibility(View.GONE);
+}
 
-        yearListVo = new Gson().fromJson(reader, YearListVo.class);
-         setGridAdapter(yearListVo);
+
     }
 
     private void setGridAdapter(YearListVo yearListVo) {
@@ -728,7 +737,13 @@ else{
         imageFile.delete();
         SessionManager.setDownloadFailed(IssuesListingActivity.this, false);
         loadToast.error();
-        finish();
+        if (downloadCount==1 && Util.isNetworkOnline(IssuesListingActivity.this)) {
+            task = new DownloadFileFromURL(issueYear);
+            task.execute(magazineType+"",issueYear);
+        }
+        else{
+            finish();
+        }
     }
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -805,8 +820,8 @@ else{
                 }
             });
         } else {
-            showToast("Not able to retreive data. Please try again.");
-            this.finish();
+            showToast("Not able to retrieve data. Please try again.");
+           // this.finish();
         }
 
     }

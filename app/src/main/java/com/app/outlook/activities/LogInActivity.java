@@ -4,11 +4,16 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -48,12 +53,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
@@ -106,16 +115,15 @@ public class LogInActivity extends AppBaseActivity implements
             mProfileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                    Log.v("facebook - profile", profile2.getFirstName());
+                 //   Log.v("facebook - profile", profile2.getFirstName());
                     profile = profile2;
-                    if (accessToken != null) {
-                        requestFacebookData(facebook_token);
-                    }
-
                     mProfileTracker.stopTracking();
                 }
             };
             mProfileTracker.startTracking();
+            if (facebook_token != null) {
+                requestFacebookData(facebook_token);
+            }
         }
 
         @Override
@@ -134,6 +142,7 @@ public class LogInActivity extends AppBaseActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
        /* // [START restore_saved_instance_state]
         if (savedInstanceState != null) {
             mIsResolving = savedInstanceState.getBoolean(KEY_IS_RESOLVING);
@@ -297,7 +306,7 @@ public class LogInActivity extends AppBaseActivity implements
                 .build();
 
         //FaceBookSDK Initialize
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        //FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, callback);
     }
@@ -340,12 +349,26 @@ public class LogInActivity extends AppBaseActivity implements
             Log.d(TAG, "requestGoogleData Person Name::" + personName);
             String email = acct.getEmail();
             Log.d(TAG, "email::" + email);
+            Log.d(TAG,"image::"+acct.getPhotoUrl());
+            Uri uri=acct.getPhotoUrl();
             UserProfileVo profile = new UserProfileVo();
             profile.setName(personName);
             profile.setEmail(email);
+            profile.setgId(acct.getId());
+            if (acct.getPhotoUrl()!=null) {
+             profile.setGmailPhoto(acct.getPhotoUrl().toString());
+            }
+            /*if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+                Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+                if (person.hasImage()) {
+                    Person.Image image = person.getImage();
+                    Log.i("g+image",person.getImage().getUrl());
+                }
+            }*/
             saveSocialLogInData(profile);
             afterSocialLogIn(personName, email);
         } else {
+            Log.d("GLogIn", result.getStatus()+"");
             showToast("Unable to Login through g+");
         }
     }
@@ -420,6 +443,7 @@ public class LogInActivity extends AppBaseActivity implements
                         UserProfileVo profile = new UserProfileVo();
                         profile.setName(json.getString("name"));
                         profile.setEmail(json.getString("email"));
+                        profile.setFbId(json.getString("id"));
                         saveSocialLogInData(profile);
                         afterSocialLogIn(profile.getName(), profile.getEmail());
                     }
@@ -537,6 +561,9 @@ public class LogInActivity extends AppBaseActivity implements
     private void saveSocialLogInData(UserProfileVo profileVo) {
         SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_EMAIL, profileVo.getEmail());
         SharedPrefManager.getInstance().setSharedData(FeedParams.PROFILE_NAME, profileVo.getName());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.FB_ID, profileVo.getFbId());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.GMAIL_ID, profileVo.getgId());
+        SharedPrefManager.getInstance().setSharedData(FeedParams.GMAIL_IMAGE, profileVo.getGmailPhoto());
     }
     private void saveTokenAfterSocialLogIn(UserProfileVo profile){
         SharedPrefManager.getInstance().setSharedData(FeedParams.TOKEN, profile.getToken());

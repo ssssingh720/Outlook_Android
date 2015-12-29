@@ -160,7 +160,11 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             />
         <activity android:name=".activities.ImageViewActivity"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c4791172f10db990e965dc69e5489ec09da8aa9c" />
     </application>
 
 </manifest>

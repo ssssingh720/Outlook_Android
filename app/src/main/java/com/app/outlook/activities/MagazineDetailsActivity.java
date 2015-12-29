@@ -79,6 +79,8 @@ public class MagazineDetailsActivity extends AppBaseActivity implements IabHelpe
     ImageView shareImg;
     @Bind(R.id.bottomLyt)
     LinearLayout bottomLyt;
+    @Bind(R.id.subscribe_issue)
+            Button subscribeIssue;
     CallbackManager callbackManager;
     IInAppBillingService mService;
     IabHelper mHelper;
@@ -136,7 +138,7 @@ public class MagazineDetailsActivity extends AppBaseActivity implements IabHelpe
             bottomLyt.setVisibility(View.GONE);
         }
         else{
-            shareImg.setVisibility(View.GONE);
+            shareImg.setVisibility(View.VISIBLE);
             bottomLyt.setVisibility(View.VISIBLE);
         }
     }
@@ -192,7 +194,12 @@ public class MagazineDetailsActivity extends AppBaseActivity implements IabHelpe
     }
 @OnClick(R.id.shareImg)
 public void onShareIssue(){
-    postToFacebook();
+    if (Util.isNetworkOnline(MagazineDetailsActivity.this)) {
+        postToFacebook();
+    }
+    else{
+        showToast(getResources().getString(R.string.no_internet));
+    }
 }
 
     public void openSectionDetails(int categoryPosition, int cardPosition) {
@@ -210,6 +217,7 @@ public void onShareIssue(){
         if (Util.isNetworkOnline(this)) {
             if (accounts.length>0) {
             queryList();
+                subscribeIssue.setEnabled(false);
         }
         else{
             showToast("Login to your Gmail account to proceed.");
@@ -240,7 +248,6 @@ public void onShareIssue(){
         this.mContent = content;
     }
     private void postToFacebook() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         ShareDialog shareDialog = new ShareDialog(this);
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -261,10 +268,10 @@ public void onShareIssue(){
         });
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle("Hello Facebook")
+                    .setContentTitle("Check out the latest Outlook Group Magazines")
                     .setContentDescription(
-                            "The 'Hello Facebook' sample  showcases simple Facebook integration")
-                    .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
+                            "")
+                    .setContentUrl(Uri.parse("https://play.google.com/apps/testing/com.app.outlooktest"))
                     .build();
 
             shareDialog.show(linkContent);
@@ -337,6 +344,7 @@ public void onShareIssue(){
     /*
 * sku sent to play store*/
     private void queryList(){
+
         mHelper.queryInventoryAsync(true, subscriptionIDList,
                 this);
     }
@@ -398,8 +406,9 @@ public void onShareIssue(){
                 }
             });
         } else {
-            showToast("Not able to retreive data. Please try again.");
-            this.finish();
+            showToast("Not able to retrieve data. Please try again.");
+            subscribeIssue.setEnabled(true);
+            //this.finish();
         }
 
     }

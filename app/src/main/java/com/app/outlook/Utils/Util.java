@@ -7,6 +7,9 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -1041,6 +1044,19 @@ public class Util {
             }
         }
         return( path.delete() );
+    }
+    public static void showHashKey(Activity context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), PackageManager.GET_SIGNATURES); //Your            package name here
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.i("KeyHash:", android.util.Base64.encodeToString(md.digest(), android.util.Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+        } catch (NoSuchAlgorithmException e) {
+        }
     }
 
 }

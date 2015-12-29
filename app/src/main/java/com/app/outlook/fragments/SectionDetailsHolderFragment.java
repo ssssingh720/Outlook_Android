@@ -1,11 +1,14 @@
 package com.app.outlook.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Picture;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -16,10 +19,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -28,6 +33,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +49,7 @@ import com.app.outlook.R;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.activities.ArticleDetailsActivity;
 import com.app.outlook.activities.ImageViewActivity;
+import com.app.outlook.activities.LogInActivity;
 import com.app.outlook.activities.MagazineDetailsActivity;
 import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.manager.SharedPrefManager;
@@ -53,12 +60,15 @@ import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.Magazine;
 import com.app.outlook.modal.MagazineDetailsVo;
 import com.app.outlook.modal.OutlookConstants;
+import com.app.outlook.views.TouchImageView;
+import com.facebook.login.LoginManager;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.squareup.picasso.Picasso;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -85,6 +95,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
     private int currentPageCount = 0;
     ArrayList<String> mContents = new ArrayList<>();
     ArrayList<String> mTitles= new ArrayList<>();
+    ArrayList<String> mBuyLines= new ArrayList<>();
     private String issueID,magazineID,magazineTitle;
     @Bind(R.id.cardsList)
     ListView cardsList;
@@ -98,6 +109,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
     private String categoryType;
     private boolean isPurchased,isNightMode,onSeekChange;
     private OnArticleModeChangeListener articleModeChangeListener;
+    Dialog imagePopUp;
 
     public OnArticleModeChangeListener getArticleModeChangeListener() {
         return articleModeChangeListener;
@@ -197,6 +209,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
             if(isPurchased || cards.get(i).getPaid()) {
                 mContents.add(cards.get(i).getContent());
                 mTitles.add(cards.get(i).getTitle());
+                mBuyLines.add(cards.get(i).getByline());
                 CategoryOptionsVo obj = new CategoryOptionsVo();
                 obj.setTitle(cards.get(i).getTitle());
                 obj.setSubTitle(cards.get(i).getSubsection());
@@ -348,11 +361,12 @@ public class SectionDetailsHolderFragment extends BaseFragment{
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    Log.i("imgUrl",url);
-                    Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+                    Log.i("imgUrl", url);
+                    showImage(url);
+                   /* Intent intent = new Intent(getActivity(), ImageViewActivity.class);
                     intent.putExtra(IntentConstants.WEB_IMAGE_LINK, url + "");
                     intent.putExtra(IntentConstants.WEB_CONTENT_TITLE, mTitles.get(position) + "");
-                    startActivity(intent);
+                    startActivity(intent);*/
                    // view.loadUrl(url);
                     return true;
                 }
@@ -447,6 +461,20 @@ public class SectionDetailsHolderFragment extends BaseFragment{
         }
     }
 
+    private void showImage(String url) {
+        imagePopUp = new Dialog(getActivity(), R.style.DialogSlideAnimImg);
+        imagePopUp.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        imagePopUp.setContentView(R.layout.popup_zoom_image);
+        imagePopUp.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        imagePopUp.getWindow().setGravity(Gravity.CENTER);
+        imagePopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        LinearLayout layoutZoom=(LinearLayout)imagePopUp.findViewById(R.id.zoom_layout);
+        TouchImageView webImage=(TouchImageView)imagePopUp.findViewById(R.id.image_web);
+        Picasso.with(getActivity()).load(url).into(webImage);
+
+        imagePopUp.show();
+    }
+
     public class CategoryOptionAdapter extends ArrayAdapter<CategoryOptionsVo>{
 
         public CategoryOptionAdapter(Context context, int resource) {
@@ -515,6 +543,10 @@ public class SectionDetailsHolderFragment extends BaseFragment{
             fontSeekBar.setVisibility(View.GONE);
         }
     }
+
+    public String getShareBuyLine(){
+        return  mBuyLines.get(mPager.getCurrentItem());
+    }
 public void showToolBar(){
     ((ArticleDetailsActivity)getActivity()).initToolBar();
 }
@@ -522,4 +554,5 @@ public void showToolBar(){
    public String getShareData(){
        return  mTitles.get(mPager.getCurrentItem());
    }
+
 }

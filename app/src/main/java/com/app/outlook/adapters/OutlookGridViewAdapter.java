@@ -83,62 +83,61 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
             return row;
         } else {
             holder.mainLyt.setVisibility(View.VISIBLE);
-            if (magazine.getImage()!=null && !magazine.getImage().isEmpty()) {
-                Picasso.with(context).load(magazine.getImage())
-                        .placeholder(R.color.cool_grey).into(holder.image);
+        }
+        if (magazine.getImage()!=null && !magazine.getImage().isEmpty()) {
+            Picasso.with(context).load(magazine.getImage())
+                    .placeholder(R.color.cool_grey).into(holder.image);
+        }
+        else{
+            holder.image.setImageResource(R.color.cool_grey);
+        }
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onIssueItemsClickListener.onCoverImageClicked(position);
             }
-            else{
-                holder.image.setImageResource(R.color.cool_grey);
-            }
-            holder.image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onIssueItemsClickListener.onCoverImageClicked(position);
-                }
-            });
+        });
 
-            holder.dateTxt.setText(magazine.getIssueDate());
-            if (position > 0 && data.get(position - 1).getIssueDate() != null
-                    && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())) {
-                holder.dateTxt.setText("");
-            }
-            if (position > 1 && data.get(position - 1).getIssueDate() != null
-                    && data.get(position - 2).getIssueDate() != null
-                    && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())
-                    && data.get(position - 2).getIssueDate().equals(magazine.getIssueDate())) {
-                holder.headerLyt.setVisibility(View.GONE);
+        holder.dateTxt.setText(magazine.getIssueDate());
+        if (position > 0 && data.get(position - 1).getIssueDate() != null
+                && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())) {
+            holder.dateTxt.setText("");
+        }
+        if (position > 1 && data.get(position - 1).getIssueDate() != null
+                && data.get(position - 2).getIssueDate() != null
+                && data.get(position - 1).getIssueDate().equals(magazine.getIssueDate())
+                && data.get(position - 2).getIssueDate().equals(magazine.getIssueDate())) {
+            holder.headerLyt.setVisibility(View.GONE);
+        } else {
+            holder.headerLyt.setVisibility(View.VISIBLE);
+        }
+
+
+        if (magazine.isPurchased()) {
+            if (Util.checkFiledownLoaded(context.getCacheDir().getAbsolutePath(), magazineID, magazine.getPostId())) {
+                holder.buyBtn.setVisibility(View.GONE);
             } else {
-                holder.headerLyt.setVisibility(View.VISIBLE);
-            }
-
-
-            if (magazine.isPurchased()) {
-                if (Util.checkFiledownLoaded(context.getCacheDir().getAbsolutePath(), magazineID, magazine.getPostId())) {
-                    holder.buyBtn.setVisibility(View.GONE);
-                } else {
-                    holder.buyBtn.setText(context.getResources().getString(R.string.download));
-                    holder.buyBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onIssueItemsClickListener.onDownloadClicked(position);
-                        }
-                    });
-                }
-            } else {
-                holder.buyBtn.setText(context.getResources().getString(R.string.buy));
-                holder.buyBtn.setVisibility(View.VISIBLE);
+                holder.buyBtn.setText(context.getResources().getString(R.string.download));
                 holder.buyBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onIssueItemsClickListener.onBuyClicked(position);
+                        onIssueItemsClickListener.onDownloadClicked(position);
                     }
                 });
             }
-            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
-                holder.buyBtn.setVisibility(View.GONE);
-                holder.draftText.setVisibility(View.VISIBLE);
-            }
-
+        } else {
+            holder.buyBtn.setText(context.getResources().getString(R.string.buy));
+            holder.buyBtn.setVisibility(View.VISIBLE);
+            holder.buyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onIssueItemsClickListener.onBuyClicked(position);
+                }
+            });
+        }
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+            holder.buyBtn.setVisibility(View.GONE);
+            holder.draftText.setVisibility(View.VISIBLE);
         }
 
         return row;

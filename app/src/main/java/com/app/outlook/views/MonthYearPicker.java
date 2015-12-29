@@ -71,7 +71,7 @@ public class MonthYearPicker {
         final Calendar instance = Calendar.getInstance();
         currentMonth = instance.get(Calendar.MONTH);
         currentYear = instance.get(Calendar.YEAR);
-        MAX_YEAR = currentYear;
+        MAX_YEAR = currentYear+1;
 
         if (selectedMonth > 11 || selectedMonth < -1) {
             selectedMonth = currentMonth;

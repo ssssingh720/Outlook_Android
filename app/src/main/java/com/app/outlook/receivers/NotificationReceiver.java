@@ -23,6 +23,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        SharedPrefManager prefManager = SharedPrefManager.getInstance();
+        prefManager.init(context);
         notificationMessage = intent.getExtras().getString(IntentConstants.NOTIFICATION_MESSAGE);
         NotificationVo notification = new Gson().fromJson(notificationMessage, NotificationVo.class);
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_LOGGEDIN)) {

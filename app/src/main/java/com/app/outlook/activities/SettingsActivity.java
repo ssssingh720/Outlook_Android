@@ -16,18 +16,22 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.app.outlook.R;
 import com.app.outlook.Utils.APIMethods;
+import com.app.outlook.Utils.CircleTransform;
 import com.app.outlook.Utils.Util;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.FeedParams;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.OutlookConstants;
 import com.app.outlook.modal.UserProfileVo;
+import com.facebook.login.LoginManager;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -44,11 +48,14 @@ import butterknife.OnClick;
 public class SettingsActivity extends AppBaseActivity implements View.OnClickListener{
     @Bind(R.id.switch_notification)
     Switch switchNotification;
-    @Bind(R.id.username_settings)
-    TextView userName;
+    /*@Bind(R.id.username_settings)
+    TextView userName;*/
     @Bind(R.id.email_settings)
     TextView emailId;
+    @Bind(R.id.imageView_user)
+    ImageView userImage;
     Dialog logoutPopUp;
+    String fbId,gId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +65,26 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
         setTheme(theme);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+        fbId=SharedPrefManager.getInstance().getSharedDataString(FeedParams.FB_ID);
+        gId=SharedPrefManager.getInstance().getSharedDataString(FeedParams.GMAIL_ID);
+        if (fbId!=null && !fbId.isEmpty()){
+            String url=APIMethods.FB_URL+fbId+APIMethods.FB_IMAGE;
+            Picasso.with(this).load(url).transform(new CircleTransform()).placeholder(R.drawable.icon_user).error(R.drawable.icon_user).into(userImage);
+        }
+        else if(gId!=null && !gId.isEmpty()){
+            String uri= SharedPrefManager.getInstance().getSharedDataString(FeedParams.GMAIL_IMAGE);
+            Picasso.with(this).load(uri).transform(new CircleTransform()).placeholder(R.drawable.icon_user).error(R.drawable.icon_user).into(userImage);
+        }
+        else{
+            userImage.setImageResource(R.drawable.icon_user);
+        }
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION)){
             switchNotification.setChecked(true);
         }
         else{
             switchNotification.setChecked(false);
         }
-        userName.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_NAME));
+        //userName.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_NAME));
         emailId.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL));
         switchNotification.setOnClickListener(this);
     }
@@ -113,6 +133,9 @@ public void onLogOutClick(){
                     if (file.exists()) {
                         Log.i("filelogoutpath",filePath);
                         Util.deleteDirectory(file);
+                    }
+                    if (fbId!=null && !fbId.isEmpty()) {
+                        LoginManager.getInstance().logOut();
                     }
                     NotificationManager notificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -200,7 +223,7 @@ public void onLogOutClick(){
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             switchNotification.setChecked(false);
         }
-        if (apiMethod.equalsIgnoreCase(APIMethods.UN_REGISTER_NOTIFICATION)){
+        if (apiMethod.equalsIgnoreCase(APIMethods.UN_REGISTER_NOTIFICATION)) {
             switchNotification.setChecked(true);
         }
     }

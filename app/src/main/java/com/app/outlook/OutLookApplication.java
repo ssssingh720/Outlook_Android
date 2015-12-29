@@ -1,12 +1,16 @@
 package com.app.outlook;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
@@ -77,13 +81,15 @@ public class OutLookApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
+        Fabric.with(this, new Crashlytics());
+
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Roboto-Regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
         Picasso.Builder builder = new Picasso.Builder(this);
         LruCache picassoCache = new LruCache(this);
         builder.memoryCache(picassoCache);
@@ -113,4 +119,9 @@ public class OutLookApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }*/
+   @Override
+   protected void attachBaseContext(Context base) {
+       super.attachBaseContext(base);
+       MultiDex.install(this);
+   }
 }

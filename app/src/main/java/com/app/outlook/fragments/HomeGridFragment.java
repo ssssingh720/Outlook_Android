@@ -3,6 +3,8 @@ package com.app.outlook.fragments;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,25 @@ public class HomeGridFragment extends BaseFragment {
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
+        /*DisplayMetrics matrics = getResources().getDisplayMetrics();
+        Log.i("widthMatrixyz",matrics.xdpi+":"+matrics.ydpi);
 
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.i("widthMatrix",metrics.densityDpi+"" );
+
+        switch(metrics.densityDpi){
+            case DisplayMetrics.DENSITY_LOW:
+                Log.i("widthMatrixLow",metrics.xdpi+"::"+metrics.ydpi);
+                break;
+            case DisplayMetrics.DENSITY_MEDIUM:
+                Log.i("widthMatrixMEDIUM",metrics.xdpi+"::"+metrics.ydpi);
+                break;
+            case DisplayMetrics.DENSITY_HIGH:
+                Log.i("widthMatrixHIgh",metrics.xdpi+"::"+metrics.ydpi);
+                break;
+        }*/
         magazineList = (ArrayList<MagazineTypeVo>) getArguments().getSerializable(IntentConstants.MAGAZINE_LIST);
         adapter = new HomeGridViewAdapter(getActivity(), R.layout.grid_item_layout, magazineList, width);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(adapter);

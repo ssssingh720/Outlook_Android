@@ -44,7 +44,7 @@
             <Button
                 android:id="@+id/logoutNoBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/button_height"
                 android:background="@color/black"
                 android:text="No"
                 android:layout_weight="0.5"
@@ -56,7 +56,7 @@
             <Button
                 android:id="@+id/logoutYesBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/button_height"
                 android:background="@color/black"
                 android:layout_weight="0.5"
 android:layout_marginLeft="5dp"

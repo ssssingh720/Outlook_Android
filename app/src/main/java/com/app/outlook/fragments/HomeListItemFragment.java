@@ -63,8 +63,8 @@ public class HomeListItemFragment extends BaseFragment {
     }
 
     private void init() {
-        float restingElevation = cardView.getCardElevation(); // keep the default
-        Log.d("elevation", "resting: " + restingElevation);
+        //float restingElevation = cardView.getCardElevation(); // keep the default
+        //Log.d("elevation", "resting: " + restingElevation);
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -72,10 +72,12 @@ public class HomeListItemFragment extends BaseFragment {
         int width = size.x;
 
         CardView.LayoutParams lp = (CardView.LayoutParams) magazineImg.getLayoutParams();
+        //lp.width = (width - Util.dipToPixels(getActivity(), 170));
+        //lp.height = (int) ((width - Util.dipToPixels(getActivity(), 140)) * 1.4);
         lp.width = (width - Util.dipToPixels(getActivity(), 160));
-        lp.height = (int) ((width - Util.dipToPixels(getActivity(), 150)) * 1.4);
+       // lp.height = (int) (((width - Util.dipToPixels(getActivity(), 2))/2) * 1.4);
         magazineImg.setLayoutParams(lp);
-        Log.i("imagewidth",lp.width+":"+ width +":"+ Util.dipToPixels(getActivity(), 160));
+      //  Log.i("imagewidth",lp.width+":"+ lp.height +":"+ ((width - Util.dipToPixels(getActivity(), 15))/2));
 
         magazine = new Gson().fromJson(getArguments().getString(IntentConstants.MAGAZINE), MagazineTypeVo.class);
         if (!magazine.getCoverImage().isEmpty())
@@ -84,7 +86,6 @@ public class HomeListItemFragment extends BaseFragment {
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onPageClickedListener.onPageClicked();
             }
         });

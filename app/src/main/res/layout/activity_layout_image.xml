@@ -53,14 +53,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black_transparent"
+    android:background="#cc000000"
     android:gravity="center">
     <com.app.outlook.views.TouchImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/image_web"
-        android:background="@color/black_transparent"
         android:src="@drawable/dummy_11"
+        android:layout_gravity="center"
         android:scaleType="center"
         />
 </LinearLayout>

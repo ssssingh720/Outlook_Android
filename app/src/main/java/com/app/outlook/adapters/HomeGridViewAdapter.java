@@ -2,6 +2,7 @@ package com.app.outlook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,10 +58,18 @@ public class HomeGridViewAdapter extends ArrayAdapter<MagazineTypeVo> {
         }
 
         CardView.LayoutParams lp = (CardView.LayoutParams) holder.image.getLayoutParams();
-        lp.width = ((width - Util.dipToPixels(context, 65)) / 2);
-        lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
+        if (Build.VERSION.SDK_INT<21){
+            lp.width = ((width - Util.dipToPixels(context, 75)) / 2);
+            lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
+            Log.i("width",width+":"+Util.dipToPixels(context, 75)+":"+lp.width);
+        }
+        else {
+            lp.width = ((width - Util.dipToPixels(context, 65)) / 2);
+            lp.height = (int) (((width - Util.dipToPixels(context, 45)) / 2) * 1.4);
+            Log.i("width",width+":"+Util.dipToPixels(context, 65)+":"+lp.width);
+        }
         holder.image.setLayoutParams(lp);
-        Log.i("width",width+":"+Util.dipToPixels(context, 65)+":"+lp.width);
+
 
         MagazineTypeVo magazine = data.get(position);
         holder.imageTitle.setText(magazine.getName().toUpperCase());

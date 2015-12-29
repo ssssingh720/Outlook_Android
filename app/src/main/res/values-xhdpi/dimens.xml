@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="view_pager_padding">-125dp</dimen>
+    <dimen name="view_pager_padding">-135dp</dimen>
 
     <dimen name="text_extra_big">20sp</dimen>
     <dimen name="text_big">16sp</dimen>
@@ -13,5 +13,10 @@
     <dimen name="magazine_cover_height">300dp</dimen>
     <dimen name="magazine_sub_header_width">120dp</dimen>
     <dimen name="magazine_header_width">150dp</dimen>
+    <dimen name="button_subscription_height">45dp</dimen>
+    <dimen name="button_buy_height">35dp</dimen>
+    <dimen name="button_buy_width">90dp</dimen>
+    <dimen name="shadow_padding">3dp</dimen>
+    <dimen name="button_height">40dp</dimen>
 
 </resources>

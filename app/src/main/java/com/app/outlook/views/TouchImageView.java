@@ -133,6 +133,7 @@ public class TouchImageView extends ImageView {
         setState(State.NONE);
         onDrawReady = false;
         super.setOnTouchListener(new PrivateOnTouchListener());
+
     }
 
     @Override
@@ -559,10 +560,12 @@ public class TouchImageView extends ImageView {
         //
         float scaleX = (float) viewWidth / drawableWidth;
         float scaleY = (float) viewHeight / drawableHeight;
+        Log.i("scaleXY",scaleX+":"+scaleY);
 
         switch (mScaleType) {
             case CENTER:
-                scaleX = scaleY = 1;
+                scaleX=(scaleY+scaleX)/2;
+                scaleY=scaleX;
                 break;
 
             case CENTER_CROP:

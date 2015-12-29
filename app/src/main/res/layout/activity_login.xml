@@ -42,7 +42,7 @@
             <RelativeLayout
                 android:id="@+id/facebook_button"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginBottom="5dp"
@@ -87,7 +87,7 @@
             <RelativeLayout
                 android:id="@+id/google_button"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/button_height"
 
                 android:layout_alignEnd="@+id/facebook_button"
                 android:layout_alignLeft="@+id/facebook_button"
@@ -162,7 +162,7 @@
             <Button
                 android:id="@+id/email_button"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="90dp"
@@ -269,7 +269,7 @@
                     android:inputType="textPassword"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:textSize="13sp" />
             </RelativeLayout>
 

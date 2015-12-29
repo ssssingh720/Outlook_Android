@@ -39,8 +39,8 @@ public class SignUpActivity extends AppBaseActivity {
     EditText mSignUpPassword;
     @Bind(R.id.signup_confirm_password)
     EditText mSignUpConfirmPassword;
-    @Bind(R.id.signup_user_name)
-    EditText mSignUpUserName;
+    /*@Bind(R.id.signup_user_name)
+    EditText mSignUpUserName;*/
     @Bind(R.id.signup_button)
     Button mButtonSignUp;
     private LoadToast loadToast;
@@ -71,20 +71,20 @@ public class SignUpActivity extends AppBaseActivity {
 
     @OnClick(R.id.signup_button)
     void doRegistration() {
-        String userName = mSignUpUserName.getText().toString();
+        //String userName = mSignUpUserName.getText().toString();
         String password = mSignUpPassword.getText().toString();
         String confirmPassword = mSignUpConfirmPassword.getText().toString();
         String email = mSignUpEmail.getText().toString();
 
-        boolean is_userName_empty = Util.isEmptyString(userName);
+       // boolean is_userName_empty = Util.isEmptyString(userName);
         boolean is_password_empty = Util.isEmptyString(password);
         boolean is_confirmPassword_empty = Util.isEmptyString(confirmPassword);
         boolean is_email_empty = Util.isEmptyString(email);
         boolean is_validEmail = SharedPrefManager.isValidEmail(email);
-        if (is_userName_empty) {
+        /*if (is_userName_empty) {
             mSignUpUserName.setError("Enter User Name");
             return;
-        }
+        }*/
         if (is_email_empty || !SharedPrefManager.isValidEmail(email)) {
             mSignUpEmail.setError("Enter a valid Email Id");
             return;
@@ -115,7 +115,7 @@ public class SignUpActivity extends AppBaseActivity {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(FeedParams.EMAIL, email);
             params.put(FeedParams.PASSWORD, password);
-            params.put(FeedParams.USERNAME, userName);
+           // params.put(FeedParams.USERNAME, userName);
             placeRequest(APIMethods.REGISTER, UserProfileVo.class, params, true, null);
             mButtonSignUp.setEnabled(false);
         } else {

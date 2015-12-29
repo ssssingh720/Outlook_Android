@@ -70,6 +70,7 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
     ImageView titleImg;
     private DownloadFileFromURL task;
     private String root;
+    int downloadCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +115,7 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
                 loadFragments(filePath);
 
             } else if (Util.isNetworkOnline(HomeListingActivity.this)) {
+                downloadCount++;
                 task = new DownloadFileFromURL();
                 task.execute();
             }
@@ -157,7 +159,7 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
 
             magazineListFragment = new HomeListFragment();
             magazineListFragment.setArguments(bundle);
-magazineListFragment.setOnThemeChangeListener(this);
+            magazineListFragment.setOnThemeChangeListener(this);
             changeFragment(magazineListFragment);
         }
     }
@@ -287,7 +289,14 @@ magazineListFragment.setOnThemeChangeListener(this);
         file.delete();
         SessionManager.setDownloadFailed(HomeListingActivity.this, false);
         loadToast.error();
-        finish();
+        if (downloadCount==1 && Util.isNetworkOnline(HomeListingActivity.this)) {
+            task = new DownloadFileFromURL();
+            task.execute();
+        }
+        else{
+            finish();
+        }
+        //finish();
     }
 
     @Override

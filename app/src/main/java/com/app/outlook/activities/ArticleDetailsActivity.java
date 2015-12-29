@@ -3,6 +3,7 @@ package com.app.outlook.activities;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,11 +23,18 @@ import android.widget.ToggleButton;
 
 import com.app.outlook.OutLookApplication;
 import com.app.outlook.R;
+import com.app.outlook.Utils.Util;
 import com.app.outlook.fragments.SectionDetailsHolderFragment;
 import com.app.outlook.listener.OnArticleModeChangeListener;
 import com.app.outlook.manager.SharedPrefManager;
 import com.app.outlook.modal.IntentConstants;
 import com.app.outlook.modal.OutlookConstants;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.google.android.gms.analytics.HitBuilders;
 import com.inmobi.ads.InMobiAdRequestStatus;
@@ -49,6 +57,7 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     private SectionDetailsHolderFragment sectionDetailsHolderFragment;
     private boolean isPurchased;
     OnArticleModeChangeListener articleModeChangeListener;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +95,17 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     }
 @OnClick(R.id.shareArticle)
 public void shareArticle(){
+    if (Util.isNetworkOnline(ArticleDetailsActivity.this)) {
+        postToFacebook();
+    }
+    else{
+        showToast(getResources().getString(R.string.no_internet));
+    }
 
-
-    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-    sharingIntent.setType("text/*");
+    /*Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+    sharingIntent.setType("text*//*");
     sharingIntent.putExtra(Intent.EXTRA_TEXT, sectionDetailsHolderFragment.getShareData());
-    startActivity(Intent.createChooser(sharingIntent, "Share Article"));
+    startActivity(Intent.createChooser(sharingIntent, "Share Article"));*/
 }
 
     @Override
@@ -198,5 +212,41 @@ public void shareArticle(){
         }
 
     }
+    private void postToFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
 
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(sectionDetailsHolderFragment.getShareData())
+                    .setContentDescription(
+                            sectionDetailsHolderFragment.getShareBuyLine())
+                    .setContentUrl(Uri.parse("https://play.google.com/apps/testing/com.app.outlooktest"))
+                    .build();
+
+            shareDialog.show(linkContent);
+        }
+    }
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (callbackManager!=null) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

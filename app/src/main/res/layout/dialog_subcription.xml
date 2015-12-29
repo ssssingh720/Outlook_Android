@@ -40,20 +40,20 @@
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_stroke_bg"
-        android:layout_height="60dp" />
+        android:layout_height="@dimen/button_subscription_height" />
     <Button
         android:id="@+id/btn_half_year"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_stroke_bg"
-        android:layout_height="60dp" />
+        android:layout_height="@dimen/button_subscription_height" />
     <Button
         android:id="@+id/btn_quater"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/selector_stroke_bg"
-        android:layout_height="60dp" />
+        android:layout_height="@dimen/button_subscription_height" />
     
     <!--<LinearLayout
         android:layout_width="match_parent"

@@ -28,7 +28,7 @@ public class ImageViewActivity extends AppBaseActivity {
         ButterKnife.bind(this);
         String imageLink = getIntent().getStringExtra(IntentConstants.WEB_IMAGE_LINK);
         String title = getIntent().getStringExtra(IntentConstants.WEB_CONTENT_TITLE);
-        Picasso.with(this).load(imageLink).into(webImage);
+        Picasso.with(this).load("http://52.76.121.132/wp-content/uploads/2015/12/image002.jpg").into(webImage);
         titleTxt.setText(title);
     }
     @OnClick(R.id.toolbar_back)

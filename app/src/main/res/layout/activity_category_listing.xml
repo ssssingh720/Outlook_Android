@@ -54,8 +54,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:src="@drawable/icon_calendar"
+                android:padding="5dp"
+                android:src="@drawable/ic_action_icon_calendar"
                 android:visibility="gone" />
             <ImageView
                 android:id="@+id/reset_filter"
@@ -65,8 +65,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:src="@drawable/filter_delete_new"
+                android:src="@drawable/ic_action_filter_delete_new"
+                android:padding="5dp"
                 android:visibility="gone" />
 
         </RelativeLayout>
@@ -82,7 +82,7 @@
         <Button
             android:id="@+id/btnSubscribe"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/button_subscription_height"
             android:layout_margin="15dp"
             android:background="@drawable/selector_subcribe_button"
             android:text="@string/subscribe"
