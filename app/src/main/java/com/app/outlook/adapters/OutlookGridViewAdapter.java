@@ -67,6 +67,9 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
                 holder.buyBtn.setVisibility(View.GONE);
                 holder.draftText.setVisibility(View.VISIBLE);
             }
+            if (magazineID.equals("5")){
+                holder.buyBtn.setVisibility(View.GONE);
+            }
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -86,10 +89,10 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
         }
         if (magazine.getImage()!=null && !magazine.getImage().isEmpty()) {
             Picasso.with(context).load(magazine.getImage())
-                    .placeholder(R.color.cool_grey).into(holder.image);
+                    .placeholder(R.drawable.outlook).error(R.drawable.outlook).into(holder.image);
         }
         else{
-            holder.image.setImageResource(R.color.cool_grey);
+            holder.image.setImageResource(R.drawable.outlook);
         }
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,11 +138,13 @@ public class OutlookGridViewAdapter extends ArrayAdapter<Magazine> {
                 }
             });
         }
+        if (magazineID.equals("5")){
+            holder.buyBtn.setVisibility(View.GONE);
+        }
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
             holder.buyBtn.setVisibility(View.GONE);
             holder.draftText.setVisibility(View.VISIBLE);
         }
-
         return row;
     }
 

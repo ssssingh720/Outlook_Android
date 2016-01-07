@@ -133,7 +133,7 @@ public class MagazineDetailsActivity extends AppBaseActivity implements IabHelpe
         bundle.putBoolean(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
         magazineDetailsFragment.setArguments(bundle);
         changeFragment(magazineDetailsFragment, false);
-        if (getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false)){
+        if (getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false) || magazineID.equals("5")){
             shareImg.setVisibility(View.VISIBLE);
             bottomLyt.setVisibility(View.GONE);
         }
@@ -177,6 +177,7 @@ public class MagazineDetailsActivity extends AppBaseActivity implements IabHelpe
     @OnClick(R.id.back)
     public void onMBackClick() {
         onBackPressed();
+
     }
 
     public void changeFragment(Fragment fragment, boolean backStack) {
@@ -478,6 +479,8 @@ public void onShareIssue(){
                 if (file.exists()) {
                     file.delete();
                 }
+            magazineDetailsFragment.downloadCount=0;
+              //  magazineDetailsFragment.fetchMagazineDetails();
                 FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
 
                 fragTransaction.detach(magazineDetailsFragment);
@@ -485,7 +488,7 @@ public void onShareIssue(){
                 fragTransaction.commit();
             }else {
                 showToast("Purchase failed.Please retry.");
-            }
+           }
 
         }
         else if (apiMethod.equals(APIMethods.VALIDATE_SUBSCRIPTION)) {

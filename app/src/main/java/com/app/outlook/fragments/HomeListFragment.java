@@ -173,10 +173,10 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
 
 
         ArrayList<String> subscriptionIDList = new ArrayList<>();
-//                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
+                    subscriptionIDList.add(magazineList.get(currentPosition).getQtly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getHalyYearly());
 //                    subscriptionIDList.add(magazineList.get(currentPosition).getAnnual());
-        subscriptionIDList.add("outlook.two");
+        //subscriptionIDList.add("outlook.two");
         subscriptionIDList.add("outlook.five");
         subscriptionIDList.add("outlook.five");
         Intent intent = new Intent(getActivity(),IssuesListingActivity.class);

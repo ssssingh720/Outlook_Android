@@ -73,8 +73,14 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
         }
         else if(gId!=null && !gId.isEmpty()){
             String uri= SharedPrefManager.getInstance().getSharedDataString(FeedParams.GMAIL_IMAGE);
-            Picasso.with(this).load(uri).transform(new CircleTransform()).placeholder(R.drawable.icon_user).error(R.drawable.icon_user).into(userImage);
-        }
+            if (uri!=null && !uri.isEmpty()) {
+                Picasso.with(this).load(uri).transform(new CircleTransform()).placeholder(R.drawable.icon_user).error(R.drawable.icon_user).into(userImage);
+            }
+            else{
+                userImage.setImageResource(R.drawable.icon_user);
+            }
+            }
+
         else{
             userImage.setImageResource(R.drawable.icon_user);
         }

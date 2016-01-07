@@ -68,6 +68,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
     private String root;
     IInAppBillingService mService;
     IabHelper mHelper;
-    static final String ITEM_SKU = "outlook.five";
+   // static final String ITEM_SKU = "outlook.five";
     private int selectedPosition = -1;
     private Purchase purchaseInfo;
     private DownloadFileFromURL task;
@@ -125,11 +126,12 @@ public class IssuesListingActivity extends AppBaseActivity implements IabHelper.
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.scale_exit);
         setContentView(R.layout.activity_category_listing);
         ButterKnife.bind(this);
-Util.clearNotification(this);
+        Util.clearNotification(this);
         magazineType = getIntent().getStringExtra(IntentConstants.TYPE);
         magazineTitle = getIntent().getStringExtra(IntentConstants.MAGAZINE_NAME);
 
         subscriptionIDList = getIntent().getStringArrayListExtra(IntentConstants.SUBSCRIPTION_IDS);
+        subscriptionIDList.removeAll(Arrays.asList("", null));
         AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
         accounts = accountManager.getAccounts();
         Log.i("account",accounts.length+"");
@@ -188,7 +190,7 @@ Util.clearNotification(this);
     }
 
     private void initView() {
-        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
+        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) || magazineType.equals("5")){
             btnSubscribe.setVisibility(View.GONE);
         }
         root =  getCacheDir().getAbsolutePath();
@@ -344,7 +346,9 @@ catch (Exception e){
         gridView.setAdapter(animationAlphaAdapter);
             calendarImg.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-            btnSubscribe.setVisibility(View.VISIBLE);
+            if (!magazineType.equals("5")) {
+                btnSubscribe.setVisibility(View.VISIBLE);
+            }
         }
         else{
             emptyView.setVisibility(View.VISIBLE);
@@ -358,7 +362,9 @@ catch (Exception e){
         }
         else{
             emptyView.setVisibility(View.GONE);
-            btnSubscribe.setVisibility(View.VISIBLE);
+            if (!magazineType.equals("5")) {
+                btnSubscribe.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -374,7 +380,7 @@ catch (Exception e){
             for(int j=0 ; j< issueArray.size();j++){
                 Magazine magazine = new Magazine();
                 magazine.setImage(issueArray.get(j).getImage());
-                magazine.setIssueDate(monthArray.get(i).getName() + ", " + issueYear);
+                magazine.setIssueDate(monthArray.get(i).getName() + ", " + monthArray.get(i).getYear());
                 magazine.setPostId(issueArray.get(j).getIssueId() + "");
                 magazine.setIsPurchased(issueArray.get(j).getPurchase());
                 magazine.setSku(issueArray.get(j).getSku());
@@ -768,13 +774,13 @@ else{
     }
 
     public void buyManagedProductClick(String sku,String issueId) {
-        mHelper.launchPurchaseFlow(this, ITEM_SKU, OutlookConstants.MAKE_GPAYMENT,
+        mHelper.launchPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
                 this, issueId);
     }
 
     public void buySubscriptionClick(String sku,String magazineId) {
         mHelper.launchPurchaseFlow(this, sku, OutlookConstants.MAKE_GPAYMENT,
-                this, adapter.getItem(adapter.getCount()-1).getIssue_published_date());
+                this, adapter.getItem(adapter.getCount() - 1).getIssue_published_date());
     }
 
     @Override
@@ -816,7 +822,9 @@ else{
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    promptUserToBuySubscription();
+                    if (skuList.get(0).getTitle()!=null) {
+                        promptUserToBuySubscription();
+                    }
                 }
             });
         } else {
@@ -835,39 +843,62 @@ else{
         subscriptionDialog.getWindow().setGravity(Gravity.CENTER);
         subscriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btn1 = (Button) subscriptionDialog.findViewById(R.id.btn_annual);
-        btn1.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                subscriptionDialog.dismiss();
-                isSubcriptionClicked = true;
-                selectedSubcription = OutlookConstants.TWELVE;
-                buySubscriptionClick(skuList.get(0).getSku(),magazineType);
-            }
-        });
         Button btn2 = (Button) subscriptionDialog.findViewById(R.id.btn_half_year);
-        btn2.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                subscriptionDialog.dismiss();
-                isSubcriptionClicked = true;
-                selectedSubcription = OutlookConstants.SIX;
-                buySubscriptionClick(skuList.get(1).getSku(), magazineType);
-            }
-        });
         Button btn3 = (Button) subscriptionDialog.findViewById(R.id.btn_quater);
-        btn3.setText(skuList.get(0).getTitle()+" for "+skuList.get(0).getPrice());
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                subscriptionDialog.dismiss();
-                isSubcriptionClicked = true;
-                selectedSubcription = OutlookConstants.THREE;
-                buySubscriptionClick(skuList.get(2).getSku(), magazineType);
-            }
-        });
+        if (skuList.size()==1){
+            btn1.setVisibility(View.VISIBLE);
+        }
+        else if (skuList.size()==2){
+            btn1.setVisibility(View.VISIBLE);
+            btn2.setVisibility(View.VISIBLE);
+        }
+        else if (skuList.size()==3){
+            btn1.setVisibility(View.VISIBLE);
+            btn2.setVisibility(View.VISIBLE);
+            btn3.setVisibility(View.VISIBLE);
+        }
+        if (btn1.getVisibility()==View.VISIBLE) {
+            btn1.setText(skuList.get(0).getTitle() + " for " + skuList.get(0).getPrice());
+            btn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscriptionDialog.dismiss();
+                    isSubcriptionClicked = true;
+                    selectedSubcription = OutlookConstants.TWELVE;
+                    buySubscriptionClick(skuList.get(0).getSku(), magazineType);
+                }
+            });
+        }
+        if (btn2.getVisibility()==View.VISIBLE) {
 
+                btn2.setText(skuList.get(1).getTitle() + " for " + skuList.get(1).getPrice());
+
+            btn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscriptionDialog.dismiss();
+                    isSubcriptionClicked = true;
+                    selectedSubcription = OutlookConstants.SIX;
+                    buySubscriptionClick(skuList.get(1).getSku(), magazineType);
+                }
+            });
+        }
+        if (btn3.getVisibility()==View.VISIBLE) {
+
+
+
+                btn3.setText(skuList.get(2).getTitle() + " for " + skuList.get(2).getPrice());
+
+            btn3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscriptionDialog.dismiss();
+                    isSubcriptionClicked = true;
+                    selectedSubcription = OutlookConstants.THREE;
+                    buySubscriptionClick(skuList.get(2).getSku(), magazineType);
+                }
+            });
+        }
         subscriptionDialog.show();
     }
 

@@ -54,14 +54,12 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
     private HomeGridFragment magazineGridFragment;
     private HomeListFragment magazineListFragment;
     private LoadToast loadToast;
-
     public static int PAGES = 2;
     public final static int LOOPS = 1;
     public final static int FIRST_PAGE = 0;//PAGES * LOOPS / 2;
     public final static float BIG_SCALE = 1.0f;
     public final static float SMALL_SCALE = 0.75f;
     public final static float DIFF_SCALE = BIG_SCALE - SMALL_SCALE;
-
     @Bind(R.id.carouselView)
     ImageButton carouselView;
     @Bind(R.id.gridView)

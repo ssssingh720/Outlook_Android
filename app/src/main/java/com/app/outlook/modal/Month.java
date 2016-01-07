@@ -14,6 +14,9 @@ public class Month {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("year")
+    @Expose
+    private String year;
     @SerializedName("issues")
     @Expose
     private List<Issue> issues = new ArrayList<Issue>();
@@ -44,5 +47,13 @@ public class Month {
      */
     public void setIssues(List<Issue> issues) {
         this.issues = issues;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 }

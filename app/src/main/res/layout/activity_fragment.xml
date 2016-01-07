@@ -31,8 +31,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:paddingRight="10dp"
-                android:src="@drawable/icon_back" />
+                android:layout_marginRight="10dp"
+                android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
 
             <ImageView
                 android:id="@+id/toolbar_title"
@@ -50,8 +50,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:src="@drawable/icon_share"
+                android:layout_marginRight="14dp"
+                android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
                 android:visibility="visible" />
     </RelativeLayout>
     </android.support.v7.widget.Toolbar>

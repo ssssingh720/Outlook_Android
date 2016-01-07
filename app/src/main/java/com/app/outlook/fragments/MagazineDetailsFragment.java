@@ -101,7 +101,8 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
     private boolean isPurchased;
     private String adminMagazine;
     Dialog subscribePopUp;
-    int downloadCount;
+    public int downloadCount;
+    static final String ITEM_SKU = "outlook.five";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,7 +167,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         cardIds.recycle();
     }
 
-    private void fetchMagazineDetails() {
+    public void fetchMagazineDetails() {
         String filePath = root + File.separator + "Outlook/Magazines/"+magazineID+"-magazine-" + issueID + ".json";
         try {
             Log.d(TAG, "Magazine Path::" + filePath);
@@ -372,7 +373,12 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             }
         }
         else{
-            showPopUpSubscribe();
+            if (!magazineID.equals("5")){
+            showPopUpSubscribe();}
+            else{
+                // buy
+               // ((MagazineDetailsActivity)getActivity()).buyManagedProductClick(ITEM_SKU, issueID);
+            }
         }
 
     }

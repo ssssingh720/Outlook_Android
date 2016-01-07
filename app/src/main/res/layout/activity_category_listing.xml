@@ -34,8 +34,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:paddingRight="10dp"
-                    android:src="@drawable/icon_back"
+                    android:layout_marginRight="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
                     android:visibility="visible" />
 
                 <ImageView
@@ -51,11 +52,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="14dp"
+                android:layout_marginLeft="14dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="5dp"
-                android:src="@drawable/ic_action_icon_calendar"
+                android:src="@drawable/calendar"
                 android:visibility="gone" />
             <ImageView
                 android:id="@+id/reset_filter"
@@ -65,8 +67,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_action_filter_delete_new"
-                android:padding="5dp"
+                android:src="@drawable/remove_filter"
                 android:visibility="gone" />
 
         </RelativeLayout>
