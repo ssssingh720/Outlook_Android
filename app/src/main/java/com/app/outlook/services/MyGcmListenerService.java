@@ -104,7 +104,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setSmallIcon(R.drawable.outlook_notification_icon)
                 .setColor(Color.RED)
                 .setLights(0xFF0000FF, 500, 500)
-                .setContentTitle("OutLook")
+                .setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText(notification.getMsg())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

@@ -50,7 +50,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_alignWithParentIfMissing="true"
-                        android:layout_toLeftOf="@+id/imgBlock"
+                        android:layout_toLeftOf="@+id/imgAuthor"
                         android:layout_toStartOf="@+id/imgBlock"
                         android:text="LETTERS"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
