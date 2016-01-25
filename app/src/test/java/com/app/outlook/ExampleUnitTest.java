@@ -1,4 +1,4 @@
-package com.app.outlook;
+package com.outlookgroup.outlookmags;
 
 import org.junit.Test;
 

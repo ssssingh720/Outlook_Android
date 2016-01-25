@@ -36,11 +36,11 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId "com.app.outlooktest"
+        applicationId "com.outlookgroup.outlookmags"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 5
-        versionName "1.4"
+        versionCode 1
+        versionName "1.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
     }

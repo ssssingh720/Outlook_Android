@@ -106,7 +106,6 @@
                         android:layout_alignWithParentIfMissing="true"
                         android:layout_below="@+id/imgBlock"
                         android:layout_marginTop="5dp"
-                        android:scaleType="centerCrop"
                         android:src="@drawable/dummy_11"
                         android:visibility="visible" />
 

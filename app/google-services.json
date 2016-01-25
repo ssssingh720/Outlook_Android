@@ -1,26 +1,26 @@
 {
   "project_info": {
-    "project_id": "outlook-app-1105",
-    "project_number": "105915870368",
-    "name": "Outlook-App"
+    "project_id": "outlook-magazines",
+    "project_number": "1086799437104",
+    "name": "Outlook Magazines"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:105915870368:android:31949d92820bc267",
-        "client_id": "android:com.app.outlook",
+        "mobilesdk_app_id": "1:1086799437104:android:04fbec218e432291",
+        "client_id": "android:com.outlookgroup.outlookmags",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "com.app.outlook"
+          "package_name": "com.outlookgroup.outlookmags"
         }
       },
       "oauth_client": [
         {
-          "client_id": "105915870368-vmvllbsnu7nhkmpmcn65efdhcasp3b0r.apps.googleusercontent.com",
+          "client_id": "1086799437104-uflo22sr977s4arv9ac18hnaprhshqjs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.app.outlook",
-            "certificate_hash": "849BFE6C6AE77EF5AAE2F76606D6BDCE34EBE487"
+            "package_name": "com.outlookgroup.outlookmags",
+            "certificate_hash": "D890B85249C297A06DC9B49FEA831223C957BDB0"
           }
         }
       ],

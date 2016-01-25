@@ -8,7 +8,7 @@
     android:descendantFocusability="beforeDescendants"
     android:orientation="vertical">
 
-    <com.app.outlook.views.CarouselLinearLayout
+    <com.outlookgroup.outlookmags.views.CarouselLinearLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,5 +48,5 @@
         </FrameLayout>
 
 
-    </com.app.outlook.views.CarouselLinearLayout>
+    </com.outlookgroup.outlookmags.views.CarouselLinearLayout>
 </LinearLayout>

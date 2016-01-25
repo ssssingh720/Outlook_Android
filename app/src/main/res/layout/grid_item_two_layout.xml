@@ -82,6 +82,7 @@
                     android:scaleType="fitXY" />
                 </RelativeLayout>
                 <Button
+                    android:visibility="gone"
                     android:layout_width="@dimen/button_buy_width"
                     android:layout_height="@dimen/button_buy_height"
                     android:id="@+id/buyBtn"

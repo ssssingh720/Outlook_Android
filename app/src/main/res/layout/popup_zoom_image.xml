@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center">
-            <com.app.outlook.views.TouchImageView
+            <com.outlookgroup.outlookmags.views.TouchImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minWidth="200dp"

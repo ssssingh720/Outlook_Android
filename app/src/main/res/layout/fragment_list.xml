@@ -52,7 +52,7 @@
             android:textSize="@dimen/text_medium" />
     </LinearLayout>
 
-    <com.app.outlook.views.CirclePageIndicator
+    <com.outlookgroup.outlookmags.views.CirclePageIndicator
         android:id="@+id/page_indicator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

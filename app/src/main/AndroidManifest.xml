@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.app.outlook" >
+    package="com.outlookgroup.outlookmags" >
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -30,11 +30,11 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <permission
-        android:name="com.app.outlook.gcm.permission.C2D_MESSAGE"
+        android:name="com.outlookgroup.outlookmags.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <!-- [END gcm_permission] -->
     <application
-        android:name=".OutLookApplication"
+        android:name="com.outlookgroup.outlookmags.OutLookApplication"
         android:allowBackup="true"
         android:icon="@drawable/outlook_launcher"
         android:label="@string/app_name"
@@ -50,25 +50,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 <!--Inmobi started-->
-        <activity
-            android:name="com.inmobi.rendering.InMobiAdActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:ignore="UnusedAttribute" />
-        <receiver
-            android:name="com.inmobi.commons.core.utilities.uid.ImIdShareBroadCastReceiver"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="com.inmobi.share.id" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
-            android:enabled="true" />
         <!-- [START gcm_receiver] -->
         <!-- GCM Receiver -->
         <receiver
@@ -85,7 +66,7 @@
 
         GCM Service
         <service
-            android:name=".services.MyGcmListenerService"
+            android:name="com.outlookgroup.outlookmags.services.MyGcmListenerService"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -94,16 +75,16 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.MyInstanceIDListenerService"
+            android:name="com.outlookgroup.outlookmags.services.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.RegistrationIntentService"
+            android:name="com.outlookgroup.outlookmags.services.RegistrationIntentService"
             android:exported="false"></service>
-        <receiver android:enabled="true" android:name=".receivers.NotificationReceiver">
+        <receiver android:enabled="true" android:name="com.outlookgroup.outlookmags.receivers.NotificationReceiver">
             <intent-filter>
                 <category android:name="com.app.outlook"/>
             </intent-filter>
@@ -111,7 +92,7 @@
         <!-- [FINISHED gcm_receiver] -->
 
         <!-- Analytics receiver permission (optional to avoid warnings) [STARTS HERE]-->
-        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+        <!--<receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -127,11 +108,11 @@
         </receiver>
         <service android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false"/>-->
         <!-- Analytics receiver permission [FINISHED]-->
 
         <activity
-            android:name=".activities.SplashScreen"
+            android:name="com.outlookgroup.outlookmags.activities.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -145,23 +126,26 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activities.LogInActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.LogInActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SignUpActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.SignUpActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.IssuesListingActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.IssuesListingActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.MagazineDetailsActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.MagazineDetailsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.HomeListingActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.HomeListingActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SettingsActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.SettingsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.ArticleDetailsActivity"
+        <activity android:name="com.outlookgroup.outlookmags.activities.ArticleDetailsActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             />
-        <activity android:name=".activities.ImageViewActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+        <activity android:name="com.outlookgroup.outlookmags.activities.ImageViewActivity"
+        android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+        />
+        <activity android:name="com.outlookgroup.outlookmags.activities.SettingsDetailsActivity"
+            android:screenOrientation="portrait"
             />
         <meta-data
             android:name="io.fabric.ApiKey"

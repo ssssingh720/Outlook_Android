@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:background="@color/white"
         android:weightSum="1">
         <Button
