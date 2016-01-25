@@ -95,6 +95,7 @@ public class SignUpActivity extends AppBaseActivity {
         }
         if (password.length()<6 || password.length()>12){
             mSignUpPassword.setError("Password must be a minimum of 6 and maximum of 12 characters long.");
+            return;
         }
         if (is_confirmPassword_empty) {
             mSignUpConfirmPassword.setError("Enter Confirm Password");
