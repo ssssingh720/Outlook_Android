@@ -107,6 +107,9 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
             case R.id.settings_privacy_policy:
                 openWebView(IntentConstants.PRIVACY);
                 break;
+            case R.id.settings_how_to_use:
+                openWebView(IntentConstants.HELP);
+                break;
         }
     }
 

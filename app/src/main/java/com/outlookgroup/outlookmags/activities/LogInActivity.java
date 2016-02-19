@@ -1,5 +1,7 @@
 package com.outlookgroup.outlookmags.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.outlookgroup.outlookmags.R;
 import com.outlookgroup.outlookmags.Utils.APIMethods;
 import com.outlookgroup.outlookmags.Utils.Util;
@@ -87,6 +90,8 @@ public class LogInActivity extends AppBaseActivity implements
     TextView mForgotPassword;
     @Bind(R.id.signup_text)
     TextView mSignUp;
+    Account[] accounts;
+
     //Facebook Callbacks
     CallbackManager callbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -190,12 +195,16 @@ public class LogInActivity extends AppBaseActivity implements
     @OnClick(R.id.google_button)
     void googleLogin() {
         if (Util.isNetworkOnline(LogInActivity.this)) {
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-    else{
-        showToast(getResources().getString(R.string.no_internet));
-    }
+            if (accounts.length>0) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+            else{                showToast("Login to your Gmail account to proceed.");
+            }
+        }
+        else{
+            showToast(getResources().getString(R.string.no_internet));
+        }
     }
 
     @OnClick(R.id.email_button)
@@ -283,6 +292,8 @@ public class LogInActivity extends AppBaseActivity implements
     /*initializing the g+ & fb SDK*/
     private void initializeSDK() {
         registerGCM();
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        accounts = accountManager.getAccounts();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -474,7 +485,19 @@ public class LogInActivity extends AppBaseActivity implements
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.RESET_PASSWORD)){
             loadToast.success();
-            showToast("Password has been sent to your registered email");
+            try {
+            BaseVO resultData= (BaseVO)response;
+            Gson gson = new Gson();
+            String json = gson.toJson(resultData);
+            JSONObject responseObj = new JSONObject(new String(json));
+            //JSONObject result = responseObj.getJSONObject("result");
+            String message = responseObj.getString("message");
+            showToast(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+                showToast("Password has been sent to your registered email");
+            }
+
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             loadToast.success();
@@ -527,7 +550,20 @@ public class LogInActivity extends AppBaseActivity implements
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER)){
         showToast("Couldn't LogIn. Please try later.");}
         if (apiMethod.equalsIgnoreCase(APIMethods.RESET_PASSWORD)){
-            showToast("Couldn't recover your password. Please try later.");}
+            try {
+                JSONObject errorObject = new JSONObject(new String(error.networkResponse.data));
+               // JSONObject result = errorObject.getJSONObject("result");
+                String message = errorObject.getString("message");
+                showToast(message);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                showToast("Couldn't recover your password. Please try later.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showToast("Couldn't recover your password. Please try later.");
+            }
+            }
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_LOGGEDIN, true);
             startActivity(new Intent(LogInActivity.this, HomeListingActivity.class));

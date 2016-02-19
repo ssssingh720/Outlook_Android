@@ -288,7 +288,7 @@ android:id="@+id/notification_settings"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="35dp"
                 android:paddingRight="35dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textView10"
@@ -314,7 +314,7 @@ android:id="@+id/notification_settings"
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@color/cool_grey" />
 
 

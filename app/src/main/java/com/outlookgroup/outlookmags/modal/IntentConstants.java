@@ -34,5 +34,6 @@ public class IntentConstants {
     public static String SCREEN_NAME = "screen_name";
     public final static int ABOUT_US = 1;
     public final static int PRIVACY = 2;
+    public final static int HELP = 3;
 
 }

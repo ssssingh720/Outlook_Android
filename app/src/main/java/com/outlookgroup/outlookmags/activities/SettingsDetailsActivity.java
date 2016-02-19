@@ -1,6 +1,10 @@
 package com.outlookgroup.outlookmags.activities;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -12,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.outlookgroup.outlookmags.modal.IntentConstants.ABOUT_US;
+import static com.outlookgroup.outlookmags.modal.IntentConstants.HELP;
 import static com.outlookgroup.outlookmags.modal.IntentConstants.PRIVACY;
 
 /**
@@ -48,6 +53,13 @@ public class SettingsDetailsActivity extends AppBaseActivity {
                 mTitle.setText(getResources().getString(R.string.privacy_policy));
                 webUrl = "file:///android_asset/privacy_policy.html";
                 break;
+            case HELP:
+                mTitle.setText(getResources().getString(R.string.how_to_use));
+                webUrl="http://www.outlooktraveller.in/app/help.html";
+                mWebview.getSettings().setLoadWithOverviewMode(true);
+                mWebview.getSettings().setUseWideViewPort(true);
+                mWebview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+                break;
 
         }
 
@@ -55,4 +67,5 @@ public class SettingsDetailsActivity extends AppBaseActivity {
 
         mWebview.loadUrl(webUrl);
     }
+
 }
