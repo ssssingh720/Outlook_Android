@@ -1,11 +1,16 @@
 package com.outlookgroup.outlookmags.activities;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +18,14 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookRequestError;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.internal.Logger;
+import com.facebook.share.model.AppInviteContent;
 import com.outlookgroup.outlookmags.R;
 import com.outlookgroup.outlookmags.Utils.Util;
 import com.outlookgroup.outlookmags.fragments.SectionDetailsHolderFragment;
@@ -26,7 +39,7 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-
+import com.outlookgroup.outlookmags.modal.OutlookConstants;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,8 +55,6 @@ public class ArticleDetailsActivity extends AppBaseActivity {
     private boolean isPurchased;
     OnArticleModeChangeListener articleModeChangeListener;
     CallbackManager callbackManager;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +78,9 @@ public class ArticleDetailsActivity extends AppBaseActivity {
         bundle.putInt(IntentConstants.SUB_CATEGORY_POSITION, getIntent().getIntExtra(IntentConstants.SUB_CATEGORY_POSITION, 0));
         bundle.putString(IntentConstants.CATEGORY_TYPE, getIntent().getStringExtra(IntentConstants.CATEGORY_TYPE));
         bundle.putBoolean(IntentConstants.IS_PURCHASED, getIntent().getBooleanExtra(IntentConstants.IS_PURCHASED, false));
-        if (getIntent().getStringExtra(IntentConstants.ADMIN_MAGAZINE)!=null){
+       /* if (getIntent().getStringExtra(IntentConstants.ADMIN_MAGAZINE)!=null){
             bundle.putString(IntentConstants.ADMIN_MAGAZINE, getIntent().getStringExtra(IntentConstants.ADMIN_MAGAZINE));
-        }
+        }*/
         sectionDetailsHolderFragment.setArguments(bundle);
 
         FragmentManager manager = getSupportFragmentManager();
@@ -84,7 +95,9 @@ public class ArticleDetailsActivity extends AppBaseActivity {
 @OnClick(R.id.shareArticle)
 public void shareArticle(){
     if (Util.isNetworkOnline(ArticleDetailsActivity.this)) {
+        //postFB();
         postToFacebook();
+        //tryAnotherWay();
     }
     else{
         showToast(getResources().getString(R.string.no_internet));
@@ -95,6 +108,7 @@ public void shareArticle(){
     sharingIntent.putExtra(Intent.EXTRA_TEXT, sectionDetailsHolderFragment.getShareData());
     startActivity(Intent.createChooser(sharingIntent, "Share Article"));*/
 }
+
 
     @Override
     public void onResume() {
@@ -224,10 +238,10 @@ public void shareArticle(){
                     .setContentTitle(sectionDetailsHolderFragment.getShareData())
                     .setContentDescription(
                             sectionDetailsHolderFragment.getShareBuyLine())
-                    .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.outlookgroup.outlookmags&hl=en"))
+                    .setContentUrl(Uri.parse(OutlookConstants.APP_LINK))
                     .build();
 
-            shareDialog.show(linkContent);
+            shareDialog.show(ArticleDetailsActivity.this,linkContent);
         }
     }
     @Override
@@ -237,4 +251,5 @@ public void shareArticle(){
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 }

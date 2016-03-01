@@ -19,6 +19,8 @@ public class OutlookConstants {
     public static final String SIX = "Six";
     public static final String TWELVE = "Twelve";
     public static final String IS_NOTIFICATION = "is_notification";
+    public static final String ADMIN_ARTICLE = "admin_article";
     public static boolean IS_BOUGHT=false;
+    public static final String APP_LINK="https://play.google.com/store/apps/details?id=com.outlookgroup.outlookmags";
     public static String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiruv4b5kkbATEXCv+Phuv3FxvXkCBAsgtF/DbMNfzn5DLTITJQG45+mThtmv4gOPx3R4GYlfHlebG+0SJf2rvX6824ssAL3DodDq2CxzvLd7YScIJhXy8vJEOJGuZgr38wQnyzYruyRGizEXdXiBWwGLOe4IQLAzR/3TM8eObOBlZV/rmHUXj7gNXYmXYU5lhhQjGegXzhU4BFPjFEuzmsdUDmGwAhZE2t6d6m2c+txOkC5D0lQFpIp4X0V4p6p2BeNzAaOjDnl8RrIPKZxgWcm2xP2Np7buM9OZoZ+7qS85yCCpt47Mm0aVNqSRrZGJdnol7JSDyhNeZdYe+D/TbQIDAQAB";
 }

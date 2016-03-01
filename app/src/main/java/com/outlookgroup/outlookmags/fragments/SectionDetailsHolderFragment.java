@@ -125,7 +125,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
         isPurchased = getArguments().getBoolean(IntentConstants.IS_PURCHASED);
         ButterKnife.bind(this, mView);
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
-            String adminMagazine = getArguments().getString(IntentConstants.ADMIN_MAGAZINE);
+            String adminMagazine = SharedPrefManager.getInstance().getSharedDataString(OutlookConstants.ADMIN_ARTICLE);
         loadAdminContents(adminMagazine);
         }
         else {
@@ -149,7 +149,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
 
             @Override
             public void onAdLoaded() {
-                if (getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
+                if (getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
                     showInterstitial();
                 }
             }
@@ -157,10 +157,9 @@ public class SectionDetailsHolderFragment extends BaseFragment{
             @Override
             public void onAdFailedToLoad(int errorCode) {
                // Log.i("MAds",getClass().getName()+"Failed"+getActivity().getLocalClassName());
-                if (getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
+                if (getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
                     startActivity(new Intent(getActivity(), ImageViewActivity.class));
                 }
-
             }
         });
     }

@@ -111,7 +111,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         //Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN)){
             if (Util.isNetworkOnline(getActivity())){
-            fetchMagazineDetailsAdminMode();}
+            fetchMagazineDetailsAdminMode();
+
+            }
             else {
                 showToast(getResources().getString(R.string.no_internet));
             }
@@ -413,9 +415,9 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
         intent.putExtra(IntentConstants.ISSUE_ID, issueID);
         intent.putExtra(IntentConstants.MAGAZINE_ID, magazineID);
         intent.putExtra(IntentConstants.MAGAZINE_NAME, magazineTitle);
-        if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine!=null){
+        /*if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_ADMIN) && adminMagazine!=null){
             intent.putExtra(IntentConstants.ADMIN_MAGAZINE, adminMagazine);
-        }
+        }*/
         startActivity(intent);
     }
 
@@ -552,6 +554,7 @@ getActivity().finish();
                 emptyViewMagazine.setVisibility(View.GONE);
                 loadCards();
                 adminMagazine = new Gson().toJson(detailsObject);
+                SharedPrefManager.getInstance().setSharedData(OutlookConstants.ADMIN_ARTICLE,adminMagazine);
             }
             else{
                 emptyViewMagazine.setVisibility(View.VISIBLE);
