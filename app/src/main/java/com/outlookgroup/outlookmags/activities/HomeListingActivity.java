@@ -144,7 +144,11 @@ public class HomeListingActivity extends AppBaseActivity implements OnThemeChang
         reader.setLenient(true);
 
         Type listType = new TypeToken<ArrayList<MagazineTypeVo>>() {}.getType();
-        magazineList = new Gson().fromJson(reader, listType);
+        try {
+            magazineList = new Gson().fromJson(reader, listType);
+        }catch (Exception e){
+            showToast("Parsing Error");
+        }
         if(magazineList != null && !magazineList.isEmpty()) {
             PAGES = magazineList.size();
 

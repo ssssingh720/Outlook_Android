@@ -162,6 +162,7 @@ public class MagazineDetailsFragment extends BaseFragment implements View.OnClic
             Log.d(TAG, "Magazine Path::" + filePath);
             File file = new File(filePath);
             if (file.exists()) {
+                System.out.println("filesize" +"from File:: " +file.length());
                 String response = Util.readJsonFromSDCard(filePath);
                 System.out.println("Response::" +"from File:: " +response);
                 JsonReader reader = new JsonReader(new StringReader(response));

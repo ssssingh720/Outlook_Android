@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,6 +50,8 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
     TextView emailId;
     @Bind(R.id.imageView_user)
     ImageView userImage;
+    @Bind(R.id.text_notify_status)
+            TextView notifyStatus;
     Dialog logoutPopUp;
     String fbId,gId;
 
@@ -61,6 +64,11 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
         setTheme(theme);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+            notifyStatus.setVisibility(View.VISIBLE);
+        } else{
+            notifyStatus.setVisibility(View.GONE);        }
         fbId=SharedPrefManager.getInstance().getSharedDataString(FeedParams.FB_ID);
         gId=SharedPrefManager.getInstance().getSharedDataString(FeedParams.GMAIL_ID);
         if (fbId!=null && !fbId.isEmpty()){
@@ -82,9 +90,11 @@ public class SettingsActivity extends AppBaseActivity implements View.OnClickLis
         }
         if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION)){
             switchNotification.setChecked(true);
+            notifyStatus.setText("ON");
         }
         else{
             switchNotification.setChecked(false);
+            notifyStatus.setText("OFF");
         }
         //userName.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_NAME));
         emailId.setText(SharedPrefManager.getInstance().getSharedDataString(FeedParams.PROFILE_EMAIL));
@@ -196,6 +206,10 @@ public void onLogOutClick(){
         else{
             showToast(getResources().getString(R.string.no_internet));
             switchNotification.setChecked(SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION));
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION))
+                notifyStatus.setText("ON");
+            else
+                notifyStatus.setText("OFF");
         }
     }
     private void registerNotification() {
@@ -222,6 +236,10 @@ public void onLogOutClick(){
         else{
             showToast(getResources().getString(R.string.no_internet));
             switchNotification.setChecked(SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION));
+            if (SharedPrefManager.getInstance().getSharedDataBoolean(OutlookConstants.IS_NOTIFICATION))
+                notifyStatus.setText("ON");
+            else
+                notifyStatus.setText("OFF");
         }
     }
 
@@ -236,10 +254,12 @@ public void onLogOutClick(){
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_NOTIFICATION, true);
             //switchNotification.setChecked(true);
+            notifyStatus.setText("ON");
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.UN_REGISTER_NOTIFICATION)){
             SharedPrefManager.getInstance().setSharedData(OutlookConstants.IS_NOTIFICATION, false);
             //switchNotification.setChecked(false);
+            notifyStatus.setText("OFF");
         }
     }
 
@@ -248,9 +268,11 @@ public void onLogOutClick(){
         super.onErrorResponse(error, apiMethod);
         if (apiMethod.equalsIgnoreCase(APIMethods.REGISTER_NOTIFICATION)){
             switchNotification.setChecked(false);
+            notifyStatus.setText("OFF");
         }
         if (apiMethod.equalsIgnoreCase(APIMethods.UN_REGISTER_NOTIFICATION)) {
             switchNotification.setChecked(true);
+            notifyStatus.setText("ON");
         }
     }
     private void hidePopupDialog() {

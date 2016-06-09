@@ -74,6 +74,7 @@ public class HomeListFragment extends BaseFragment implements OnPageClickedListe
             Log.i("Home list page selected",position+"");
             magazineName.setText(magazineList.get(position).getName().toUpperCase());
             magazineDescp.setText(magazineList.get(position).getDescription());
+            if (onThemeChangeListener!=null)
             onThemeChangeListener.onMagazineTheme(position);
            /* if (position==1){
                 ImageView title=(ImageView)getActivity().findViewById(R.id.toolbar_title);

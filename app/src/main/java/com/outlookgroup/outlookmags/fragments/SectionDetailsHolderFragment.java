@@ -149,7 +149,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
 
             @Override
             public void onAdLoaded() {
-                if (getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
+                if (getActivity()!=null && getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
                     showInterstitial();
                 }
             }
@@ -157,7 +157,7 @@ public class SectionDetailsHolderFragment extends BaseFragment{
             @Override
             public void onAdFailedToLoad(int errorCode) {
                // Log.i("MAds",getClass().getName()+"Failed"+getActivity().getLocalClassName());
-                if (getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
+                if (getActivity()!=null && getActivity().getLocalClassName()!=null && getActivity().getLocalClassName().equalsIgnoreCase("activities.ArticleDetailsActivity")) {
                     startActivity(new Intent(getActivity(), ImageViewActivity.class));
                 }
             }

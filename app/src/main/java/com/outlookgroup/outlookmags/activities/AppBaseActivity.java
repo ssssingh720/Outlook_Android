@@ -95,9 +95,7 @@ public class AppBaseActivity extends AppCompatActivity implements ServerCallback
      * @param isPOST
      */
     public void placeRequest(String methodName, Class clazz, HashMap<String, String> params, boolean isPOST,String action) {
-        //  if (!methodName.equals(APIMethods.CHECK_USERNAME))
 
-        // showProgressDialog();
         RequestManager.getInstance(this).placeRequest(methodName, clazz, this, params, isPOST, action);
     }
 

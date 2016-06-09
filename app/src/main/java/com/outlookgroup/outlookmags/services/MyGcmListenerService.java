@@ -93,7 +93,7 @@ public class MyGcmListenerService extends GcmListenerService {
         Intent intent = new Intent(this, NotificationReceiver.class);
         intent.putExtra(IntentConstants.NOTIFICATION_MESSAGE, message);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(0);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, ++NotificationCount /* Request code */, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         Bitmap bitmapLarge = BitmapFactory.decodeResource(getResources(),
